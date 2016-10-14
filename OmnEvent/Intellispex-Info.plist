@@ -42,7 +42,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1.0.7</string>
+	<string>1.0.9</string>
 	<key>FacebookAppID</key>
 	<string>1770868383173778</string>
 	<key>FacebookDisplayName</key>
@@ -95,9 +95,11 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>$(PRODUCT_NAME) uses camera to take photos</string>
+	<string>$(PRODUCT_NAME) uses camera</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Intellispex wants to use your current location</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>$(PRODUCT_NAME) uses microphone</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>$(PRODUCT_NAME) uses photos</string>
 	<key>UIAppFonts</key>

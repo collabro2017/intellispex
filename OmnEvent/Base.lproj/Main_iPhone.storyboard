@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16A313a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="mIQ-Ad-mgQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="mIQ-Ad-mgQ">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
@@ -4508,14 +4508,14 @@
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="lbl_logo" translatesAutoresizingMaskIntoConstraints="NO" id="uDX-Xs-62g">
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="uDX-Xs-62g" secondAttribute="height" multiplier="193:50" id="3mR-If-ERR"/>
+                                    <constraint firstAttribute="width" secondItem="uDX-Xs-62g" secondAttribute="height" multiplier="193:50" constant="-77.019999999999982" id="3mR-If-ERR"/>
                                 </constraints>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="x9a-ft-0f6" firstAttribute="centerX" secondItem="rOI-4e-5pH" secondAttribute="centerX" id="0XE-HU-B5E"/>
-                            <constraint firstAttribute="trailing" secondItem="uDX-Xs-62g" secondAttribute="trailing" constant="50" id="5mS-6J-SnK"/>
+                            <constraint firstAttribute="trailing" secondItem="uDX-Xs-62g" secondAttribute="trailing" constant="16" id="5mS-6J-SnK"/>
                             <constraint firstItem="Tvu-vF-fLw" firstAttribute="top" secondItem="rOI-4e-5pH" secondAttribute="top" id="Hds-aR-KlV"/>
                             <constraint firstItem="W8u-nc-x3E" firstAttribute="centerX" secondItem="rOI-4e-5pH" secondAttribute="centerX" id="HuM-T0-v9X"/>
                             <constraint firstItem="pMC-YM-EXS" firstAttribute="top" secondItem="uDX-Xs-62g" secondAttribute="bottom" constant="133" id="Iw3-J0-hqQ"/>
@@ -4525,7 +4525,7 @@
                             <constraint firstItem="pMC-YM-EXS" firstAttribute="centerX" secondItem="rOI-4e-5pH" secondAttribute="centerX" id="VB8-xt-wVP"/>
                             <constraint firstItem="RRL-EO-8Pb" firstAttribute="top" secondItem="x9a-ft-0f6" secondAttribute="bottom" constant="11" id="Xgb-rm-PJT"/>
                             <constraint firstAttribute="trailing" secondItem="Tvu-vF-fLw" secondAttribute="trailing" id="Zkh-Rw-Jxk"/>
-                            <constraint firstItem="uDX-Xs-62g" firstAttribute="centerX" secondItem="rOI-4e-5pH" secondAttribute="centerX" id="dcl-Vd-UeT"/>
+                            <constraint firstItem="uDX-Xs-62g" firstAttribute="centerX" secondItem="rOI-4e-5pH" secondAttribute="centerX" constant="3.5" id="dcl-Vd-UeT"/>
                             <constraint firstItem="N4e-wV-WLo" firstAttribute="top" secondItem="Tvu-vF-fLw" secondAttribute="bottom" id="dwS-tD-Cz7"/>
                             <constraint firstItem="W8u-nc-x3E" firstAttribute="top" secondItem="pMC-YM-EXS" secondAttribute="bottom" constant="12" id="gYt-eF-kGQ"/>
                             <constraint firstItem="RRL-EO-8Pb" firstAttribute="centerX" secondItem="rOI-4e-5pH" secondAttribute="centerX" id="pGh-dN-pnB"/>
@@ -4542,7 +4542,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DUp-t8-Dhq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-4141" y="-5359"/>
+            <point key="canvasLocation" x="-4141.5" y="-5359.5"/>
         </scene>
         <!--Login View Controller-->
         <scene sceneID="pKM-4U-VCX">
@@ -4880,7 +4880,7 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="69" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="I4T-fo-Fda">
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" misplaced="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="MessageCell" rowHeight="69" id="PcG-RK-V21" customClass="OMMessageCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MessageCell" rowHeight="69" id="PcG-RK-V21" customClass="OMMessageCell">
                                         <rect key="frame" x="0.0" y="86" width="375" height="69"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="PcG-RK-V21" id="NfE-qA-Ai8">
@@ -5524,7 +5524,7 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="3nr-wa-VzJ">
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" misplaced="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TagFriendCell" id="FSa-yt-nQh" customClass="OMTagFriendCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="TagFriendCell" id="FSa-yt-nQh" customClass="OMTagFriendCell">
                                         <rect key="frame" x="0.0" y="22" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="FSa-yt-nQh" id="2hn-BF-Cit">

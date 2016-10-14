@@ -639,7 +639,6 @@
 		3C5E7E8A197628DF000550F6 /* Intellispex-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Intellispex-Info.plist"; sourceTree = "<group>"; };
 		3C5E7E8C197628DF000550F6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		3C5E7E8E197628DF000550F6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		3C5E7E90197628DF000550F6 /* ICYMI-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ICYMI-Prefix.pch"; sourceTree = "<group>"; };
 		3C5E7E91197628DF000550F6 /* OMAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OMAppDelegate.h; sourceTree = "<group>"; };
 		3C5E7E92197628DF000550F6 /* OMAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OMAppDelegate.m; sourceTree = "<group>"; };
 		3C5E7E95197628DF000550F6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
@@ -1536,7 +1535,6 @@
 				3C5E7E8A197628DF000550F6 /* Intellispex-Info.plist */,
 				3C5E7E8B197628DF000550F6 /* InfoPlist.strings */,
 				3C5E7E8E197628DF000550F6 /* main.m */,
-				3C5E7E90197628DF000550F6 /* ICYMI-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
