@@ -212,14 +212,8 @@
     self.contraintWidthTabbar.constant = IS_IPAD? 414 : SCREEN_WIDTH_ROTATED;
     
     urlForVideo = [[NSBundle mainBundle] pathForResource:@"tutorial" ofType:@"mp4"];
-    
-    
-    //////
-    _viewControllersByIdentifier = [NSMutableDictionary dictionary];
-    
 
-    [OMGlobal setCircleView:imageViewForAvatar borderColor:[UIColor whiteColor]];
-    
+    _viewControllersByIdentifier = [NSMutableDictionary dictionary];
     
     availableIdentifiers = @[@"kIdentifierHome",
                              @"kIdentifierSearch",
@@ -295,6 +289,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    [OMGlobal setCircleView:imageViewForAvatar borderColor:[UIColor whiteColor]];
     
     if (USER) {
         if ([USER[@"loginType"] isEqualToString:@"email"] || [USER[@"loginType"] isEqualToString:@"gmail"]) {
@@ -343,9 +338,8 @@
         [APP_DELEGATE setLogOut:YES];
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:LOG_IN];
         [[NSUserDefaults standardUserDefaults] synchronize];
-        [MBProgressHUD hideAllHUDsForView:self.view.window animated:YES];
-        
-
+        OMAppDelegate *appDelegate = (OMAppDelegate *)[UIApplication sharedApplication].delegate;
+        [MBProgressHUD hideAllHUDsForView:appDelegate.window animated:YES];
     }];
 }
 

@@ -699,7 +699,7 @@
 {
     UIImage *image = [info objectForKey:UIImagePickerControllerEditedImage];
     
-    image = [image resizedImageToSize:CGSizeMake(AVATAR_SIZE, AVATAR_SIZE)];
+//    image = [image resizedImageToSize:CGSizeMake(AVATAR_SIZE, AVATAR_SIZE)];
     
     avatarChanged = YES;
     

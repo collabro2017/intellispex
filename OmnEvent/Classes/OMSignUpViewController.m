@@ -39,7 +39,6 @@
     
     UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAvatar:)];
     [imgViewForAvatar addGestureRecognizer:gesture];
-    [OMGlobal setCircleView:imgViewForAvatar borderColor:[UIColor greenColor]];
     // Do any additional setup after loading the view.
     
     tempValue = constraintForTopspace.constant;
@@ -70,6 +69,11 @@
     [super viewWillAppear:animated];
     
     self.navigationController.navigationBarHidden = YES;
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [OMGlobal setCircleView:imgViewForAvatar borderColor:[UIColor greenColor]];
 }
 
 #pragma mark - UIKeyboard Delegate Methods
