@@ -68,7 +68,20 @@
     //session---------------------------------
     effectiveScale = 1.0;
     
-    self.captureSession = [[AVCaptureSession alloc] init];
+    _captureSession = [[AVCaptureSession alloc] init];
+    if(_isPhoto) {
+        _captureSession.sessionPreset = AVCaptureSessionPresetPhoto;
+    } else {
+        _captureSession.sessionPreset = AVCaptureSessionPresetHigh;
+    }
+    
+    // preview layer
+    CGRect bounds = self.preview.layer.bounds;
+    _preViewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:self.captureSession];
+    _preViewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+    _preViewLayer.bounds = bounds;
+    _preViewLayer.position = CGPointMake(CGRectGetMidX(bounds), CGRectGetMidY(bounds));
+    [self.preview.layer addSublayer:_preViewLayer];
     
     //input
     AVCaptureDevice *frontCamera = nil;
@@ -106,47 +119,48 @@
     if ([backCamera isExposureModeSupported:AVCaptureExposureModeContinuousAutoExposure]) {
         [backCamera setExposureMode:AVCaptureExposureModeContinuousAutoExposure];
     }
-
+    
     [backCamera unlockForConfiguration];
     
     self.videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:backCamera error:nil];
-    AVCaptureDeviceInput *audioDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio] error:nil];
-
-    if (self.videoDeviceInput)[_captureSession addInput:self.videoDeviceInput];
-    if(audioDeviceInput) [_captureSession addInput:audioDeviceInput];
-    
-    //output
-    self.movieFileOutput = [[AVCaptureMovieFileOutput alloc] init];
-    [_captureSession addOutput:_movieFileOutput];
-    
-    // Setup the still image file output
-    AVCaptureStillImageOutput *newStillImageOutput = [[AVCaptureStillImageOutput alloc] init];
-    NSDictionary *outputSettings = [[NSDictionary alloc] initWithObjectsAndKeys:
-                                    AVVideoCodecJPEG, AVVideoCodecKey,
-                                    nil];
-    [newStillImageOutput setOutputSettings:outputSettings];
-    
-    [self setStillImageOutput:newStillImageOutput];
-
-    
-    //preset
-    if(_isPhoto) _captureSession.sessionPreset = AVCaptureSessionPresetPhoto;
-    else _captureSession.sessionPreset = AVCaptureSessionPresetHigh;
-    
-    if ([_captureSession canAddOutput:newStillImageOutput]) {
-        [_captureSession addOutput:newStillImageOutput];
+    if ([self.captureSession canAddInput:_videoDeviceInput]) {
+        [self.captureSession addInput:_videoDeviceInput];
+        self.preViewLayer.connection.videoOrientation = AVCaptureVideoOrientationPortrait;
     }
-
-    //preview layer------------------
-    self.preViewLayer = [AVCaptureVideoPreviewLayer layerWithSession:_captureSession];
-    _preViewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
     
-    [_captureSession startRunning];
+    // add audio if video is enabled
+    if (self.isPhoto == NO) {
+        AVCaptureDeviceInput *audioDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio] error:nil];
+        
+        if([self.captureSession canAddInput:audioDeviceInput]) {
+            [self.captureSession addInput:audioDeviceInput];
+        }
+        
+        //output
+        _movieFileOutput = [[AVCaptureMovieFileOutput alloc] init];
+        [_movieFileOutput setMovieFragmentInterval:kCMTimeInvalid];
+        
+        if([self.captureSession canAddOutput:_movieFileOutput]) {
+            [self.captureSession addOutput:_movieFileOutput];
+        }
+    }
+    
+    // image output
+    self.stillImageOutput = [[AVCaptureStillImageOutput alloc] init];
+    NSDictionary *outputSettings = [[NSDictionary alloc] initWithObjectsAndKeys: AVVideoCodecJPEG, AVVideoCodecKey, nil];
+    [self.stillImageOutput setOutputSettings:outputSettings];
+    [self.captureSession addOutput:self.stillImageOutput];
+    
+    //if we had disabled the connection on capture, re-enable it
+    if (![self.preViewLayer.connection isEnabled]) {
+        [self.preViewLayer.connection setEnabled:YES];
+    }
     
     UIPinchGestureRecognizer *guester = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(handlePinchGesture:)];
     guester.delegate = self;
-    [_preview addGestureRecognizer:guester];
+    [self.preview addGestureRecognizer:guester];
     
+    [self.captureSession startRunning];
 }
 
 - (void)startCountDurTimer
@@ -175,14 +189,14 @@
 
 - (void)outMediaFile:(NSURL*)filePath
 {
- 
+    
 }
 
 
 - (void)mergeAndExportVideosAtFileURLs:(NSArray *)fileURLArray
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-       
+        
         NSError *error = nil;
         
         CGSize renderSize = CGSizeMake(0, 0);
@@ -193,12 +207,12 @@
         
         CMTime totalDuration = kCMTimeZero;
         
-       
+        
         NSMutableArray *assetTrackArray = [[NSMutableArray alloc] init];
         NSMutableArray *assetArray = [[NSMutableArray alloc] init];
         for (NSURL *fileURL in fileURLArray) {
             AVAsset *asset = [AVAsset assetWithURL:fileURL];
-
+            
             if (!asset) {
                 continue;
             }
@@ -215,7 +229,7 @@
         CGFloat renderW = MIN(renderSize.width, renderSize.height);
         
         for (int i = 0; i < [assetArray count] && i < [assetTrackArray count]; i++) {
-          
+            
             
             AVAsset *asset = (AVAsset*)[assetArray objectAtIndex:i];
             AVAssetTrack *assetTrack = [assetTrackArray objectAtIndex:i];
@@ -382,31 +396,31 @@
 
 - (void)focusWithMode:(AVCaptureFocusMode)focusMode exposeWithMode:(AVCaptureExposureMode)exposureMode atDevicePoint:(CGPoint)point monitorSubjectAreaChange:(BOOL)monitorSubjectAreaChange {
     //    NSLog(@"focus point: %f %f", point.x, point.y);
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-		AVCaptureDevice *device = [_videoDeviceInput device];
-		NSError *error = nil;
-		if ([device lockForConfiguration:&error]) {
-			if ([device isFocusPointOfInterestSupported]) {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        AVCaptureDevice *device = [_videoDeviceInput device];
+        NSError *error = nil;
+        if ([device lockForConfiguration:&error]) {
+            if ([device isFocusPointOfInterestSupported]) {
                 [device setFocusPointOfInterest:point];
             }
             
             if ([device isFocusModeSupported:focusMode]) {
-				[device setFocusMode:focusMode];
-			}
+                [device setFocusMode:focusMode];
+            }
             
-			if ([device isExposurePointOfInterestSupported]) {
+            if ([device isExposurePointOfInterestSupported]) {
                 [device setExposurePointOfInterest:point];
             }
             
             if ([device isExposureModeSupported:exposureMode]) {
-				[device setExposureMode:exposureMode];
-			}
+                [device setExposureMode:exposureMode];
+            }
             
-			[device setSubjectAreaChangeMonitoringEnabled:monitorSubjectAreaChange];
-			[device unlockForConfiguration];
-		} else {
+            [device setSubjectAreaChangeMonitoringEnabled:monitorSubjectAreaChange];
+            [device unlockForConfiguration];
+        } else {
         }
-	});
+    });
 }
 
 
@@ -609,66 +623,33 @@
 
 - (void) captureStillImage
 {
-    
-//    AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-    
-//    if ([device hasTorch] && _flashOn)
-//    {
-//        [device lockForConfiguration:nil];
-//        [device setTorchMode:AVCaptureTorchModeOn];  // use AVCaptureTorchModeOff to turn off
-//        [device unlockForConfiguration];
-//    }
-//    
-    AVCaptureConnection *stillImageConnection = [SBCaptureConnection connectionWithMediaType:AVMediaTypeVideo fromConnections:[[self stillImageOutput] connections]];
+    AVCaptureConnection *stillImageConnection = [SBCaptureConnection connectionWithMediaType:AVMediaTypeVideo
+                                                                             fromConnections:self.stillImageOutput.connections];
+    [stillImageConnection setVideoOrientation:AVCaptureVideoOrientationPortrait];
     [stillImageConnection setVideoScaleAndCropFactor:effectiveScale];
     
-    if ([stillImageConnection isVideoOrientationSupported])
-        [stillImageConnection setVideoOrientation:AVCaptureVideoOrientationPortrait];
-    
-    [[self stillImageOutput] captureStillImageAsynchronouslyFromConnection:stillImageConnection
-                                                         completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error) {
-                                                             
-                                                             ALAssetsLibraryWriteImageCompletionBlock completionBlock = ^(NSURL *assetURL, NSError *error) {
-                                                                 if (error) {
-                                                                     if ([[self delegate] respondsToSelector:@selector(captureManager:didFailWithError:)]) {
-                                                                         [[self delegate] captureManager:self didFailWithError:error];
-                                                                     }
-                                                                 }
-                                                                 else
-                                                                 {
-                                                                     
-                                                                     NSLog(@"%@",assetURL);
-                                                                 }
-                                                             };
-                                                             
-                                                             if (imageDataSampleBuffer != NULL)
-                                                             {
-                                                                 NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
-                                                                 
-                                                                 UIImage *image = [[UIImage alloc] initWithData:imageData];
-                                                                 
-                                                                 if ([[self delegate] respondsToSelector:@selector(captureManagerStillImageCaptured:image:)]) {
-                                                                     
-                                                                     UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
-                                                                     [[self delegate] captureManagerStillImageCaptured:self image:image];
-                                                                     
-                                                                 }
-                                                                 
-                                                                 
-                                                                 
-                                                             }
-                                                             else
-                                                                 completionBlock(nil, error);
-                                                             
-															                                              
-                                }];
-    
-    
+    [self.stillImageOutput captureStillImageAsynchronouslyFromConnection:stillImageConnection
+                                                       completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error)
+     {
+         
+         if (imageDataSampleBuffer != NULL) {
+             NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
+             UIImage *image = [[UIImage alloc] initWithData:imageData];
+             if ([[self delegate] respondsToSelector:@selector(captureManagerStillImageCaptured:image:)]) {
+                 [[self delegate] captureManagerStillImageCaptured:self image:image];
+             }
+         }
+         else {
+             if ([[self delegate] respondsToSelector:@selector(captureManager:didFailWithError:)]) {
+                 [[self delegate] captureManager:self didFailWithError:error];
+             }
+         }
+     }];
 }
 
 - (BOOL)isRecording
 {
-   return [[self movieFileOutput] isRecording];
+    return [[self movieFileOutput] isRecording];
 }
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
@@ -718,6 +699,24 @@
 - (BOOL) isAdjustingFocus
 {
     return [self.videoDeviceInput.device isAdjustingFocus];
+}
+
+- (UIImage *)cropImage:(UIImage *)image usingPreviewLayer:(AVCaptureVideoPreviewLayer *)previewLayer
+{
+    CGRect previewBounds = previewLayer.bounds;
+    CGRect outputRect = [previewLayer metadataOutputRectOfInterestForRect:previewBounds];
+    
+    CGImageRef takenCGImage = image.CGImage;
+    size_t width = CGImageGetWidth(takenCGImage);
+    size_t height = CGImageGetHeight(takenCGImage);
+    CGRect cropRect = CGRectMake(outputRect.origin.x * width, outputRect.origin.y * height,
+                                 outputRect.size.width * width, outputRect.size.height * height);
+    
+    CGImageRef cropCGImage = CGImageCreateWithImageInRect(takenCGImage, cropRect);
+    image = [UIImage imageWithCGImage:cropCGImage scale:1 orientation:image.imageOrientation];
+    CGImageRelease(cropCGImage);
+    
+    return image;
 }
 
 @end

@@ -76,7 +76,7 @@
     imagePicker.allowsEditing = YES;
     
     [self performSelectorOnMainThread:@selector(initRecorder) withObject:nil waitUntilDone:NO];
-   
+    
     [self initTopBar];
     [self initPhotoControls];
     [self initVideoControls];
@@ -84,11 +84,9 @@
     [SBCaptureToolKit createVideoFolderIfNotExist];
     [self initProgressBar];
     
-    
-    
-//    CGRect frame = imageViewForPreview.frame;
-//    frame = CGRectMake(0, 0, IS_IPAD?768: 320, IS_IPAD?768: 320);
-    imageViewForPreview.frame = CGRectMake(0, 0, IS_IPAD?768: 320, IS_IPAD?768: 320);
+    //    CGRect frame = imageViewForPreview.frame;
+    //    frame = CGRectMake(0, 0, IS_IPAD?768: 320, IS_IPAD?768: 320);
+    //    imageViewForPreview.frame = CGRectMake(0, 0, IS_IPAD?768: 320, IS_IPAD?768: 320);
     // for photo editing
     scrollViewForPreview.delegate = self;
     
@@ -102,16 +100,7 @@
     twoFingerTapRecognizer.numberOfTouchesRequired = 2;
     [scrollViewForPreview addGestureRecognizer:twoFingerTapRecognizer];
     
-   // [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(drawFocusView) userInfo:nil repeats:NO];
-
-    
-   
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated
-    
+    // [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(drawFocusView) userInfo:nil repeats:NO];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -120,6 +109,11 @@
     
     [self refreshScreen];
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated
 }
 
 - (void)drawFocusView
@@ -142,7 +136,7 @@
     CGRect frame = imageViewForPreview.frame;
     frame = CGRectMake(0, 0, IS_IPAD?768: 320,IS_IPAD?768: 320);
     imageViewForPreview.frame = frame;
-
+    
     scrollViewForPreview.zoomScale = 1.0;
     scrollViewForPreview.minimumZoomScale = 1.0;
     scrollViewForPreview.maximumZoomScale = 10.0f;
@@ -185,11 +179,9 @@
     imageViewForPreview.frame = contentsFrame;
 }
 
-- (UIImage*)cropImageFromScroll:(UIScrollView *)scrollview
-{
-    
+- (UIImage*)cropImageFromScroll:(UIScrollView *)scrollview {
     CGSize pageSize = scrollview.frame.size;
-    UIGraphicsBeginImageContext(pageSize);
+    UIGraphicsBeginImageContextWithOptions(pageSize, NO, 0);
     CGContextRef resizedContext = UIGraphicsGetCurrentContext();
     int offsetX = -1*scrollview.contentOffset.x;
     int offsetY = -1*scrollview.contentOffset.y;
@@ -198,7 +190,6 @@
     UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     UIImageWriteToSavedPhotosAlbum(viewImage, nil, nil, nil);
-    
     return viewImage;
 }
 
@@ -271,7 +262,7 @@
     [btnForFront setImage:[UIImage imageNamed:@"record_lensflip_highlighted.png"] forState:UIControlStateSelected];
     [btnForFront setImage:[UIImage imageNamed:@"record_lensflip_highlighted.png"] forState:UIControlStateHighlighted];
     btnForFront.enabled = [_recorder isFrontCameraSupported];
-
+    
     //Flash button
     
     [btnForFlash setImage:[UIImage imageNamed:@"record_flashlight_normal.png"] forState:UIControlStateNormal];
@@ -279,7 +270,7 @@
     [btnForFlash setImage:[UIImage imageNamed:@"record_flashlight_highlighted.png"] forState:UIControlStateHighlighted];
     [btnForFlash setImage:[UIImage imageNamed:@"record_flashlight_highlighted.png"] forState:UIControlStateSelected];
     btnForFlash.enabled = _recorder.isTorchSupported;
-
+    
 }
 
 - (void)initPhotoControls {
@@ -296,7 +287,7 @@
         case kTypeCaptureAll:
         {
             [btnForVideo setHidden:YES];
-
+            
         }
             break;
         case kTypeCaptureVideo:
@@ -359,7 +350,7 @@
                         
                         UIImageView *buttonImgView = [[UIImageView alloc] initWithFrame:btnForAlbum.bounds];
                         
-                        [buttonImgView setContentMode:UIViewContentModeScaleToFill];
+                        [buttonImgView setContentMode:UIViewContentModeScaleAspectFill];
                         [buttonImgView setImage:img];
                         
                         
@@ -384,7 +375,7 @@
         
     }];
     
-
+    
 }
 
 - (void)initVideoControls {
@@ -401,11 +392,11 @@
         [lblForTimer setHidden:NO];
     }
     [OMGlobal setCircleView:imageViewForRedTimer borderColor:nil];
-
+    
     
     //ok Button
     
-
+    
     btnForOk.enabled = NO;
     
     [btnForOk setBackgroundImage:[UIImage imageNamed:@"record_icon_hook_normal_bg.png"] forState:UIControlStateNormal];
@@ -431,21 +422,16 @@
 }
 
 - (void)initRecorder {
-    
     self.recorder = [[SBVideoRecorder alloc] initWithView:viewForCamera];
-    _recorder.delegate = self;
-    _recorder.preViewLayer.frame = viewForCamera.bounds;
-    
-    _recorder.isPhoto = captureOption == kTypeCaptureVideo? NO:YES;
-    
-    [_recorder focusInPoint:viewForCamera.center];
-    [viewForCamera.layer addSublayer:_recorder.preViewLayer];
+    self.recorder.isPhoto = captureOption == kTypeCaptureVideo? NO:YES;
+    self.recorder.delegate = self;
+    [self.recorder focusInPoint:viewForPreview.center];
     
     btnForFront.enabled = [_recorder isFrontCameraSupported];
     btnForFlash.enabled = _recorder.isTorchSupported;
 }
 
-- (void)initFocuseView{
+- (void)initFocuseView {
     
     //focus rect view
     self.focusRectView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 90, 90)];
@@ -458,7 +444,7 @@
     
     UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(setFocuseTap:)];
     [viewForPreview addGestureRecognizer:singleTap];
-
+    
 }
 
 - (void)setFocuseTap:(UITapGestureRecognizer*)recognizer
@@ -516,10 +502,10 @@
                                      [btnForClose setImage:[UIImage imageNamed:@"btn_back_profile"] forState:UIControlStateNormal];
                                      
                                  }
-
+                                 
                              }
                              
-                            
+                             
                          }];
         
     }
@@ -528,7 +514,7 @@
 //  Hide/Show Video Control Views
 
 - (void)hideVideoControllView:(BOOL)_bool {
-
+    
     if (_bool) {
         constraintForVideoControl.constant = defaultValue;
         [self updateLayoutWithAnimate:YES showProgress:_bool];
@@ -541,7 +527,7 @@
 // Take a Photo
 - (void)capturePhoto {
     
-    [_recorder captureStillImage];    
+    [_recorder captureStillImage];
     [MBProgressHUD showMessag:@"Processing..." toView:self.view];
 }
 
@@ -562,34 +548,34 @@
 #pragma mark - Touch Event
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     
-//    if (_isProcessingData) {
-//        return;
-//    }
-//    
-//    if (btnForDelete.style == DeleteButtonStyleDelete) {
-//        [btnForDelete setButtonStyle:DeleteButtonStyleNormal];
-//        [_progressBar setLastProgressToStyle:ProgressBarProgressStyleNormal];
-//        return;
-//    }
-//    
-   // UITouch *touch = [touches anyObject];
+    //    if (_isProcessingData) {
+    //        return;
+    //    }
+    //
+    //    if (btnForDelete.style == DeleteButtonStyleDelete) {
+    //        [btnForDelete setButtonStyle:DeleteButtonStyleNormal];
+    //        [_progressBar setLastProgressToStyle:ProgressBarProgressStyleNormal];
+    //        return;
+    //    }
+    //
+    // UITouch *touch = [touches anyObject];
     
-   // CGPoint touchPoint = [touch locationInView:viewForPreview];
-//    if (CGRectContainsPoint(btnForRecord.frame, touchPoint)) {
-//        NSString *filePath = [SBCaptureToolKit getVideoSaveFilePathString];
-//        [_recorder startRecordingToOutputFileURL:[NSURL fileURLWithPath:filePath]];
-//    }
-//    
-   // touchPoint = [touch locationInView:self.view];
-   // if (CGRectContainsPoint(_recorder.preViewLayer.frame, touchPoint)) {
-   //     [self showFocusRectAtPoint:touchPoint];
-   //     [_recorder focusInPoint:touchPoint];
-   // }
+    // CGPoint touchPoint = [touch locationInView:viewForPreview];
+    //    if (CGRectContainsPoint(btnForRecord.frame, touchPoint)) {
+    //        NSString *filePath = [SBCaptureToolKit getVideoSaveFilePathString];
+    //        [_recorder startRecordingToOutputFileURL:[NSURL fileURLWithPath:filePath]];
+    //    }
+    //
+    // touchPoint = [touch locationInView:self.view];
+    // if (CGRectContainsPoint(_recorder.preViewLayer.frame, touchPoint)) {
+    //     [self showFocusRectAtPoint:touchPoint];
+    //     [_recorder focusInPoint:touchPoint];
+    // }
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-
+    
 }
 //When Tap Delete Button
 
@@ -615,7 +601,7 @@
     
     [_progressBar stopShining];
     [_progressBar setLastProgressToWidth:0];
-
+    
     if (_recorder.isRecording) {
         [_recorder stopCurrentVideoRecording];
     }
@@ -663,7 +649,7 @@
     [postEventVC setCurObj:curObj];
     
     [self.navigationController pushViewController:postEventVC animated:YES];
-
+    
 }
 
 - (void)showPreviewForVideo:(NSURL *)_url
@@ -699,7 +685,7 @@
     
     
     [MBProgressHUD showMessag:@"Processing..." toView:self.view];
-
+    
     [picker dismissViewControllerAnimated:YES completion:^{
         
         [viewForCamera setHidden:YES];
@@ -720,7 +706,7 @@
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
     [picker dismissViewControllerAnimated:YES completion:^{
         [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
-
+        
     }];
 }
 #pragma mark - SBVideoRecorderDelegate
@@ -733,14 +719,14 @@
 }
 
 - (void)captureManagerStillImageCaptured:(SBVideoRecorder *)videoRecorder image:(UIImage *)image {
-
+    
     
     self.isProcessingData = NO;
     
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     
     [_recorder stopCurrentVideoRecording];
-
+    
     // Hide the previewlayer when get image or video for new Event/Post
     //[_recorder.preViewLayer setHidden:YES];
     [viewForCamera setHidden:YES];
@@ -753,7 +739,7 @@
     
     btnForVideo.enabled = YES;
     btnForVideo.hidden = NO;
-
+    
 }
 
 //Record Video
@@ -781,7 +767,7 @@
         
         [_progressBar stopShining];
         [_progressBar setLastProgressToWidth:0];
-
+        
         if(videoDuration > MIN_VIDEO_DUR && videoDuration < MAX_VIDEO_DUR)
         {
             if(_recorder.isRecording)
@@ -815,14 +801,14 @@
     
     [self.progressBar addProgressView];
     
-//  [btnForDelete setButtonStyle:DeleteButtonStyleNormal];
+    //  [btnForDelete setButtonStyle:DeleteButtonStyleNormal];
     
     lblForTimer.text = [NSString stringWithFormat:@"%02d:%02d",min,second];
     imageViewForRedTimer.hidden = NO;
     [self performSelector:@selector(incrementTime:) withObject:nil afterDelay:1.0];
     [self performSelector:@selector(animateRecordView) withObject:nil afterDelay:0.5];
     btnForRecord.enabled = YES;
-
+    
 }
 
 #pragma mark ---------rotate(only when this controller is presented, the code below effect)-------------
@@ -859,7 +845,7 @@
 - (void)showFocusRectAtPoint:(CGPoint)point
 {
     //if(_focusRectView.alpha != 0.0f) return;
-        
+    
     _focusRectView.alpha = 1.0f;
     _focusRectView.center = point;
     _focusRectView.transform = CGAffineTransformMakeScale(1.5f, 1.5f);
@@ -905,8 +891,8 @@
                         isPhotoMode = !isPhotoMode;
                         [self hideVideoControllView:isPhotoMode];
                     }
-
-
+                    
+                    
                 }
                     break;
                 case kTypeCapturePhoto:
@@ -925,8 +911,8 @@
                 default:
                     break;
             }
-           
-
+            
+            
         }
             break;
         case TAG_TOP_BUTTON + 1:
@@ -998,7 +984,7 @@
         case TAG_PHOTO_BUTTON + 1:
         {
             //Show Album View Controller
-
+            
             imagePicker.navigationBar.tintColor = [UIColor whiteColor];
             [self.navigationController presentViewController:imagePicker animated:YES completion:nil];
         }
