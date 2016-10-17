@@ -768,9 +768,7 @@
             PFObject *eventObj = currentObj[@"targetEvent"];
             arrEventTagFriends = eventObj[@"TagFriends"];
             if(![eventUser.objectId isEqualToString:USER.objectId])
-            {
-                [arrEventTagFriends addObject:eventUser.objectId];
-                if ([arrEventTagFriends containsObject:USER.objectId]) {
+            {                if ([arrEventTagFriends containsObject:USER.objectId]) {
                     [arrEventTagFriends removeObject:USER.objectId];
                 }
             }

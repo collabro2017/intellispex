@@ -275,26 +275,32 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-//    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+    
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex{
+    
     picker.delegate = self;
     picker.allowsEditing = YES;
     switch (buttonIndex) {
         case 0:
         {
-            
-            picker.sourceType = UIImagePickerControllerSourceTypeCamera;
-            picker.cameraCaptureMode = UIImagePickerControllerCameraCaptureModePhoto;
-            picker.cameraDevice = UIImagePickerControllerCameraDeviceRear;
-            [self presentViewController:picker animated:YES completion:nil];
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+                picker.cameraCaptureMode = UIImagePickerControllerCameraCaptureModePhoto;
+                picker.cameraDevice = UIImagePickerControllerCameraDeviceRear;
+                [self presentViewController:picker animated:YES completion:nil];
+                
+            }];
 
-            
-            
             break;
         }
         case 1:
         {
-            picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-            [self presentViewController:picker animated:YES completion:nil];
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                picker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
+                [self presentViewController:picker animated:YES completion:nil];
+            }];
 
             break;
         }
