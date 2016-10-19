@@ -47,6 +47,7 @@
 #define kTag_Share1             8000
 #define kTag_EventShare         2000
 #define kTag_EventShareGuest    2001
+#define kTag_AddMediaAfter      4001
 
 #define kTag_TextShare          9000
 #define kTag_TextShare1         10000
@@ -1328,14 +1329,17 @@
     PFUser *user = (PFUser *)_obj[@"user"];
     
     if ([user.objectId isEqualToString:USER.objectId]) {
-        shareAction1 = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Share via Email" otherButtonTitles:@"Facebook",@"Twitter",@"Instagram",@"Add to Folder",  @"Export to PDF",@"Select Items for New Event", @"Delete",status, @"Report", nil];
+        shareAction1 = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Share via Email" otherButtonTitles:@"Facebook", @"Twitter", @"Instagram",
+                        @"Add Media After", @"Add to Folder", @"Export to PDF", @"Select Items for New Event",
+                        @"Delete", status, @"Report", nil];
         
         [shareAction1 showInView:self.view];
         shareAction1.tag = kTag_EventShare;
     }
     else
     {
-        shareAction1 = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Share via Email" otherButtonTitles:@"Facebook",@"Twitter",@"Instagram", @"Export to PDF", @"Select Items for New Event", @"Report", nil];
+        shareAction1 = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Share via Email" otherButtonTitles:@"Facebook", @"Twitter", @"Instagram",
+                        @"Export to PDF", @"Select Items for New Event", @"Report", nil];
         
         [shareAction1 showInView:self.view];
         shareAction1.tag = kTag_EventShareGuest;
@@ -1406,7 +1410,8 @@
     
     if ([user.objectId isEqualToString:USER.objectId] || authFlag) {
         
-        shareAction1 = [[UIActionSheet alloc] initWithTitle:@"More option" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Save to Camera roll" otherButtonTitles:@"Use this as thumbnail", @"Delete", @"Report", nil];
+        shareAction1 = [[UIActionSheet alloc] initWithTitle:@"More option" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Save to Camera roll" otherButtonTitles:@"Add Media After", @"Use this as thumbnail",
+                        @"Delete", @"Report", nil];
         [shareAction1 setTag:kTag_Share];
         [shareAction1 showInView:self.view];
 
@@ -1659,15 +1664,15 @@
                 case 0:
                 {
                     [self shareViaEmail];
-                    
                 }
                     break;
+                    
                 case 1:
                 {
                     [self shareViaFacebook];
-                    
                 }
                     break;
+                    
                 case 2:
                 {
                     [self shareViaTwitter];
@@ -1683,15 +1688,35 @@
                     
                 case 4:
                 {
+                    [self performSelector:@selector(showAddMediaAfter) withObject:nil afterDelay:0.1f];
+                }
+                    break;
+                    
+                case 5:
+                {
                     [self tagFolders];
                 }
                     break;
+                    
+                case 6:
+                {
+                    [self performSelector:@selector(exportToPDF) withObject:nil afterDelay:0.1f];
+                }
+                    break;
+                    
                 case 7:
+                {
+                    [self duplicateToNewEvent];
+                }
+                    break;
+                    
+                case 8:
                 {
                     [self deleteEvent];
                 }
                     break;
-                case 8:
+                    
+                case 9:
                 {
                     PFUser *user = (PFUser *)currentObject[@"user"];
                     if ([user.objectId isEqualToString:USER.objectId]) {
@@ -1711,29 +1736,18 @@
                     else
                     {
                         [MBProgressHUD showMessag:@"Progressing..." toView:self.view];
-                        
                         [NSTimer scheduledTimerWithTimeInterval:2.0f target:self selector:@selector(reportEvent) userInfo:nil repeats:NO];
                     }
                     
                 }
                     break;
-                case 5:
-                {
-                    [self performSelector:@selector(exportToPDF) withObject:nil afterDelay:0.1f];
-                    //[self exportToPDF];
                     
-                }
-                    break;
-                case 6:
-                {
-                    [self duplicateToNewEvent];
-                }
-                    break;
-                case 9:
+                case 10:
                 {
                     [MBProgressHUD showMessag:@"Progressing..." toView:self.view];
                     [NSTimer scheduledTimerWithTimeInterval:2.0f target:self selector:@selector(reportEvent) userInfo:nil repeats:NO];
                 }
+                    
                 default:
                     break;
             }
@@ -1806,17 +1820,22 @@
                     break;
                 case 1:
                 {
-                    [self useThisAsThumbnail];
+                    [self performSelector:@selector(showAddMediaAfter) withObject:nil afterDelay:0.1f];
                 }
                     break;
                 case 2:
+                {
+                    [self useThisAsThumbnail];
+                }
+                    break;
+                case 3:
                 {
                     [self deleteFeed];
                     
                 }
                     break;
                     
-                case 3:
+                case 4:
                 {
                     [MBProgressHUD showMessag:@"Progressing..." toView:self.view];
                     
@@ -1901,6 +1920,53 @@
                     break;
             }
         }
+            
+        case kTag_AddMediaAfter:
+        {
+            switch (buttonIndex) {
+                case 0: //Text
+                {
+                    if ([currentObject[@"openStatus"] intValue]) {
+                        [TABController newPostAction:kTypeUploadPost mediaKind:kTypeCaptureText currentObject:currentObject];
+                    } else {
+                        [OMGlobal showAlertTips:@"Oops!" title:@"This event was closed."];
+                    }
+                }
+                    break;
+                case 1: //Image
+                {
+                    if ([currentObject[@"openStatus"] intValue]) {
+                        [TABController newPostAction:kTypeUploadPost mediaKind:kTypeCapturePhoto currentObject:currentObject];
+                    } else {
+                        [OMGlobal showAlertTips:@"Oops!" title:@"This event was closed."];
+                    }
+                }
+                    break;
+                case 2: //Audio
+                {
+                    if ([currentObject[@"openStatus"] intValue]) {
+                        [TABController postAudio:kTypeUploadPost mediaKind:kTypeCaptureAudio
+                                   currentObject:currentObject audioData:m_audioData];
+                    } else {
+                        [OMGlobal showAlertTips:@"Oops!" title:@"This event was closed."];
+                    }
+                }
+                    break;
+                case 3: //Video
+                {
+                    if ([currentObject[@"openStatus"] intValue]) {
+                        [TABController newPostAction:kTypeUploadPost mediaKind:kTypeCaptureVideo currentObject:currentObject];
+                    } else {
+                        [OMGlobal showAlertTips:@"Oops!" title:@"This event was closed."];
+                    }
+                }
+                    break;
+                default:
+                    break;
+            }
+        }
+            break;
+            
         default:
             break;
     }
@@ -2306,6 +2372,14 @@
         [OMGlobal showAlertTips:@"Please install Instagram app" title:nil];
     }
     
+}
+
+//Add Media After
+- (void)showAddMediaAfter {
+    UIActionSheet* shareAction = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Text", @"Image", @"Audio", @"Video", nil];
+    
+    [shareAction showInView:self.view];
+    shareAction.tag = kTag_AddMediaAfter;
 }
 
 - (void)tagFolders
