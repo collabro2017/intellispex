@@ -14,16 +14,18 @@
 
 - (void)awakeFromNib {
     // Initialization code
+    [super awakeFromNib];
+}
+
+- (void)drawRect:(CGRect)rect {
+    [super drawRect:rect];
+    
     [OMGlobal setCircleView:imageViewForAvatar borderColor:nil];
     
     lblForTitle.delegate = self;
     lblForDes.delegate = self;
-    
-    constraintForHeight.constant = 100;
-    
-    
-    [self.superview layoutIfNeeded];
 }
+
 - (IBAction)onCheckBtn:(id)sender {
     
     UIButton* tmp = (UIButton*)sender;
@@ -185,9 +187,10 @@
     [lblForTime setTextColor:HEXCOLOR(0x6F7179FF)];
     
     [lblForTitle setText:currentObj[@"title"]];
-    constraintForHeight.constant = [OMGlobal heightForCellWithPost:currentObj[@"description"]];
+    constraintForTitleHeight.constant = [OMGlobal heightForCellWithPost:currentObj[@"title"]];
     
     [lblForDes setText:currentObj[@"description"]];
+    constraintForHeight.constant = [OMGlobal heightForCellWithPost:currentObj[@"description"]];
     
     // for badge processing
     if(curEventIndex  >= 0)

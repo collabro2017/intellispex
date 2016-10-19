@@ -188,7 +188,7 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="523"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="h5l-Ah-obu">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="h5l-Ah-obu">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -857,7 +857,7 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="523"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="Ndr-Up-bRu">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Ndr-Up-bRu">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -2340,7 +2340,7 @@
                 <navigationController id="3vM-mn-W0l" sceneMemberID="viewController">
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="518"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="Kpf-6g-V4e">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Kpf-6g-V4e">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -2618,7 +2618,7 @@
                 <navigationController id="vEx-gy-TDP" sceneMemberID="viewController">
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="523"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="qHk-Os-jfg">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="qHk-Os-jfg">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -3435,7 +3435,7 @@
                                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Title" translatesAutoresizingMaskIntoConstraints="NO" id="Ax7-ni-AgB">
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="38" id="Eje-La-cq2"/>
-                                                        <constraint firstAttribute="width" constant="200" id="FoT-2J-LM1"/>
+                                                        <constraint firstAttribute="width" constant="262" id="FoT-2J-LM1"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -3589,7 +3589,7 @@
                                                 <constraint firstItem="ybL-oi-Pge" firstAttribute="leading" secondItem="fZK-2d-vhX" secondAttribute="leadingMargin" constant="42" id="WT2-Sp-evA"/>
                                                 <constraint firstItem="ROr-TV-YWL" firstAttribute="leading" secondItem="C9P-tX-fDC" secondAttribute="trailing" constant="12" id="ZcO-SB-ura"/>
                                                 <constraint firstItem="w2q-sL-5if" firstAttribute="top" secondItem="fZK-2d-vhX" secondAttribute="top" id="akP-HO-sgz"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="Ax7-ni-AgB" secondAttribute="trailing" constant="62" id="bTB-So-KfX"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="Ax7-ni-AgB" secondAttribute="trailing" id="bTB-So-KfX"/>
                                                 <constraint firstItem="jSf-x8-PhF" firstAttribute="top" secondItem="F0e-u7-HJ3" secondAttribute="bottom" constant="40" id="bnt-Nq-3yL"/>
                                                 <constraint firstItem="ROr-TV-YWL" firstAttribute="top" secondItem="fZK-2d-vhX" secondAttribute="topMargin" constant="3" id="dUl-IE-v2A"/>
                                                 <constraint firstItem="Pnx-VZ-P0G" firstAttribute="leading" secondItem="fZK-2d-vhX" secondAttribute="leadingMargin" constant="-8" id="dj6-0w-oFf"/>
@@ -4006,7 +4006,7 @@
                 <navigationController id="SgL-ab-oQZ" sceneMemberID="viewController">
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="523"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="iRT-5X-f0f">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="iRT-5X-f0f">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -4854,7 +4854,7 @@
         <scene sceneID="goF-QV-8D4">
             <objects>
                 <navigationController id="ypM-8d-ArT" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="j16-Fn-jFd">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="j16-Fn-jFd">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

@@ -1266,7 +1266,7 @@
         {
             if (indexPath.row == 0) {
                 
-                return [OMGlobal heightForCellWithPost:tempObj[@"title"]] + 130;
+                return [OMGlobal heightForCellWithPost:tempObj[@"title"]] + [OMGlobal heightForCellWithPost:tempObj[@"description"]] + 80;
             }
             else if (indexPath.row > 0 && indexPath.row < [self cellCount:tempObj])
             {
