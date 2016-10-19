@@ -10,8 +10,14 @@
 
 @implementation OMDetailHeaderCell
 @synthesize user,delegate;
+
 - (void)awakeFromNib {
     // Initialization code
+    [super awakeFromNib];
+}
+
+- (void)drawRect:(CGRect)rect {
+    [super drawRect:rect];
     
     [OMGlobal setCircleView:imageViewForAvatar borderColor:[UIColor whiteColor]];
     
@@ -19,7 +25,6 @@
     gesture.numberOfTapsRequired = 1;
     
     [imageViewForAvatar addGestureRecognizer:gesture];
-
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

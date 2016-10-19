@@ -22,7 +22,11 @@
 - (void)awakeFromNib
 {
     // Initialization code
-    
+    [super awakeFromNib];
+}
+
+- (void)drawRect:(CGRect)rect {
+    [super drawRect:rect];
     [OMGlobal setCircleView:imageViewForAvatar borderColor:nil];
 }
 

@@ -219,10 +219,8 @@
     [autoRefreshTimer invalidate];
     autoRefreshTimer = nil;
     NSLog(@"Auto Refresh timer - stoped!");
-    
-    
-    
 }
+
 - (void)firstViewLoad {
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
@@ -242,9 +240,7 @@
         [btnForNetState setImage:btnImage forState:UIControlStateNormal];
     }
     
-    
     autoRefreshTimer = [NSTimer scheduledTimerWithTimeInterval: 10.0 target: self selector: @selector(callAfterSixtySecond:) userInfo: nil repeats: YES];
-   
 }
 
 - (void)didReceiveMemoryWarning
@@ -1068,7 +1064,7 @@
             }
             
             [cell setDelegate:self];
-            [cell newsetUser:objectId comment:[currentObject[@"commentsArray"] objectAtIndex:indexPath.row - 2] curObj:currentObject commentType:kTypeEventComment];
+            [cell newsetUser:objectId comment:[currentObject[@"commentsArray"] objectAtIndex:indexPath.row - 2] curObj:currentObject commentType:kTypeEventComment number:indexPath.row - 2];
             
             return cell;
         }

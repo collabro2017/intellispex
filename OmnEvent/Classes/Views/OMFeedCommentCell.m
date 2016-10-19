@@ -16,9 +16,12 @@
 
 - (void)awakeFromNib {
     // Initialization code
-    
+    [super awakeFromNib];
+}
+
+- (void)drawRect:(CGRect)rect {
+    [super drawRect:rect];
     [OMGlobal setCircleView:imageViewForProfile borderColor:nil];
-    
     lblForDes.delegate = self;
 }
 
@@ -139,14 +142,17 @@
         }
     }];
 }
+
 // for event
-- (void)newsetUser:(NSString *)user comment:(NSString *)_comment curObj:(PFObject *)_obj commentType:(NSInteger)curType
+- (void)newsetUser:(NSString *)user comment:(NSString *)_comment curObj:(PFObject *)_obj
+                                                                    commentType:(NSInteger)curType number:(NSUInteger)_number
 {
     [lblForDes sizeToFit];
     [lblForTime setHidden:YES];
     
-    //currentType = curType;
     currentType = kTypeEventComment;
+    comment_number = _number;
+    event_flag = YES;
     
     PFQuery *query = [PFUser query];
     [query whereKey:@"objectId" equalTo:user];
@@ -554,7 +560,7 @@
     }   
 }
 
-- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
     
     if (textField == lblForDes) {
         
