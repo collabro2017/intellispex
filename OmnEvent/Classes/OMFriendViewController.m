@@ -131,6 +131,12 @@
                 [arrForObjects addObjectsFromArray:tempArrForObjects];
                 [arrForFriends addObjectsFromArray:tempArrForFriends];
                 
+                //Apply Sorting
+                NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"username" ascending:YES
+                                                                        selector:@selector(caseInsensitiveCompare:)];
+                [arrForObjects sortUsingDescriptors:@[sort]];
+                [arrForFriends sortUsingDescriptors:@[sort]];
+                
                 [tblForFriend reloadData];
             }
         }
@@ -149,6 +155,7 @@
     
     [mainQ includeKey:@"FromUser"];
     [mainQ includeKey:@"ToUser"];
+    [mainQ orderByDescending:@"username"];
     
     [mainQ findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
      {
@@ -235,6 +242,12 @@
                  
                  [arrForObjects addObjectsFromArray:tempArrForObjects];
                  [arrForFriends addObjectsFromArray:tempArrForFriends];
+                 
+                 //Apply Sorting
+                 NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"username" ascending:YES
+                                                                         selector:@selector(caseInsensitiveCompare:)];
+                 [arrForObjects sortUsingDescriptors:@[sort]];
+                 [arrForFriends sortUsingDescriptors:@[sort]];
                  
                  [tblForFriend reloadData];
                  
@@ -386,6 +399,11 @@
                 }
             }
 
+            //Apply Sorting
+            NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"username" ascending:YES
+                                                                    selector:@selector(caseInsensitiveCompare:)];
+            [arrForPeople sortUsingDescriptors:@[sort]];
+            
             [tblForSearch reloadData];
         }
     }];
