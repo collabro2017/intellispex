@@ -10,7 +10,7 @@
 #import "Cells/OMCommentCell.h"
 #import "YFInputBar.h"
 #import "OMFeedOtherCommentCell.h"
-@interface OMCommentViewController ()<YFInputBarDelegate>
+@interface OMCommentViewController ()<YFInputBarDelegate, UITextFieldDelegate>
 {
     
     NSMutableArray *arrForComment;
@@ -72,6 +72,7 @@
     inputBar = [[YFInputBar alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT_ROTATED - 50, SCREEN_WIDTH_ROTATED, 50)];
     inputBar.backgroundColor = [UIColor colorWithRed:arc4random_uniform(255)/255.0f green:arc4random_uniform(255)/255.0f blue:arc4random_uniform(255)/255.0f alpha:1];
     inputBar.delegate = self;
+    inputBar.textField.delegate = self;
     inputBar.clearInputWhenSend = YES;
     inputBar.resignFirstResponderWhenSend = YES;    
     [self.view addSubview:inputBar];
@@ -119,6 +120,11 @@
             
         }
     }
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [inputBar.textField becomeFirstResponder];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -210,16 +216,15 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+#pragma mark - Delegate method of UITextField
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    if ([textField isEqual:inputBar.textField]) {
+        if (textField.text.length < MAX_COMMENT_LIMIT || [string isEqualToString:@""]) {
+            return YES;
+        }
+    }
+    return NO;
 }
-*/
 
 #pragma mark YFInput Bar Delegate
 
