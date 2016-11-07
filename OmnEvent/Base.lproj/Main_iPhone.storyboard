@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="mIQ-Ad-mgQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16B2555" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="mIQ-Ad-mgQ">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
@@ -188,7 +188,7 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="523"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="h5l-Ah-obu">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="h5l-Ah-obu">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -857,7 +857,7 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="523"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Ndr-Up-bRu">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="Ndr-Up-bRu">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -2340,7 +2340,7 @@
                 <navigationController id="3vM-mn-W0l" sceneMemberID="viewController">
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="518"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Kpf-6g-V4e">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="Kpf-6g-V4e">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -2618,7 +2618,7 @@
                 <navigationController id="vEx-gy-TDP" sceneMemberID="viewController">
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="523"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="qHk-Os-jfg">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="qHk-Os-jfg">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -2863,12 +2863,23 @@
                                             <action selector="changeModeAction:" destination="y7e-16-ruc" eventType="touchUpInside" id="x0K-zt-e1M"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pFq-Tf-bBW">
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="22" id="pUD-i5-RSi"/>
+                                            <constraint firstAttribute="width" constant="20" id="wxa-as-Mpz"/>
+                                        </constraints>
+                                        <state key="normal" image="btn-updown-arrow"/>
+                                        <connections>
+                                            <action selector="onBtnReverseActionSheetContentsTapped:" destination="y7e-16-ruc" eventType="touchUpInside" id="OwI-Bn-gzi"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstItem="gXE-DB-GFo" firstAttribute="top" secondItem="7Sj-sf-r6H" secondAttribute="top" constant="8" id="8S9-8v-f3r"/>
                                     <constraint firstItem="gXE-DB-GFo" firstAttribute="leading" secondItem="7Sj-sf-r6H" secondAttribute="leading" constant="13" id="CI9-Nz-eVo"/>
                                     <constraint firstAttribute="centerY" secondItem="u20-4n-9kr" secondAttribute="centerY" constant="-0.5" id="DgA-rS-dN5"/>
+                                    <constraint firstItem="pFq-Tf-bBW" firstAttribute="leading" secondItem="7Wf-TZ-Dvr" secondAttribute="trailing" constant="16" id="E0n-ds-sDN"/>
                                     <constraint firstItem="bAQ-hp-kod" firstAttribute="leading" secondItem="JR9-X7-tT8" secondAttribute="trailing" constant="15" id="ICS-cb-6Nd"/>
                                     <constraint firstItem="u20-4n-9kr" firstAttribute="centerY" secondItem="AvW-hm-ch0" secondAttribute="centerY" id="Lhg-DL-MMh"/>
                                     <constraint firstItem="45e-VB-yNq" firstAttribute="top" secondItem="7Sj-sf-r6H" secondAttribute="top" id="N6c-h0-S3l"/>
@@ -2882,6 +2893,7 @@
                                     <constraint firstAttribute="height" constant="35" id="nX5-ol-xAK"/>
                                     <constraint firstItem="7Wf-TZ-Dvr" firstAttribute="leading" secondItem="gXE-DB-GFo" secondAttribute="trailing" constant="16" id="ntZ-bI-r2x"/>
                                     <constraint firstAttribute="bottom" secondItem="45e-VB-yNq" secondAttribute="bottom" id="o2T-Eg-uIs"/>
+                                    <constraint firstItem="pFq-Tf-bBW" firstAttribute="top" secondItem="7Sj-sf-r6H" secondAttribute="top" constant="7" id="qMZ-WJ-qnt"/>
                                     <constraint firstItem="gXE-DB-GFo" firstAttribute="leading" secondItem="7Sj-sf-r6H" secondAttribute="leading" constant="13" id="sSK-7k-hPL"/>
                                     <constraint firstItem="45e-VB-yNq" firstAttribute="leading" secondItem="7Sj-sf-r6H" secondAttribute="leading" id="tVG-lB-s8k"/>
                                     <constraint firstItem="AvW-hm-ch0" firstAttribute="leading" secondItem="bAQ-hp-kod" secondAttribute="trailing" constant="15" id="uVw-3g-moC"/>
@@ -3730,6 +3742,7 @@
                         <outlet property="btnForNetState" destination="7Wf-TZ-Dvr" id="QsU-eR-XY6"/>
                         <outlet property="btnForPhoto" destination="bAQ-hp-kod" id="c1p-SR-2Ay"/>
                         <outlet property="btnForVideo" destination="u20-4n-9kr" id="PT9-4t-sL5"/>
+                        <outlet property="btnReverse" destination="pFq-Tf-bBW" id="KJe-56-0NF"/>
                         <outlet property="doneView" destination="jh8-OB-zd4" id="Dd6-N1-l5H"/>
                         <outlet property="tblForDetailList" destination="Vxp-Dm-FQr" id="UCK-8A-EPE"/>
                     </connections>
@@ -4006,7 +4019,7 @@
                 <navigationController id="SgL-ab-oQZ" sceneMemberID="viewController">
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="523"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="iRT-5X-f0f">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="iRT-5X-f0f">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -4854,7 +4867,7 @@
         <scene sceneID="goF-QV-8D4">
             <objects>
                 <navigationController id="ypM-8d-ArT" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="j16-Fn-jFd">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="j16-Fn-jFd">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -7629,6 +7642,7 @@
         <image name="back-green.png" width="30" height="30"/>
         <image name="bg_splash" width="320" height="569"/>
         <image name="btn-post.png" width="93" height="28"/>
+        <image name="btn-updown-arrow" width="24" height="24"/>
         <image name="btn_FB" width="280" height="44"/>
         <image name="btn_add_audio" width="20" height="18"/>
         <image name="btn_add_photo" width="20" height="19"/>

@@ -81,7 +81,6 @@
     NSMutableArray *arrPrevTagFriends;
     
     BOOL modeForExport;
-    
 }
 
 @property (weak, nonatomic) IBOutlet UITableView *tblForDetailList;
@@ -148,8 +147,13 @@
                 }
             }
             
-           [arrForDetail addObjectsFromArray:objects];
-           [tblForDetailList reloadData];
+            [arrForDetail addObjectsFromArray:objects];
+            
+            if (isActionSheetReverseSelected) {
+                arrForDetail = [[[arrForDetail reverseObjectEnumerator] allObjects] mutableCopy];
+            }
+
+            [tblForDetailList reloadData];
         }
     }];
 }
@@ -441,6 +445,10 @@
             
             if([objects count] > 0) [arrForDetail addObjectsFromArray:objects];
             
+            if (isActionSheetReverseSelected) {
+                arrForDetail = [[[arrForDetail reverseObjectEnumerator] allObjects] mutableCopy];
+            }
+
             // Current Test feature. lets check these again.
             PFUser *eventUser = currentObject[@"user"];
             if([eventUser.objectId isEqualToString: USER.objectId] && appDel.network_state)
@@ -483,8 +491,13 @@
         {
             [arrForDetail removeAllObjects];
             [arrForDetail addObjectsFromArray:objects];
-            OMAppDelegate* appDel = [UIApplication sharedApplication].delegate;
+            OMAppDelegate* appDel = (OMAppDelegate *)[UIApplication sharedApplication].delegate;
             [arrForDetail addObjectsFromArray:appDel.m_offlinePosts];
+            
+            if (isActionSheetReverseSelected) {
+                arrForDetail = [[[arrForDetail reverseObjectEnumerator] allObjects] mutableCopy];
+            }
+            
             [tblForDetailList reloadData];
         }
     }];
@@ -628,6 +641,21 @@
     
     [[NSUserDefaults standardUserDefaults] setBool:appDel.network_state forKey:@"network_status"];
     [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (IBAction)onBtnReverseActionSheetContentsTapped:(UIButton *)sender {
+    isActionSheetReverseSelected = !isActionSheetReverseSelected;
+    if (isActionSheetReverseSelected) {
+        [sender setImage:[UIImage imageNamed:@"btn-updown-arrow-selected"] forState:UIControlStateNormal];
+    } else {
+        [sender setImage:[UIImage imageNamed:@"btn-updown-arrow"] forState:UIControlStateNormal];
+    }
+    
+    if (arrForDetail.count > 0) {
+        arrForDetail = [[[arrForDetail reverseObjectEnumerator] allObjects] mutableCopy];
+    }
+    
+    [tblForDetailList reloadData];
 }
 
 - (NSInteger)firstSectionCount:(PFObject *)_obj
@@ -1218,13 +1246,14 @@
           {
               OMMediaCell *_cell = (OMMediaCell *)cell;
               if (_cell)
-              {
-                 if ([tempObj[@"postType"] isEqualToString:@"video"])
-                {
-                    [_cell stopVideo];
-                }
-                else
-                    [_cell stopAudio];
+              {                 
+                  if ([tempObj[@"postType"] isEqualToString:@"video"])
+                  {
+                      [_cell stopVideo];
+                  }
+                  else if ([tempObj[@"postType"] isEqualToString:@"audio"]) {
+                      [_cell stopAudio];
+                  }
               }
                 
           }

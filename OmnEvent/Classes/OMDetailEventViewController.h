@@ -39,6 +39,8 @@
     
     IBOutlet UIButton *btnForNetState;
     
+    IBOutlet UIButton *btnReverse;
+    BOOL isActionSheetReverseSelected;
 }
 
 @property (nonatomic, retain) UIDocumentInteractionController *dic;
