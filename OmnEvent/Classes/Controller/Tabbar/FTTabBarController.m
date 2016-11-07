@@ -81,7 +81,7 @@
 - (IBAction)showMessageAction:(id)sender {
 }
 
-- (void)newPostAction:(int)_uploadOption mediaKind:(int)_captureOption currentObject:(PFObject *)_curObj
+- (void)newPostAction:(int)_uploadOption mediaKind:(int)_captureOption currentObject:(PFObject *)_curObj postOrder:(int)_postOrder
 {
     
     if ((kTypeCapture)_captureOption == kTypeCaptureText) {
@@ -137,13 +137,9 @@
     
 }
 
-- (void)postAudio:(int)_uploadOption
-        mediaKind:(int)_captureOption
-    currentObject:(PFObject *)_curObj
-        audioData:(NSData *)_audioData
-{
-    
-    
+- (void)postAudio:(int)_uploadOption mediaKind:(int)_captureOption currentObject:(PFObject *)_curObj
+        audioData:(NSData *)_audioData postOrder:(int)_postOrder
+{    
     OMRecordAudioViewController *recordAudioVC = [self.storyboard instantiateViewControllerWithIdentifier:@"RecordAudioVC"];
     [recordAudioVC setUploadOption:_uploadOption];
     [recordAudioVC setCaptureOption:_captureOption];

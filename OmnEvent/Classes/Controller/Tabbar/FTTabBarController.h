@@ -50,18 +50,13 @@
 
 - (IBAction)showMessageAction:(id)sender;
 
+- (void)newPostAction:(int)_uploadOption mediaKind:(int)_captureOption currentObject:(PFObject *)_curObj postOrder:(int)_postOrder;
 
-- (void)newPostAction:(int )_uploadOption
-            mediaKind:(int )_captureOption
-        currentObject:(PFObject *)_curObj;
+- (void)postAudio:(int)_uploadOption mediaKind:(int)_captureOption currentObject:(PFObject *)_curObj
+        audioData:(NSData *)_audioData postOrder:(int)_postOrder;
+
 - (void) setSelectedIndex:(int)index;
-
 - (void)hideTabView:(BOOL) _hidden;
 - (void)signOut;
-
-- (void)postAudio:(int )_uploadOption
-        mediaKind:(int )_captureOption
-    currentObject:(PFObject *)_curObj
-        audioData:(NSData *)_audioData;
 
 @end

@@ -53,6 +53,7 @@
         [postEventVC setUploadOption:_uploadOption];
         [postEventVC setCaptureOption:_captureOption];
         [postEventVC setCurObj:_curObj];
+        [postEventVC setPostOrder:_postOrder];
         [postEventVC setAudioData:recordedData];
         
         [self.navigationController pushViewController:postEventVC animated:YES];

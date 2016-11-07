@@ -558,6 +558,19 @@
             post[@"description"]    = textViewForDescription.text;
             post[@"country"]        = lblForLocation.text;
             
+            NSMutableArray *allPosts = curObj[@"postedObjects"];
+            NSNumber *postOrder = [NSNumber numberWithInt:1];
+            if (self.postOrder == -1) {
+                PFObject *item = allPosts.firstObject; //First Element will contain the object with highest postOrder
+                int newOrder = [item[@"postOrder"] intValue] + 1;
+                postOrder = [NSNumber numberWithInt:newOrder];
+            }
+            else if (allPosts.count > 0) {
+                PFObject *item = allPosts[self.postOrder];
+                postOrder = item[@"postOrder"];
+            }
+            post[@"postOrder"] = postOrder;
+            
             //for badge
             arrPostLookedFlags = [arrCurTaggedFriends mutableCopy];
             PFUser *eventUser = curObj[@"user"];
@@ -622,11 +635,7 @@
                     break;
             }
             
-            
-            
-            
             //Request a background execution task to allow us to finish uploading the photo even if the app is background
-            
             self.fileUploadBackgroundTaskId = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
                 [[UIApplication sharedApplication] endBackgroundTask:self.fileUploadBackgroundTaskId];
             }];
@@ -645,10 +654,19 @@
                                
                                 NSLog(@"Success ---- Post");
                                 
+                                //Increment the postOrder for other posts
+                                for (int i=0; i<=self.postOrder; i++) {
+                                    PFObject *item = allPosts[i];
+                                    [item incrementKey:@"postOrder"];
+                                    [item save];
+                                }
+                                
                                 // add one Post on Event postedObject field: for badge
                                 if(![curObj[@"postedObjects"] containsObject:post])
                                 {
-                                    [curObj addObject:post forKey:@"postedObjects"];
+                                    [allPosts insertObject:post atIndex:self.postOrder+1];
+                                    curObj[@"postedObjects"] = allPosts;
+//                                    [curObj addObject:post forKey:@"postedObjects"];
                                     [curObj saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
                                         if(error == nil) NSLog(@"PostEventVC:Badge Processing - Added one Post Obj on Event Field");
                                     }];
@@ -710,11 +728,19 @@
                         if (succeeded) {
                             NSLog(@"Success ---- Post");
                             
+                            //Increment the postOrder for other posts
+                            for (int i=0; i<=self.postOrder; i++) {
+                                PFObject *item = allPosts[i];
+                                [item incrementKey:@"postOrder"];
+                                [item save];
+                            }
+                            
                             // add one Post on Event postedObject field: for badge
-                           
                             if(![curObj[@"postedObjects"] containsObject:post])
                             {
-                                [curObj addObject:post forKey:@"postedObjects"];
+                                [allPosts insertObject:post atIndex:self.postOrder+1];
+                                curObj[@"postedObjects"] = allPosts;
+//                                [curObj addObject:post forKey:@"postedObjects"];
                                 [curObj saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
                                     [GlobalVar getInstance].isPosting = NO;
                                     if(error == nil) NSLog(@"PostEventVC:Badge Processing - Added one Post Obj on Event Field");
