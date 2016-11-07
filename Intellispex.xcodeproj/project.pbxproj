@@ -527,6 +527,7 @@
 		E4B0BA8B1C3D116300F6CCB9 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4B0BA8A1C3D116300F6CCB9 /* CoreData.framework */; };
 		E4B0BA8D1C3E09C600F6CCB9 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4B0BA8C1C3E09C600F6CCB9 /* CoreText.framework */; };
 		E4B0BA911C3E0FA100F6CCB9 /* PDFRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = E4B0BA901C3E0FA100F6CCB9 /* PDFRenderer.m */; };
+		FAB3D3161DD09E85007FEE35 /* OMEventFeedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB3D3151DD09E85007FEE35 /* OMEventFeedCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1185,6 +1186,8 @@
 		E4B0BA901C3E0FA100F6CCB9 /* PDFRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDFRenderer.m; sourceTree = "<group>"; };
 		F3DEAB0F3BE827825F894A85 /* Pods-Intellispex.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Intellispex.release.xcconfig"; path = "Pods/Target Support Files/Pods-Intellispex/Pods-Intellispex.release.xcconfig"; sourceTree = "<group>"; };
 		F7DC6A5B4C0984C3685D1B4D /* libPods-Intellispex.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Intellispex.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FAB3D3141DD09E85007FEE35 /* OMEventFeedCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMEventFeedCell.h; sourceTree = "<group>"; };
+		FAB3D3151DD09E85007FEE35 /* OMEventFeedCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMEventFeedCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2023,6 +2026,8 @@
 		3EB718D11ABF4F730050E2D2 /* Cell */ = {
 			isa = PBXGroup;
 			children = (
+				FAB3D3141DD09E85007FEE35 /* OMEventFeedCell.h */,
+				FAB3D3151DD09E85007FEE35 /* OMEventFeedCell.m */,
 				3EB298A91ACDD83400528552 /* OMMediaCell.h */,
 				3EB298AA1ACDD83400528552 /* OMMediaCell.m */,
 				A999C2C71AD16D0C0052BFFD /* OMTextCell.h */,
@@ -2709,7 +2714,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		6FBD8A97EE955709A159C67F /* [CP] Copy Pods Resources */ = {
@@ -2744,6 +2749,7 @@
 				3EA765951AC3DAEB005CC683 /* OMBaseNavigationController.m in Sources */,
 				3E6F5CFD1ACA9384002ABFED /* OMEditEmailCell.m in Sources */,
 				3E7E5F671AC1EBFF00349242 /* OMSearchViewController.m in Sources */,
+				FAB3D3161DD09E85007FEE35 /* OMEventFeedCell.m in Sources */,
 				3EB718D41ABF4FD40050E2D2 /* OMFeedHeaderCell.m in Sources */,
 				3C093F9B198487A300AEBDBD /* OMCommentViewController.m in Sources */,
 				A9A9444A1AD2562F00ECD958 /* Common.m in Sources */,
@@ -3011,7 +3017,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.collabro.intellispex;
 				PRODUCT_NAME = Intellispex;
-				PROVISIONING_PROFILE = "2163141a-d8f8-4f6a-8fdb-7a2a86c437ad";
+				PROVISIONING_PROFILE = "250daf26-b830-4859-bb61-50832b56532a";
 				PROVISIONING_PROFILE_SPECIFIER = "Intellispex development";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
@@ -3023,8 +3029,8 @@
 			baseConfigurationReference = F3DEAB0F3BE827825F894A85 /* Pods-Intellispex.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Blake Ratcliff (6M75VL4633)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Blake Ratcliff (6M75VL4633)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Blake Ratcliff (87E9534LVP)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Blake Ratcliff (87E9534LVP)";
 				COMPRESS_PNG_FILES = YES;
 				DEVELOPMENT_TEAM = 6M75VL4633;
 				ENABLE_BITCODE = NO;
@@ -3045,7 +3051,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.collabro.intellispex;
 				PRODUCT_NAME = Intellispex;
-				PROVISIONING_PROFILE = "6e6529b3-fbd9-4e1f-87cf-0b8709a1226c";
+				PROVISIONING_PROFILE = "250daf26-b830-4859-bb61-50832b56532a";
 				PROVISIONING_PROFILE_SPECIFIER = "Intellispex distribution";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
