@@ -34,7 +34,7 @@
 - (void)setUser:(PFUser *)user comment:(NSString *)_comment curObj:(PFObject *)_obj number:(NSUInteger)_number;
 
 - (void)newsetUser:(NSString *)user comment:(NSString *)_comment curObj:(PFObject *)_obj
-                                                                commentType:(NSInteger)curType number:(NSUInteger)_number;
+       commentType:(NSInteger)curType number:(NSUInteger)_number;
 // Comment
 - (void)configurateCell:(PFObject *)tempObj;
 //Post

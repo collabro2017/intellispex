@@ -26,7 +26,7 @@
     
     _user = _currentObj[@"user"];
     
-    PFUser *self_user = [PFUser currentUser];    
+    PFUser *self_user = [PFUser currentUser];
     
     if (![_user.objectId isEqualToString:self_user.objectId]) {
         txtViewForDescription.editable = NO;
@@ -69,9 +69,8 @@
 }
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-    if ([text isEqualToString:@"\n"]) {
-        if (textView == txtViewForDescription)
-        {
+    if ([textView isEqual:txtViewForDescription]) {
+        if ([text isEqualToString:@"\n"]) {
             if (![beforeDescription isEqualToString:txtViewForDescription.text] && txtViewForDescription.text.length > 0)
             {
                 _currentObj[@"description"] = txtViewForDescription.text;
@@ -98,23 +97,26 @@
                 
             }
             [txtViewForDescription resignFirstResponder];
-        }
-        
-        if ([textView.superview.superview.superview.superview isKindOfClass:[UITableView class]]){
-            CGPoint bottomPosition = [textView convertPoint:textView.frame.origin toView:textView.superview.superview.superview.superview];
             
-            NSDictionary *userInfo = @{
-                                       @"pointInTable_x": [[NSNumber numberWithFloat:bottomPosition.x] stringValue],
-                                       @"pointInTable_y": [[NSNumber numberWithFloat:bottomPosition.y] stringValue]
-                                       };
+            if ([textView.superview.superview.superview.superview isKindOfClass:[UITableView class]]){
+                CGPoint bottomPosition = [textView convertPoint:textView.frame.origin toView:textView.superview.superview.superview.superview];
+                
+                NSDictionary *userInfo = @{
+                                           @"pointInTable_x": [[NSNumber numberWithFloat:bottomPosition.x] stringValue],
+                                           @"pointInTable_y": [[NSNumber numberWithFloat:bottomPosition.y] stringValue]
+                                           };
+                
+                [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationKeyboardHide object:nil userInfo:userInfo];
+            }
             
-            [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationKeyboardHide object:nil userInfo:userInfo];
+            return NO;
         }
-        
-        return NO;
+        else if (textView.text.length < MAX_DESCRIPTION_LIMIT || [text isEqualToString:@""]) {
+            return YES;
+        }
     }
     
-    return YES;
+    return NO;
 }
 
 @end

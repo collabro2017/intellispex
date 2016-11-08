@@ -76,16 +76,16 @@
     
     [lblForUsername setText:user.username];
     
-    //    [_lblForTime setText:[OMGlobal showTime:_currentObj.createdAt]];
-    //    _constraintForHeight.constant = [OMGlobal heightForCellWithPost:_currentObj[@"description"]];
-    //    [_lblForDes setText:_currentObj[@"description"]];
-    
-    //    if (_currentObj[@"country"]) {
-    //
-    //        [_lblForLocation setText:_currentObj[@"country"]];
-    //    }
-    //    else
-    //        [_lblForLocation setText:@"Unknown"];
+//    [_lblForTime setText:[OMGlobal showTime:_currentObj.createdAt]];
+//    _constraintForHeight.constant = [OMGlobal heightForCellWithPost:_currentObj[@"description"]];
+//    [_lblForDes setText:_currentObj[@"description"]];
+
+//    if (_currentObj[@"country"]) {
+//
+//        [_lblForLocation setText:_currentObj[@"country"]];
+//    }
+//    else
+//        [_lblForLocation setText:@"Unknown"];
     
     
     if (imageViewForPost.image) {

@@ -28,7 +28,7 @@
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-
+    
     // Configure the view for the selected state
 }
 
@@ -137,7 +137,7 @@
             }
             
             constraintForCommentHeight.constant = [OMGlobal heightForCellWithPost:_comment];
-
+            
             [commentTextView setText:_comment];
             [lblForUsername setText:currentUser.username];
         }
@@ -146,7 +146,7 @@
 
 // for event
 - (void)newsetUser:(NSString *)user comment:(NSString *)_comment curObj:(PFObject *)_obj
-                                                                    commentType:(NSInteger)curType number:(NSUInteger)_number
+       commentType:(NSInteger)curType number:(NSUInteger)_number
 {
     [commentTextView sizeToFit];
     [lblForTime setHidden:YES];
@@ -221,7 +221,7 @@
                     [query whereKey:@"Comments" equalTo:_comment];
                     
                     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
- 
+                        
                         if ([objects count] == 0 || !objects) {
                             return;
                         }
@@ -331,7 +331,7 @@
 // for post comment cell
 - (void)configCell:(PFObject *)tempObj EventObject:(PFObject *) eventObject commentType:(NSInteger)curType
 {
-
+    
     currentType = curType;
     //currentType = kTypePostComment;
     currentObj = tempObj;
@@ -376,7 +376,7 @@
                     break;
                 }
             }
-
+            
             
             if ([AuthorityValue isEqualToString:@"Full"] || [AuthorityValue isEqualToString:@"Comment Only"]){
                 commentTextView.editable = YES;
@@ -402,11 +402,11 @@
     }
     
     [currentUser fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-       
+        
         if (!error) {
             
             [lblForUsername setText:currentUser.username];
-
+            
             if ([currentUser[@"loginType"] isEqualToString:@"email"] || [currentUser[@"loginType"] isEqualToString:@"gmail"]) {
                 PFFile *avatarFile = (PFFile *)currentUser[@"ProfileImage"];
                 if (avatarFile) {
@@ -467,7 +467,7 @@
         {
             arrForTagFriendAuthorities = eventObject[@"TagFriendAuthorities"];
         }
-
+        
         
         NSString *AuthorityValue = @"";
         
@@ -481,7 +481,7 @@
                     break;
                 }
             }
-
+            
             
             if ([AuthorityValue isEqualToString:@"Full"] || [AuthorityValue isEqualToString:@"Comment Only"]){
                 commentTextView.editable = YES;
@@ -536,7 +536,7 @@
         [lblForTime setText:str_date];
         
     }];
-
+    
 }
 
 - (void)textViewDidBeginEditing:(UITextView *)textView {
@@ -620,7 +620,7 @@
                                 
                                 if ([textView.superview.superview.superview.superview isKindOfClass:[UITableView class]]){
                                     CGPoint bottomPosition = [textView convertPoint:textView.frame.origin
-                                                                              toView:textView.superview.superview.superview.superview];
+                                                                             toView:textView.superview.superview.superview.superview];
                                     
                                     NSDictionary *userInfo = @{
                                                                @"pointInTable_x": [[NSNumber numberWithFloat:bottomPosition.x] stringValue],
@@ -707,8 +707,11 @@
         
         return NO;
     }
+    else if (textView.text.length < MAX_COMMENT_LIMIT || [text isEqualToString:@""]) {
+        return YES;
+    }
     
-    return YES;
+    return NO;
 }
 
 @end

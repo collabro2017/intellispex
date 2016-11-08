@@ -290,6 +290,8 @@
     CGPoint bottomPosition = CGPointMake(pointInTable_x, pointInTable_y);
     NSIndexPath *indexPath = [tblForDetailList indexPathForRowAtPoint:bottomPosition];
     
+    [tblForDetailList reloadData];
+
     [tblForDetailList scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:TRUE];
     
     [GlobalVar getInstance].isPosting = NO;
@@ -1291,13 +1293,13 @@
         else if (indexPath.row == 1)
         {
             if (currentObject[@"description"]) {
-                return ([OMGlobal getBoundingOfString:currentObject[@"description"] width:tableView.frame.size.width].height + 20.0f);
+                return ([OMGlobal getBoundingOfString:currentObject[@"description"] width:tableView.frame.size.width].height + 40.0f);
             }
             return 0;
         }
         else
         {
-            if (indexPath.row > 2)
+            if (indexPath.row > 1)
                 return [OMGlobal heightForCellWithPost:[[currentObject objectForKey:@"commentsArray"] objectAtIndex:(indexPath.row - 2)]] + 30;
             else
                 return 70;
@@ -1321,7 +1323,9 @@
         else
         {
             if (indexPath.row == 0) {
-                return IS_IPAD? SCREEN_WIDTH_ROTATED + 130 :450;
+                PFObject *tempObj = (PFObject*)[arrForDetail objectAtIndex:indexPath.section - 1];
+                CGFloat height = [OMGlobal heightForCellWithPost:tempObj[@"title"]] + [OMGlobal heightForCellWithPost:tempObj[@"description"]] - 55;
+                return IS_IPAD? SCREEN_WIDTH_ROTATED + 130 + height: 450 + height;
             }
             else if (indexPath.row > 0 && indexPath.row < [self cellCount:tempObj])
             {
@@ -1974,7 +1978,7 @@
                     break;
             }
         }
-            
+            break;
         case kTag_AddMediaAfter:
         {
             switch (buttonIndex) {
