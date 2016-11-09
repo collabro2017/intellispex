@@ -29,6 +29,7 @@
 {
     CLPlacemark *_placeMark;
     NSString *country;
+    NSString *countryLatLong;
     NSString *city;
     NSString *state;
     CLPlacemark *placeMark;
@@ -123,6 +124,7 @@
     [tapGestureForBg setDelegate:self];
     [imageViewForPostImage addGestureRecognizer:tapGestureForBg];
     lblForCount.text = [NSString stringWithFormat:@"%d", MAX_DESCRIPTION_LIMIT];
+    countryLatLong = @"Unknown";
     
     /////
     UIToolbar *toolbar = [[UIToolbar alloc] init];
@@ -376,6 +378,7 @@
             post[@"TagFriends"] = arrForTaggedFriend;
             post[@"TagFriendAuthorities"] = arrForTaggedFriendAuthor;
             post[@"country"] = lblForLocation.text;
+            post[@"countryLatLong"] = countryLatLong;
             post[@"postType"] = _postType;
             
             //for badge
@@ -520,8 +523,8 @@
                 post[@"TagFriendAuthorities"] = arrForTaggedFriendAuthor;
             }
             
-            
             post[@"country"] = lblForLocation.text;
+            post[@"countryLatLong"] = countryLatLong;
             post[@"postType"] = _postType;
             
             //for badge
@@ -585,6 +588,7 @@
             post[@"title"]          = lblForTitle.text;
             post[@"description"]    = textViewForDescription.text;
             post[@"country"]        = lblForLocation.text;
+            post[@"countryLatLong"] = countryLatLong;
             
             NSMutableArray *allPosts = curObj[@"postedObjects"];
             NSNumber *postOrder = [NSNumber numberWithInt:1];
@@ -1061,10 +1065,30 @@
             state   = strState;
             
             lblForLocation.text = [NSString stringWithFormat:@"%@, %@, %@",strCity,strState,strCountry];
+            
+            //Conver the location to DMS notation
+            CLLocationCoordinate2D location = someLocation.coordinate;
+            
+            int latSeconds = (int)(location.latitude * 3600);
+            int latDegrees = latSeconds / 3600;
+            latSeconds = ABS(latSeconds % 3600);
+            int latMinutes = latSeconds / 60;
+            latSeconds %= 60;
+            
+            int longSeconds = (int)(location.longitude * 3600);
+            int longDegrees = longSeconds / 3600;
+            longSeconds = ABS(longSeconds % 3600);
+            int longMinutes = longSeconds / 60;
+            longSeconds %= 60;
+            
+            countryLatLong = [NSString stringWithFormat:@"%d°%d'%d\"%@ %d°%d'%d\"%@",
+                              ABS(latDegrees), latMinutes, latSeconds, latDegrees >= 0 ? @"N" : @"S",
+                              ABS(longDegrees), longMinutes, longSeconds, longDegrees >= 0 ? @"E" : @"W"];
         }
         else
         {
             [lblForLocation setText:@"Unknown"];
+            countryLatLong = @"Unknown";
         }
     }];
 }

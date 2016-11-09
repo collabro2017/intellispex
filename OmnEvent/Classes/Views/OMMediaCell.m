@@ -223,7 +223,49 @@
     constraintForTitle.constant = [OMGlobal getBoundingOfString:currentObj[@"title"] width:txtViewForTitle.frame.size.width].height + 20;
     constraintForDescription.constant = [OMGlobal getBoundingOfString:currentObj[@"description"] width:txtViewForDes.frame.size.width].height + 30;
     
-    [lblForLocation setText:currentObj[@"country"]];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"IS_GEOCODE_ENABLED"]) {
+        if (currentObj[@"countryLatLong"]) {
+            lblForLocation.text = currentObj[@"countryLatLong"];
+        }
+        else {
+            CLGeocoder *geocoder = [[CLGeocoder alloc] init];
+            [geocoder geocodeAddressString:currentObj[@"country"] completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
+                if (placemarks.count > 0) {
+                    CLPlacemark *placemark = placemarks.firstObject;
+                    CLLocationCoordinate2D location = placemark.location.coordinate;
+                    
+                    int latSeconds = (int)(location.latitude * 3600);
+                    int latDegrees = latSeconds / 3600;
+                    latSeconds = ABS(latSeconds % 3600);
+                    int latMinutes = latSeconds / 60;
+                    latSeconds %= 60;
+                    
+                    int longSeconds = (int)(location.longitude * 3600);
+                    int longDegrees = longSeconds / 3600;
+                    longSeconds = ABS(longSeconds % 3600);
+                    int longMinutes = longSeconds / 60;
+                    longSeconds %= 60;
+                    
+                    NSString* result = [NSString stringWithFormat:@"%d°%d'%d\"%@ %d°%d'%d\"%@",
+                                        ABS(latDegrees),
+                                        latMinutes,
+                                        latSeconds,
+                                        latDegrees >= 0 ? @"N" : @"S",
+                                        ABS(longDegrees),
+                                        longMinutes,
+                                        longSeconds,
+                                        longDegrees >= 0 ? @"E" : @"W"];
+                    lblForLocation.text = result;
+                    
+                    currentObj[@"countryLatLong"] = result;
+                    [currentObj saveInBackground];
+                }
+            }];
+        }
+    }
+    else {
+        [lblForLocation setText:currentObj[@"country"]];
+    }
     
     // for badge processing
     if(curEventIndex >= 0)
