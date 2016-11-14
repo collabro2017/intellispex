@@ -1011,14 +1011,22 @@
         dic.delegate = self;
         
         dic.annotation = [NSDictionary dictionaryWithObject:@"Uploaded using #ICYMI App" forKey:@"InstagramCaption"];
-        [dic presentOpenInMenuFromRect:CGRectZero inView:self.view animated:YES];
-        
+        //[dic presentOpenInMenuFromRect:CGRectZero inView:self.view animated:YES];
+        if (IS_IPAD) {
+            [self performSelector:@selector(openDicOniPad:) withObject:nil  afterDelay:0.5];
+        }
+        else{
+            [dic presentOpenInMenuFromRect:CGRectZero inView:self.view animated:YES];
+        }
     }
     else
     {
         [OMGlobal showAlertTips:@"Please install Instagram app" title:nil];
     }
     
+}
+-(void)openDicOniPad:(id)sender{
+    [dic presentOpenInMenuFromRect:self.view.bounds inView:self.view animated:YES];
 }
 #pragma mark UIAlertView
 
