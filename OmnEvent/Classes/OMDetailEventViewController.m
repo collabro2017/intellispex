@@ -2425,7 +2425,13 @@
         dic.delegate = self;
         
         dic.annotation = [NSDictionary dictionaryWithObject:@"Uploaded using #INTELLISPEX App" forKey:@"InstagramCaption"];
-        [dic presentOpenInMenuFromRect:CGRectZero inView:self.view animated:YES];
+        //[dic presentOpenInMenuFromRect:CGRectZero inView:self.view animated:YES];
+        if (IS_IPAD) {
+            [self performSelector:@selector(openDicOniPad:) withObject:nil afterDelay:0.5];
+        }
+        else{
+            [dic presentOpenInMenuFromRect:CGRectZero inView:self.view animated:YES];
+        }
         
     }
     else
@@ -2434,7 +2440,9 @@
     }
     
 }
-
+-(void)openDicOniPad:(id)sender{
+    [dic presentOpenInMenuFromRect:self.view.bounds inView:self.view animated:YES];
+}
 //Add Media After
 - (void)showAddMediaAfter {
     UIActionSheet* shareAction = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Text", @"Image", @"Audio", @"Video", nil];
