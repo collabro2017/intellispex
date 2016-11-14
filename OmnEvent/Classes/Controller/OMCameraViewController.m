@@ -20,6 +20,9 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 
+//----
+#import "OMPhotoEditViewController.h"
+//----
 #define TIMER_INTERVAL 0.05f
 
 #define TAG_ALERTVIEW_CLOSE_CONTROLLER 10086
@@ -638,7 +641,7 @@
     
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     UIImage *image = [_image resizedImageToSize:CGSizeMake(POSTIMAGE_SIZE, POSTIMAGE_SIZE)];
-    
+    /*
     OMPostEventViewController *postEventVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PostEventVC"];
     
     [postEventVC setImageForPost:image];
@@ -649,7 +652,19 @@
     [postEventVC setCurObj:curObj];
     
     [self.navigationController pushViewController:postEventVC animated:YES];
+    */
     
+    OMPhotoEditViewController *photoEditVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoEditVC"];
+    
+    [photoEditVC setPreImage:image];
+    [photoEditVC setPostType:@"image"];
+    
+    [photoEditVC setUploadOption:uploadOption];
+    [photoEditVC setCaptureOption:captureOption];
+    [photoEditVC setCurObj:curObj];
+    [photoEditVC setPostOrder:_postOrder];
+    
+    [self.navigationController pushViewController:photoEditVC animated:YES];
 }
 
 - (void)showPreviewForVideo:(NSURL *)_url

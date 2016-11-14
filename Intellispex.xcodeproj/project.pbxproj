@@ -520,6 +520,15 @@
 		A9C016311AD8770C00E7F2B1 /* OMAdditionalTagViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C016301AD8770C00E7F2B1 /* OMAdditionalTagViewController.m */; };
 		A9E986E61B2240E900B1BB92 /* PrivacyPolicy.docx in Resources */ = {isa = PBXBuildFile; fileRef = A9E986E51B2240E900B1BB92 /* PrivacyPolicy.docx */; };
 		A9E986E91B2241D900B1BB92 /* OMPrivacyVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A9E986E81B2241D900B1BB92 /* OMPrivacyVC.m */; };
+		B45ED2601DD960C700664B78 /* OMAddTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B45ED25F1DD960C700664B78 /* OMAddTextViewController.m */; };
+		B45ED2661DD9611800664B78 /* JCDrawView.m in Sources */ = {isa = PBXBuildFile; fileRef = B45ED2631DD9611800664B78 /* JCDrawView.m */; };
+		B45ED2671DD9611800664B78 /* OMDrawTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B45ED2651DD9611800664B78 /* OMDrawTextViewController.m */; };
+		B45ED2751DD9637800664B78 /* IQLabelView.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B45ED2691DD9637800664B78 /* IQLabelView.bundle */; };
+		B45ED2761DD9637800664B78 /* IQLabelView.m in Sources */ = {isa = PBXBuildFile; fileRef = B45ED26B1DD9637800664B78 /* IQLabelView.m */; };
+		B45ED2771DD9637800664B78 /* UITextField+DynamicFontSize.m in Sources */ = {isa = PBXBuildFile; fileRef = B45ED26D1DD9637800664B78 /* UITextField+DynamicFontSize.m */; };
+		B45ED2781DD9637800664B78 /* PhotoTweaksViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B45ED2701DD9637800664B78 /* PhotoTweaksViewController.m */; };
+		B45ED2791DD9637800664B78 /* PhotoTweakView.m in Sources */ = {isa = PBXBuildFile; fileRef = B45ED2721DD9637800664B78 /* PhotoTweakView.m */; };
+		B45ED27A1DD9637800664B78 /* UIColor+Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = B45ED2741DD9637800664B78 /* UIColor+Tweak.m */; };
 		B4D45A771DD21ED5002EA1D1 /* IQDropDownTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = B4D45A761DD21ED5002EA1D1 /* IQDropDownTextField.m */; };
 		B4FBBA271CCE723200BFDAD8 /* OMFeedOtherCommentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FBBA261CCE723100BFDAD8 /* OMFeedOtherCommentCell.m */; };
 		E42F747E1C8ACEC20008CC38 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = E42F747D1C8ACEC20008CC38 /* Reachability.m */; };
@@ -1176,6 +1185,23 @@
 		A9E986E51B2240E900B1BB92 /* PrivacyPolicy.docx */ = {isa = PBXFileReference; lastKnownFileType = file; path = PrivacyPolicy.docx; sourceTree = "<group>"; };
 		A9E986E71B2241D900B1BB92 /* OMPrivacyVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OMPrivacyVC.h; path = Controller/OMPrivacyVC.h; sourceTree = "<group>"; };
 		A9E986E81B2241D900B1BB92 /* OMPrivacyVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OMPrivacyVC.m; path = Controller/OMPrivacyVC.m; sourceTree = "<group>"; };
+		B45ED25E1DD960C700664B78 /* OMAddTextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMAddTextViewController.h; sourceTree = "<group>"; };
+		B45ED25F1DD960C700664B78 /* OMAddTextViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMAddTextViewController.m; sourceTree = "<group>"; };
+		B45ED2621DD9611800664B78 /* JCDrawView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JCDrawView.h; sourceTree = "<group>"; };
+		B45ED2631DD9611800664B78 /* JCDrawView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JCDrawView.m; sourceTree = "<group>"; };
+		B45ED2641DD9611800664B78 /* OMDrawTextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMDrawTextViewController.h; sourceTree = "<group>"; };
+		B45ED2651DD9611800664B78 /* OMDrawTextViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMDrawTextViewController.m; sourceTree = "<group>"; };
+		B45ED2691DD9637800664B78 /* IQLabelView.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = IQLabelView.bundle; sourceTree = "<group>"; };
+		B45ED26A1DD9637800664B78 /* IQLabelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQLabelView.h; sourceTree = "<group>"; };
+		B45ED26B1DD9637800664B78 /* IQLabelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQLabelView.m; sourceTree = "<group>"; };
+		B45ED26C1DD9637800664B78 /* UITextField+DynamicFontSize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextField+DynamicFontSize.h"; sourceTree = "<group>"; };
+		B45ED26D1DD9637800664B78 /* UITextField+DynamicFontSize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextField+DynamicFontSize.m"; sourceTree = "<group>"; };
+		B45ED26F1DD9637800664B78 /* PhotoTweaksViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoTweaksViewController.h; sourceTree = "<group>"; };
+		B45ED2701DD9637800664B78 /* PhotoTweaksViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoTweaksViewController.m; sourceTree = "<group>"; };
+		B45ED2711DD9637800664B78 /* PhotoTweakView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoTweakView.h; sourceTree = "<group>"; };
+		B45ED2721DD9637800664B78 /* PhotoTweakView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoTweakView.m; sourceTree = "<group>"; };
+		B45ED2731DD9637800664B78 /* UIColor+Tweak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Tweak.h"; sourceTree = "<group>"; };
+		B45ED2741DD9637800664B78 /* UIColor+Tweak.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Tweak.m"; sourceTree = "<group>"; };
 		B4D45A751DD21ED5002EA1D1 /* IQDropDownTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQDropDownTextField.h; sourceTree = "<group>"; };
 		B4D45A761DD21ED5002EA1D1 /* IQDropDownTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQDropDownTextField.m; sourceTree = "<group>"; };
 		B4FBBA251CCE723100BFDAD8 /* OMFeedOtherCommentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMFeedOtherCommentCell.h; sourceTree = "<group>"; };
@@ -1588,6 +1614,8 @@
 		3C5E7EC1197651E3000550F6 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				B45ED2681DD9637800664B78 /* IQLabelView */,
+				B45ED26E1DD9637800664B78 /* PhotoTweaks */,
 				B4D45A751DD21ED5002EA1D1 /* IQDropDownTextField.h */,
 				B4D45A761DD21ED5002EA1D1 /* IQDropDownTextField.m */,
 				A81D7A7D1D6ECC0500D48B53 /* MBProgressHUD+Add.h */,
@@ -1902,6 +1930,8 @@
 		3EB66C441AB60F0100E90054 /* Camera */ = {
 			isa = PBXGroup;
 			children = (
+				B45ED2611DD960EF00664B78 /* AddDraw */,
+				B45ED25D1DD960A500664B78 /* AddText */,
 				3EB66C451AB60F2C00E90054 /* OMCameraViewController.h */,
 				3EB66C461AB60F2C00E90054 /* OMCameraViewController.m */,
 				8FBFC43E1D2906A300E33CD7 /* OMCameraPhotoViewController.h */,
@@ -2237,6 +2267,51 @@
 				A9A944491AD2562F00ECD958 /* UIImage+Color.m */,
 			);
 			path = PCSEQItem;
+			sourceTree = "<group>";
+		};
+		B45ED25D1DD960A500664B78 /* AddText */ = {
+			isa = PBXGroup;
+			children = (
+				B45ED25E1DD960C700664B78 /* OMAddTextViewController.h */,
+				B45ED25F1DD960C700664B78 /* OMAddTextViewController.m */,
+			);
+			name = AddText;
+			sourceTree = "<group>";
+		};
+		B45ED2611DD960EF00664B78 /* AddDraw */ = {
+			isa = PBXGroup;
+			children = (
+				B45ED2621DD9611800664B78 /* JCDrawView.h */,
+				B45ED2631DD9611800664B78 /* JCDrawView.m */,
+				B45ED2641DD9611800664B78 /* OMDrawTextViewController.h */,
+				B45ED2651DD9611800664B78 /* OMDrawTextViewController.m */,
+			);
+			name = AddDraw;
+			sourceTree = "<group>";
+		};
+		B45ED2681DD9637800664B78 /* IQLabelView */ = {
+			isa = PBXGroup;
+			children = (
+				B45ED2691DD9637800664B78 /* IQLabelView.bundle */,
+				B45ED26A1DD9637800664B78 /* IQLabelView.h */,
+				B45ED26B1DD9637800664B78 /* IQLabelView.m */,
+				B45ED26C1DD9637800664B78 /* UITextField+DynamicFontSize.h */,
+				B45ED26D1DD9637800664B78 /* UITextField+DynamicFontSize.m */,
+			);
+			path = IQLabelView;
+			sourceTree = "<group>";
+		};
+		B45ED26E1DD9637800664B78 /* PhotoTweaks */ = {
+			isa = PBXGroup;
+			children = (
+				B45ED26F1DD9637800664B78 /* PhotoTweaksViewController.h */,
+				B45ED2701DD9637800664B78 /* PhotoTweaksViewController.m */,
+				B45ED2711DD9637800664B78 /* PhotoTweakView.h */,
+				B45ED2721DD9637800664B78 /* PhotoTweakView.m */,
+				B45ED2731DD9637800664B78 /* UIColor+Tweak.h */,
+				B45ED2741DD9637800664B78 /* UIColor+Tweak.m */,
+			);
+			path = PhotoTweaks;
 			sourceTree = "<group>";
 		};
 		CC164C17D1ED2A76D7A74FD6 /* Pods */ = {
@@ -2631,6 +2706,7 @@
 				3CC691B9199FBE350064B4D0 /* IQ.png in Resources */,
 				3CC6920B199FBE350064B4D0 /* RO.png in Resources */,
 				3EB66CAE1AB6186700E90054 /* record_focus_off.png in Resources */,
+				B45ED2751DD9637800664B78 /* IQLabelView.bundle in Resources */,
 				3CC691D8199FBE350064B4D0 /* MC.png in Resources */,
 				3CC691DE199FBE350064B4D0 /* MK.png in Resources */,
 				3EB66CB41AB6186700E90054 /* record_icon_hook_normal.png in Resources */,
@@ -2713,6 +2789,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B4D45A771DD21ED5002EA1D1 /* IQDropDownTextField.m in Sources */,
+				B45ED2661DD9611800664B78 /* JCDrawView.m in Sources */,
 				3EB66CDB1AB6199C00E90054 /* DeleteButton.m in Sources */,
 				3C3D7141199A6ED700DBD54E /* OMEventCommentViewController.m in Sources */,
 				3C4059BB198B8EA50024C1AD /* OMPreviewPhotoViewController.m in Sources */,
@@ -2723,6 +2800,7 @@
 				3EA765951AC3DAEB005CC683 /* OMBaseNavigationController.m in Sources */,
 				3E6F5CFD1ACA9384002ABFED /* OMEditEmailCell.m in Sources */,
 				3E7E5F671AC1EBFF00349242 /* OMSearchViewController.m in Sources */,
+				B45ED2771DD9637800664B78 /* UITextField+DynamicFontSize.m in Sources */,
 				FAB3D3161DD09E85007FEE35 /* OMEventFeedCell.m in Sources */,
 				3EB718D41ABF4FD40050E2D2 /* OMFeedHeaderCell.m in Sources */,
 				3C093F9B198487A300AEBDBD /* OMCommentViewController.m in Sources */,
@@ -2738,6 +2816,7 @@
 				3EC765A61AC9523500A3F1F5 /* UIImage+Resize.m in Sources */,
 				A999C2C91AD16D0C0052BFFD /* OMTextCell.m in Sources */,
 				3C12844A1978D17E00EB7744 /* OMSignUpViewController.m in Sources */,
+				B45ED2791DD9637800664B78 /* PhotoTweakView.m in Sources */,
 				A9A944421AD236BF00ECD958 /* OMRecordAudioViewController.m in Sources */,
 				3C4059BE198B97870024C1AD /* OMTagListViewController.m in Sources */,
 				3C2EE6121981759F00733EED /* OMProfilePhotoCell.m in Sources */,
@@ -2764,6 +2843,7 @@
 				E4B0BA911C3E0FA100F6CCB9 /* PDFRenderer.m in Sources */,
 				6C9CA1C41B4664DB00806F96 /* OMTutorialVC.m in Sources */,
 				3C0A5C5E1978FC17009AEC85 /* OMSocialPhoto.m in Sources */,
+				B45ED2761DD9637800664B78 /* IQLabelView.m in Sources */,
 				3E5611C81AC4951300505444 /* OMMyProfileViewController.m in Sources */,
 				3C0BE2C1199B700D0011F843 /* OMFriendListViewController.m in Sources */,
 				3C646B6B199D1DCC001353FC /* OMEditProfileViewControllers.m in Sources */,
@@ -2772,6 +2852,7 @@
 				3CC6914E199FBE350064B4D0 /* CountryPicker.m in Sources */,
 				3C2FC34E1998EB67008D5069 /* OMDetailEventViewController.m in Sources */,
 				3CB78B5D1978F30A00D12B34 /* OMEventListViewController.m in Sources */,
+				B45ED2671DD9611800664B78 /* OMDrawTextViewController.m in Sources */,
 				3C2EE60619816D9300733EED /* OMOwnerProfileViewController.m in Sources */,
 				3C0A5C4F1978FB92009AEC85 /* OMSocialTimer.m in Sources */,
 				3EB66CDC1AB6199C00E90054 /* ProgressBar.m in Sources */,
@@ -2793,6 +2874,7 @@
 				A9A9444B1AD2562F00ECD958 /* PCSEQVisualizer.m in Sources */,
 				3CE377C0199C9B210091745D /* OMFriendListCell.m in Sources */,
 				3E6508B11ABAE28700C00F29 /* OMWelcomeViewController.m in Sources */,
+				B45ED27A1DD9637800664B78 /* UIColor+Tweak.m in Sources */,
 				3C5E7E8F197628DF000550F6 /* main.m in Sources */,
 				A9E986E91B2241D900B1BB92 /* OMPrivacyVC.m in Sources */,
 				3C029231197F5C2E0007ECCD /* OMAddFriendViewController.m in Sources */,
@@ -2816,6 +2898,8 @@
 				A9C016311AD8770C00E7F2B1 /* OMAdditionalTagViewController.m in Sources */,
 				3C0283C4198973FC00EA3864 /* OMPhotoViewController.m in Sources */,
 				3C093F9F19848B3900AEBDBD /* YFInputBar.m in Sources */,
+				B45ED2781DD9637800664B78 /* PhotoTweaksViewController.m in Sources */,
+				B45ED2601DD960C700664B78 /* OMAddTextViewController.m in Sources */,
 				3C4D1F3C1987A298001622B7 /* SlideNavigationContorllerAnimatorScaleAndFade.m in Sources */,
 				3C5E7EC4197651F6000550F6 /* OMLoginViewController.m in Sources */,
 				3C1284471978C90500EB7744 /* OMEventCell.m in Sources */,
