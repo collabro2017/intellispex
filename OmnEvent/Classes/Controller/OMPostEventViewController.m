@@ -152,6 +152,9 @@
     textFieldDescriptionPicker.isOptionalDropDown = NO;
     [textFieldDescriptionPicker setItemList:[NSArray arrayWithObjects:@"", @"For Reference", @"Comment", nil]];
     strTemp = @"";
+    ////-----------
+    UITapGestureRecognizer *singleFingerTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
+    [self.view addGestureRecognizer:singleFingerTap];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -1162,7 +1165,14 @@
     lblForCount.text = [NSString stringWithFormat:@"%u",max_num - textView.text.length];
     
     if ([lblForCount.text isEqualToString:@"0"]) {
-        
+        if ([textViewForDescription becomeFirstResponder]) {
+            
+            [textViewForDescription resignFirstResponder];
+        }
+        if ([lblForTitle becomeFirstResponder]) {
+            
+            [lblForTitle resignFirstResponder];
+        }
         lblForCount.textColor = [UIColor redColor];
     }
 }
@@ -1263,4 +1273,19 @@
     textFieldRoomItemPicker.text = @"";
 }
 //-------
+
+//-------
+//The event handling method.
+-(void)handleSingleTap:(UITapGestureRecognizer *)recognizer{
+    
+    if ([textViewForDescription becomeFirstResponder]) {
+        
+        [textViewForDescription resignFirstResponder];
+    }
+    if ([lblForTitle becomeFirstResponder]) {
+        
+        [lblForTitle resignFirstResponder];
+    }
+    
+}
 @end
