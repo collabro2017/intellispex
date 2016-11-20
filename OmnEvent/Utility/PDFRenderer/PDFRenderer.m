@@ -118,7 +118,9 @@
     [PDFRenderer drawText:user.username inFrame:CGRectMake(51 * rScale, (nCurrOffset + 20) * rScale, 211 * rScale, 21 * rScale) fontName:@"Roboto-Regular" fontSize:12 * rScale fontColor:[UIColor blackColor]];
     
     int nDesHeight = [OMGlobal heightForCellWithPost:currentObj[@"title"]];
-    
+    //---------------------------------------------------------------------//
+    [PDFRenderer drawText:currentObj[@"title"] inFrame:CGRectMake(51 * rScale, (nCurrOffset + nDesHeight + 25) * rScale, 250 * rScale, nDesHeight * rScale) fontName:@"HelveticaNeue-Light" fontSize:12 * rScale fontColor:[UIColor grayColor]];
+    //---------------------------------------------------------------------//
     [PDFRenderer drawText:currentObj[@"title"] inFrame:CGRectMake(51 * rScale, (nCurrOffset + 70) * rScale, 250 * rScale, nDesHeight * rScale) fontName:@"HelveticaNeue-Light" fontSize:12 * rScale fontColor:[UIColor grayColor]];
     
     NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
@@ -130,7 +132,23 @@
     
     [PDFRenderer drawText:str_date inFrame:CGRectMake(200 * rScale, (nCurrOffset + 20) * rScale, 211 * rScale, 21 * rScale) fontName:@"Roboto-Regular" fontSize:12 * rScale fontColor:[UIColor grayColor]];
     
-    nCurrOffset += 70;
+    //-------------------------------------------------------------//
+    nCurrOffset += nDesHeight;
+    nCurrOffset += 10;
+    
+    int nDescHeight = [OMGlobal getBoundingOfString:currentObj[@"description"] width:250].height + 20;
+    
+    
+    if (((nCurrOffset + nDescHeight) * rScale) > 800)
+    {
+        UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, 612, 730), nil); // start second page
+        nCurrOffset = 30;
+    }
+    
+    [PDFRenderer drawText:currentObj[@"description"] inFrame:CGRectMake(52 * rScale, (nCurrOffset + nDescHeight) * rScale, 250 * rScale, nDescHeight * rScale) fontName:@"Roboto-Regular" fontSize:11 * rScale fontColor:[UIColor blackColor]];
+    
+    nCurrOffset += nDescHeight;
+    //------------------------------------------------------------//
 
     if (currentObj[@"commentsUsers"])
         [PDFRenderer drawText:[NSString stringWithFormat:@"%lu",(unsigned long) [currentObj[@"commentsUsers"] count]] inFrame:CGRectMake(149 * rScale, (nCurrOffset + 27) * rScale, 46 * rScale, 30 * rScale) fontName:@"HelveticaNeue-Light" fontSize:15 * rScale  fontColor:[UIColor grayColor]];
@@ -221,11 +239,11 @@
                 }
                 
                 [PDFRenderer drawText:commenter.username inFrame:CGRectMake(51 * rScale, (nCurrOffset + 20) * rScale, 211 * rScale, 21 * rScale) fontName:@"Roboto-Regular" fontSize:12 * rScale fontColor:[UIColor blackColor]];
-                
+                /*
                 int nDesHeight = [OMGlobal heightForCellWithPost:tempObj[@"Comments"]];
                 
                 [PDFRenderer drawText:tempObj[@"Comments"] inFrame:CGRectMake(51 * rScale, (nCurrOffset + nDesHeight + 20) * rScale, 250 * rScale, nDesHeight * rScale) fontName:@"HelveticaNeue-Light " fontSize:12 * rScale fontColor:[UIColor grayColor]];
-                
+                //*/
                 NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
                 //    [dateFormat setDateFormat:@"EEE, MMM dd yyyy hh:mm a"];//Wed, Dec 14 2011 1:50 PM
                 [dateFormat setDateFormat:@"MMM dd yyyy hh:mm a"];//Dec 14 2011 1:50 PM
@@ -234,6 +252,18 @@
                 NSLog(@"str_date = %@",str_date);
                 
                 [PDFRenderer drawText:str_date inFrame:CGRectMake(200 * rScale, (nCurrOffset + 20) * rScale, 211 * rScale, 21 * rScale) fontName:@"Roboto-Regular" fontSize:12 * rScale fontColor:[UIColor grayColor]];
+                
+                //-----------------------------------------------------------//
+                int nDesHeight = [OMGlobal heightForCellWithPost:tempObj[@"Comments"]];
+                
+                if (((nCurrOffset + nDesHeight) * rScale) > 800)
+                {
+                    UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, 612, 730), nil); // start second page
+                    nCurrOffset = 30;
+                }
+                
+                [PDFRenderer drawText:tempObj[@"Comments"] inFrame:CGRectMake(51 * rScale, (nCurrOffset + nDesHeight + 20) * rScale, 250 * rScale, nDesHeight * rScale) fontName:@"HelveticaNeue-Light " fontSize:12 * rScale fontColor:[UIColor grayColor]];
+                //-----------------------------------------------------------//
                 
                 nCurrOffset += nDesHeight + 20;
                 
@@ -306,8 +336,23 @@
     [PDFRenderer drawText:str_date inFrame:CGRectMake(200 * rScale, (nCurrOffset + 20) * rScale, 211 * rScale, 21 * rScale) fontName:@"Roboto-Regular" fontSize:12 * rScale fontColor:[UIColor grayColor]];
     
     if (currentObj[@"country"])
+    {
+        NSString *strCountryInfo = currentObj[@"country"];
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"IS_GEOCODE_ENABLED"]) {
+            
+            if (currentObj[@"countryLatLong"] && ![currentObj[@"countryLatLong"] isEqualToString:@""]) {
+                strCountryInfo = currentObj[@"countryLatLong"];
+            }
+            //-------------------------------//
+            else
+                strCountryInfo = [[NSUserDefaults standardUserDefaults] stringForKey:currentObj[@"country"]];
+            
+        }
+        [PDFRenderer drawText:strCountryInfo inFrame:CGRectMake(51 * rScale, (nCurrOffset + 40) * rScale, 211 * rScale, 21 * rScale) fontName:@"Roboto-Regular" fontSize:12 * rScale fontColor:[UIColor grayColor]];
+    }
+    /*
         [PDFRenderer drawText:currentObj[@"country"] inFrame:CGRectMake(51 * rScale, (nCurrOffset + 40) * rScale, 211 * rScale, 21 * rScale) fontName:@"Roboto-Regular" fontSize:12 * rScale fontColor:[UIColor grayColor]];
-    
+    //*/
     nCurrOffset += 70;
     
     if ((nCurrOffset * rScale) > pageContentH)
@@ -656,9 +701,18 @@
                         
                         int nDesHeight = [OMGlobal heightForCellWithPost:comment];
                         
-                        [PDFRenderer drawText:comment inFrame:CGRectMake(51 * rScale, (nCurrentOffset + 70) * rScale, 250 * rScale, nDesHeight * rScale) fontName:@"HelveticaNeue-Light " fontSize:12 * rScale fontColor:[UIColor grayColor]];
+                        //----------------------------------------------------//
+                        if (((nCurrentOffset + nDesHeight) * rScale) > 800)
+                        {
+                            UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, 612, 730), nil); // start second page
+                            nCurrentOffset = 30;
+                        }
                         
-                        nCurrentOffset += 70;
+                        
+                        nCurrentOffset += 70;		                        [PDFRenderer drawText:comment inFrame:CGRectMake(51 * rScale, (nCurrentOffset + nDesHeight + 15) * rScale, 250 * rScale, nDesHeight * rScale) fontName:@"HelveticaNeue-Light " fontSize:12 * rScale fontColor:[UIColor grayColor]];
+                        nCurrentOffset += nDesHeight;
+                        nCurrentOffset += 15;
+                        //---------------------------------------------------//
                         
                         if ((nCurrentOffset * rScale) > pageContentH) {
                             UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, 612, pageH), nil); // start second page
