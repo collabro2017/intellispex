@@ -317,7 +317,11 @@
         [_playButton removeFromSuperview];
         _playButton = nil;
     }
-    
+    //-------------------------------------------------//
+    // Fixed the blue check button.
+    /////////////////////////////////////////////////////
+    /*
+
     if ([self viewWithTag:10]) {
         
         UIButton *button = (UIButton *)[self viewWithTag:10];
@@ -326,7 +330,7 @@
         button = nil;
         
     }
-    
+    //----------------------------------------------//*/
     if ([imageViewForMedia viewWithTag:11]) {
         
         PCSEQVisualizer *tempEQ = (PCSEQVisualizer *)[imageViewForMedia viewWithTag:11];
