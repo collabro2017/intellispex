@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "OMGlobal.h"
 @class PopUpMenuView;
-
-@interface FTTabBarController : UIViewController
+//-------------------------------------
+#import "ZCImagePickerController.h"
+@interface FTTabBarController : UIViewController<UIActionSheetDelegate, ZCImagePickerControllerDelegate>
 {
     
     IBOutlet UIImageView *imageViewForAvatar;
@@ -25,7 +26,10 @@
     
     
     IBOutlet NSLayoutConstraint *constraintForNotificationHeight;
-    
+    UIActionSheet *actionSheet;
+    //---------------------------------
+    NSMutableArray *_imageArray;
+    UIPopoverController *_popoverController;
 }
 
 - (IBAction)showTutorialVideoAction:(id)sender;
@@ -44,6 +48,13 @@
 @property (nonatomic, strong) IBOutletCollection(UIButton) NSArray *tabBarButtons;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *contraintWidthTabbar;
+
+//----------------------------------------------------//
+@property (nonatomic) int tempCaptureOption;
+@property (nonatomic) PFObject* tempCurObj;
+@property (nonatomic) int tempPostOrder;
+@property (nonatomic) int tempUploadOption;
+//----------------------------------------------------//
 
 - (IBAction)tabBarAction:(id)sender;
 

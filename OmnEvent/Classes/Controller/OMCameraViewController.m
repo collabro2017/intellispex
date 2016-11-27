@@ -22,7 +22,11 @@
 
 //----
 #import "OMPhotoEditViewController.h"
+#import "_CLImageEditorViewController.h"
 //----
+
+//-----------------------------------------
+#import "OMPanoViewController.h"
 #define TIMER_INTERVAL 0.05f
 
 #define TAG_ALERTVIEW_CLOSE_CONTROLLER 10086
@@ -653,7 +657,7 @@
     
     [self.navigationController pushViewController:postEventVC animated:YES];
     */
-    
+    /*
     OMPhotoEditViewController *photoEditVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoEditVC"];
     
     [photoEditVC setPreImage:image];
@@ -665,8 +669,49 @@
     [photoEditVC setPostOrder:_postOrder];
     
     [self.navigationController pushViewController:photoEditVC animated:YES];
+    //*/
+    
+    CLImageEditor *editor = [[CLImageEditor alloc] initWithImage:image];
+    editor.delegate = self;
+    [[CLImageEditorTheme theme] setBackgroundColor:[UIColor blackColor]];
+    [[CLImageEditorTheme theme] setToolbarColor:[[UIColor blackColor] colorWithAlphaComponent:0.8]];
+    [[CLImageEditorTheme theme] setToolbarTextColor:[UIColor whiteColor]];
+    [[CLImageEditorTheme theme] setToolIconColor:@"white"];
+    [self presentViewController:editor animated:YES completion:nil];
+    
+}
+#pragma mark - CLimageEditor delegate
+- (void)imageEditorDidCancel:(CLImageEditor *)editor
+{
+    [editor dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (void)imageEditor:(CLImageEditor *)editor didFinishEdittingWithImage:(UIImage *)image
+{
+    [editor dismissViewControllerAnimated:YES completion:^{
+        
+        if (image) {
+            
+            OMPostEventViewController *postEventVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PostEventVC"];
+            
+            [postEventVC setImageForPost:image];
+            [postEventVC setPostType:@"image"]; //Post Type  :  image , video, audio
+            
+            [postEventVC setUploadOption:uploadOption];
+            [postEventVC setCaptureOption:captureOption];
+            [postEventVC setCurObj:curObj];
+            [postEventVC setPostOrder:_postOrder];
+            if (self.panoFlag == YES) {
+                [postEventVC setPanoFlag:YES];
+                self.panoFlag = NO;
+            }
+            
+            [self.navigationController pushViewController:postEventVC animated:YES];
+            
+        }
+    }];
+    
+}
 - (void)showPreviewForVideo:(NSURL *)_url
 {
     
@@ -678,6 +723,7 @@
     [postEventVC setUploadOption:uploadOption];
     [postEventVC setCaptureOption:captureOption];
     [postEventVC setCurObj:curObj];
+    [postEventVC setPostOrder:_postOrder];
     
     [self.navigationController pushViewController:postEventVC animated:YES];
 }
@@ -1056,6 +1102,33 @@
     [self performSelector:@selector(animateRecordView) withObject:nil afterDelay:0.5];
 }
 
+//--------------------------
+- (IBAction)actionPanoramCapture:(id)sender {
+    
+    OMPanoViewController *panoVC = [self.storyboard instantiateViewControllerWithIdentifier:@"panoViewController"];
+    panoVC.delegate = self;
+    
+    [self.navigationController pushViewController:panoVC animated:YES];
+    
+}
+
+#pragma mark - OMPanoramViewControllerDelegate
+-(void)didFinishCapture:(UIImage *)image{
+    if (image) {
+        
+        CLImageEditor *editor = [[CLImageEditor alloc] initWithImage:image];
+        editor.delegate = self;
+        [[CLImageEditorTheme theme] setBackgroundColor:[UIColor blackColor]];
+        [[CLImageEditorTheme theme] setToolbarColor:[[UIColor blackColor] colorWithAlphaComponent:0.8]];
+        [[CLImageEditorTheme theme] setToolbarTextColor:[UIColor whiteColor]];
+        [[CLImageEditorTheme theme] setToolIconColor:@"white"];
+        
+        //-------------------------------------------------------------
+        self.panoFlag = YES;
+        
+        [self presentViewController:editor animated:YES completion:nil];
+    }
+}
 
 
 @end

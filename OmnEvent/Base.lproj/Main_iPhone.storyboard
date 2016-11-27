@@ -6456,6 +6456,19 @@
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="kt9-9C-wqO">
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="j4i-35-h6o">
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="2ee-Rd-XOC"/>
+                                            <constraint firstAttribute="width" constant="45" id="c0i-48-584"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <state key="normal" title="Pano">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="actionPanoramCapture:" destination="OVm-2c-yBL" eventType="touchUpInside" id="0Ji-Hd-IAv"/>
+                                        </connections>
+                                    </button>
                                     <button opaque="NO" tag="200" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SJY-sh-4vY" userLabel="camera">
                                         <constraints>
                                             <constraint firstAttribute="height" constant="90" id="TLz-Rl-kCw"/>
@@ -6518,6 +6531,7 @@
                                     <constraint firstAttribute="centerY" secondItem="SJY-sh-4vY" secondAttribute="centerY" constant="-1" id="D3b-4z-ICF"/>
                                     <constraint firstItem="SJY-sh-4vY" firstAttribute="leading" secondItem="qhw-MR-dcX" secondAttribute="trailing" id="D6z-Si-ca4"/>
                                     <constraint firstAttribute="height" constant="208" id="EwT-pf-SEg"/>
+                                    <constraint firstItem="j4i-35-h6o" firstAttribute="top" secondItem="bic-2s-Xcu" secondAttribute="top" constant="15" id="FLm-rH-a0C"/>
                                     <constraint firstItem="qhw-MR-dcX" firstAttribute="leading" secondItem="bic-2s-Xcu" secondAttribute="leading" id="LhO-T2-ddY"/>
                                     <constraint firstAttribute="trailing" secondItem="nri-WH-qQe" secondAttribute="trailing" id="NVN-i6-5ys"/>
                                     <constraint firstAttribute="bottom" secondItem="kt9-9C-wqO" secondAttribute="bottom" id="QXY-QP-xex"/>
@@ -6527,6 +6541,7 @@
                                     <constraint firstItem="kt9-9C-wqO" firstAttribute="leading" secondItem="bic-2s-Xcu" secondAttribute="leading" id="YdO-4E-7Er"/>
                                     <constraint firstItem="kt9-9C-wqO" firstAttribute="top" secondItem="bic-2s-Xcu" secondAttribute="top" id="aHb-4W-Bcc"/>
                                     <constraint firstItem="SJY-sh-4vY" firstAttribute="centerY" secondItem="qhw-MR-dcX" secondAttribute="centerY" constant="0.5" id="nk6-lt-kJz"/>
+                                    <constraint firstAttribute="trailing" secondItem="j4i-35-h6o" secondAttribute="trailing" constant="15" id="nwb-hn-AZv"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YXM-JN-l0h" userLabel="videoControl">
@@ -8171,6 +8186,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rqc-UV-sFr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-4604" y="-3078"/>
+        </scene>
+        <!--Pano View Controller-->
+        <scene sceneID="l0T-sf-hGV">
+            <objects>
+                <viewController storyboardIdentifier="panoViewController" id="eGN-KM-jzm" customClass="OMPanoViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="xZM-or-ZrC"/>
+                        <viewControllerLayoutGuide type="bottom" id="HeF-4o-xwm"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="m7W-UA-zsI">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vrn-Q4-Fm4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-4967" y="-3767"/>
         </scene>
     </scenes>
     <resources>

@@ -41,6 +41,8 @@
     
     IBOutlet UIButton *btnReverse;
     BOOL isActionSheetReverseSelected;
+    //------------------
+    IBOutlet UIButton *btnNotification;
 }
 
 @property (nonatomic, retain) UIDocumentInteractionController *dic;

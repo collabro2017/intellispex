@@ -224,7 +224,7 @@
     constraintForDescription.constant = [OMGlobal getBoundingOfString:currentObj[@"description"] width:txtViewForDes.frame.size.width].height + 30;
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"IS_GEOCODE_ENABLED"]) {
-        if (currentObj[@"countryLatLong"]) {
+        if (currentObj[@"countryLatLong"] && ![currentObj[@"countryLatLong"] isEqualToString:@""]) {
             lblForLocation.text = currentObj[@"countryLatLong"];
         }
         else {
