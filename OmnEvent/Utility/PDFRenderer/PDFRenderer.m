@@ -121,7 +121,7 @@
     //---------------------------------------------------------------------//
     [PDFRenderer drawText:currentObj[@"title"] inFrame:CGRectMake(51 * rScale, (nCurrOffset + nDesHeight + 25) * rScale, 250 * rScale, nDesHeight * rScale) fontName:@"HelveticaNeue-Light" fontSize:12 * rScale fontColor:[UIColor grayColor]];
     //---------------------------------------------------------------------//
-    [PDFRenderer drawText:currentObj[@"title"] inFrame:CGRectMake(51 * rScale, (nCurrOffset + 70) * rScale, 250 * rScale, nDesHeight * rScale) fontName:@"HelveticaNeue-Light" fontSize:12 * rScale fontColor:[UIColor grayColor]];
+    
     
     NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
     //    [dateFormat setDateFormat:@"EEE, MMM dd yyyy hh:mm a"];//Wed, Dec 14 2011 1:50 PM
@@ -709,7 +709,7 @@
                         }
                         
                         
-                        nCurrentOffset += 70;		                        [PDFRenderer drawText:comment inFrame:CGRectMake(51 * rScale, (nCurrentOffset + nDesHeight + 15) * rScale, 250 * rScale, nDesHeight * rScale) fontName:@"HelveticaNeue-Light " fontSize:12 * rScale fontColor:[UIColor grayColor]];
+                        [PDFRenderer drawText:comment inFrame:CGRectMake(51 * rScale, (nCurrentOffset + nDesHeight + 15) * rScale, 250 * rScale, nDesHeight * rScale) fontName:@"HelveticaNeue-Light " fontSize:12 * rScale fontColor:[UIColor grayColor]];
                         nCurrentOffset += nDesHeight;
                         nCurrentOffset += 15;
                         //---------------------------------------------------//
