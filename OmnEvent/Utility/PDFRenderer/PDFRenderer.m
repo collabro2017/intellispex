@@ -396,10 +396,18 @@
     }
     
     int nDescHeight = [OMGlobal getBoundingOfString:currentObj[@"description"] width:250].height + 20;
+    //*********************************//
     
+    if (((nCurrOffset + nDescHeight) * rScale) > 800)
+    {
+        UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, 612, 730), nil); // start second page
+        nCurrOffset = 30;
+    }
+    //*********************************//
     [PDFRenderer drawText:currentObj[@"description"] inFrame:CGRectMake(25 * rScale, (nCurrOffset + nDescHeight) * rScale, 250 * rScale, nDescHeight * rScale) fontName:@"Roboto-Regular" fontSize:11 * rScale fontColor:[UIColor blackColor]];
     
     nCurrOffset += nDescHeight;
+    
     
     if (currentObj[@"commentsUsers"])
         [PDFRenderer drawText:[NSString stringWithFormat:@"%lu",(unsigned long) [currentObj[@"commentsUsers"] count]] inFrame:CGRectMake(149 * rScale, (nCurrOffset + 27) * rScale, 46 * rScale, 30 * rScale) fontName:@"HelveticaNeue-Light" fontSize:15 * rScale  fontColor:[UIColor grayColor]];
