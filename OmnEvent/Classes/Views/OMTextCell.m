@@ -219,6 +219,10 @@
                     
                     if(socialEventObj.badgeCount >= 1) socialEventObj.badgeCount -= 1;
                     [[GlobalVar getInstance].gArrEventList replaceObjectAtIndex:curEventIndex withObject:socialEventObj];
+                    //---------------------------------------------
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"descount_bagdes" object:nil];
+                    });
                 }
                 
                 //[[NSNotificationCenter defaultCenter] postNotificationName:kLoadEventDataWithGlobal object:nil];
@@ -460,5 +464,23 @@
     
     return NO;
 }
-
+//---------------------------------------------------------------------------------------------//
+- (void) setEditing:(BOOL)editing animated:(BOOL)animated
+{
+    [super setEditing: editing animated: YES];
+    
+    if (editing) {
+        
+        for (UIView * view in self.subviews) {
+            if ([NSStringFromClass([view class]) rangeOfString: @"Reorder"].location != NSNotFound) {
+                for (UIView * subview in view.subviews) {
+                    if ([subview isKindOfClass: [UIImageView class]]) {
+                        ((UIImageView *)subview).image = [UIImage imageNamed: @"arrow_up_down"];
+                    }
+                }
+            }
+        }
+    }
+}
+/***********************************************************************************************/
 @end

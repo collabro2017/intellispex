@@ -43,6 +43,7 @@
     BOOL isActionSheetReverseSelected;
     //------------------
     IBOutlet UIButton *btnNotification;
+    UILabel *lbl_card_count;
 }
 
 @property (nonatomic, retain) UIDocumentInteractionController *dic;

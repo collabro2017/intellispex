@@ -602,6 +602,9 @@
 		B45ED2781DD9637800664B78 /* PhotoTweaksViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B45ED2701DD9637800664B78 /* PhotoTweaksViewController.m */; };
 		B45ED2791DD9637800664B78 /* PhotoTweakView.m in Sources */ = {isa = PBXBuildFile; fileRef = B45ED2721DD9637800664B78 /* PhotoTweakView.m */; };
 		B45ED27A1DD9637800664B78 /* UIColor+Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = B45ED2741DD9637800664B78 /* UIColor+Tweak.m */; };
+		B4B88B101DF40010005F75E9 /* OMEventNotiViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4B88B0F1DF40010005F75E9 /* OMEventNotiViewController.m */; };
+		B4B88B1C1DF400CC005F75E9 /* OMNotiMediaCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B4B88B191DF400CC005F75E9 /* OMNotiMediaCell.m */; };
+		B4B88B1D1DF400CC005F75E9 /* OMNotiTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B4B88B1B1DF400CC005F75E9 /* OMNotiTextCell.m */; };
 		B4D45A771DD21ED5002EA1D1 /* IQDropDownTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = B4D45A761DD21ED5002EA1D1 /* IQDropDownTextField.m */; };
 		B4FBBA271CCE723200BFDAD8 /* OMFeedOtherCommentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FBBA261CCE723100BFDAD8 /* OMFeedOtherCommentCell.m */; };
 		E42F747E1C8ACEC20008CC38 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = E42F747D1C8ACEC20008CC38 /* Reachability.m */; };
@@ -1408,6 +1411,12 @@
 		B45ED2721DD9637800664B78 /* PhotoTweakView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoTweakView.m; sourceTree = "<group>"; };
 		B45ED2731DD9637800664B78 /* UIColor+Tweak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Tweak.h"; sourceTree = "<group>"; };
 		B45ED2741DD9637800664B78 /* UIColor+Tweak.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Tweak.m"; sourceTree = "<group>"; };
+		B4B88B0E1DF40010005F75E9 /* OMEventNotiViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMEventNotiViewController.h; sourceTree = "<group>"; };
+		B4B88B0F1DF40010005F75E9 /* OMEventNotiViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMEventNotiViewController.m; sourceTree = "<group>"; };
+		B4B88B181DF400CC005F75E9 /* OMNotiMediaCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMNotiMediaCell.h; sourceTree = "<group>"; };
+		B4B88B191DF400CC005F75E9 /* OMNotiMediaCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMNotiMediaCell.m; sourceTree = "<group>"; };
+		B4B88B1A1DF400CC005F75E9 /* OMNotiTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMNotiTextCell.h; sourceTree = "<group>"; };
+		B4B88B1B1DF400CC005F75E9 /* OMNotiTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMNotiTextCell.m; sourceTree = "<group>"; };
 		B4D45A751DD21ED5002EA1D1 /* IQDropDownTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQDropDownTextField.h; sourceTree = "<group>"; };
 		B4D45A761DD21ED5002EA1D1 /* IQDropDownTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQDropDownTextField.m; sourceTree = "<group>"; };
 		B4FBBA251CCE723100BFDAD8 /* OMFeedOtherCommentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMFeedOtherCommentCell.h; sourceTree = "<group>"; };
@@ -1597,6 +1606,8 @@
 		3C3D713C199A6BD100DBD54E /* HomeGroup */ = {
 			isa = PBXGroup;
 			children = (
+				B4B88B0E1DF40010005F75E9 /* OMEventNotiViewController.h */,
+				B4B88B0F1DF40010005F75E9 /* OMEventNotiViewController.m */,
 				3C5E7E9A197628DF000550F6 /* OMHomeViewController.h */,
 				3C5E7E9B197628DF000550F6 /* OMHomeViewController.m */,
 				3C2FC34C1998EB67008D5069 /* OMDetailEventViewController.h */,
@@ -2279,6 +2290,7 @@
 		3EB718D11ABF4F730050E2D2 /* Cell */ = {
 			isa = PBXGroup;
 			children = (
+				B4B88B111DF40057005F75E9 /* EventNotification */,
 				FAB3D3141DD09E85007FEE35 /* OMEventFeedCell.h */,
 				FAB3D3151DD09E85007FEE35 /* OMEventFeedCell.m */,
 				3EB298A91ACDD83400528552 /* OMMediaCell.h */,
@@ -2862,6 +2874,17 @@
 				B45ED2741DD9637800664B78 /* UIColor+Tweak.m */,
 			);
 			path = PhotoTweaks;
+			sourceTree = "<group>";
+		};
+		B4B88B111DF40057005F75E9 /* EventNotification */ = {
+			isa = PBXGroup;
+			children = (
+				B4B88B181DF400CC005F75E9 /* OMNotiMediaCell.h */,
+				B4B88B191DF400CC005F75E9 /* OMNotiMediaCell.m */,
+				B4B88B1A1DF400CC005F75E9 /* OMNotiTextCell.h */,
+				B4B88B1B1DF400CC005F75E9 /* OMNotiTextCell.m */,
+			);
+			name = EventNotification;
 			sourceTree = "<group>";
 		};
 		CC164C17D1ED2A76D7A74FD6 /* Pods */ = {
@@ -3464,6 +3487,7 @@
 				3C4D1F471987A55D001622B7 /* OMLeftMenuTableViewCell.m in Sources */,
 				B42059321DEB1B9B0060F0A0 /* ZCImagePickerController.m in Sources */,
 				3EB570C41AC5CD3C0033C151 /* OMCustomProfileInfoView.m in Sources */,
+				B4B88B1C1DF400CC005F75E9 /* OMNotiMediaCell.m in Sources */,
 				B42058F51DEB06690060F0A0 /* CLGPUImageVignetteFilter.m in Sources */,
 				A9193FCA1AD1305B00692A50 /* OMMessageViewController.m in Sources */,
 				E4B0BA911C3E0FA100F6CCB9 /* PDFRenderer.m in Sources */,
@@ -3480,6 +3504,7 @@
 				A9BFE3471AE6436C00812AE0 /* OMDescriptionCell.m in Sources */,
 				3CC6914E199FBE350064B4D0 /* CountryPicker.m in Sources */,
 				B42058DF1DEB06690060F0A0 /* CLDrawTool.m in Sources */,
+				B4B88B1D1DF400CC005F75E9 /* OMNotiTextCell.m in Sources */,
 				B42058FD1DEB06690060F0A0 /* CLTextSettingView.m in Sources */,
 				3C2FC34E1998EB67008D5069 /* OMDetailEventViewController.m in Sources */,
 				B42058EF1DEB06690060F0A0 /* CLColorPickerView.m in Sources */,
@@ -3558,6 +3583,7 @@
 				A9193FC71AD0F74A00692A50 /* OMDetailHeaderCell.m in Sources */,
 				3C4D1F411987A298001622B7 /* SlideNavigationController.m in Sources */,
 				8F18CABB1CF78E90005021BB /* NSString+MD5.m in Sources */,
+				B4B88B101DF40010005F75E9 /* OMEventNotiViewController.m in Sources */,
 				B42058E51DEB06690060F0A0 /* CLPosterizeEffect.m in Sources */,
 				A81D7A7F1D6ECC0500D48B53 /* MBProgressHUD+Add.m in Sources */,
 				3EC673BF1AB82C2E00EB1216 /* OMSettingsViewController.m in Sources */,
