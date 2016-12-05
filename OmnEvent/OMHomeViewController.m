@@ -380,7 +380,11 @@
     
     if (is_grid) [collectionViewForFeed reloadData];
     else [tableViewForFeeds reloadData];
-    
+ 
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if (is_grid) [collectionViewForFeed reloadData];
+        else [tableViewForFeeds reloadData];
+    });
 }
 
 // Recurrent processing until arrForFirstArray is empty
