@@ -55,8 +55,14 @@
     [OMSocialEvent registerSubclass];
     [ParseCrashReporting enable];
     [Parse enableLocalDatastore];
-    [Parse setApplicationId:PARSE_APP_ID clientKey:CLIENT_KEY];
+    //[Parse setApplicationId:PARSE_APP_ID clientKey:CLIENT_KEY];
     
+    [Parse initializeWithConfiguration:[ParseClientConfiguration configurationWithBlock:^(id<ParseMutableClientConfiguration> configuration) {
+        configuration.applicationId = PARSE_APP_ID;
+        configuration.clientKey = CLIENT_KEY;
+        configuration.server = @"http://intellispex-env.us-east-1.elasticbeanstalk.com//parse";
+        [configuration setLocalDatastoreEnabled:YES ];
+    }]];
     if (IS_UPLOADING)
         [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
