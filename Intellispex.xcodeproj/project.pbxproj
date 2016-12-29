@@ -614,6 +614,8 @@
 		E4B0BA8D1C3E09C600F6CCB9 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4B0BA8C1C3E09C600F6CCB9 /* CoreText.framework */; };
 		E4B0BA911C3E0FA100F6CCB9 /* PDFRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = E4B0BA901C3E0FA100F6CCB9 /* PDFRenderer.m */; };
 		FAB3D3161DD09E85007FEE35 /* OMEventFeedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB3D3151DD09E85007FEE35 /* OMEventFeedCell.m */; };
+		FAF336EF1E15154100989F27 /* OMTermsAndConditionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAF336EE1E15154100989F27 /* OMTermsAndConditionsViewController.m */; };
+		FAF336F11E15157200989F27 /* terms_and_conditions.txt in Resources */ = {isa = PBXBuildFile; fileRef = FAF336F01E15157200989F27 /* terms_and_conditions.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1432,6 +1434,9 @@
 		F7DC6A5B4C0984C3685D1B4D /* libPods-Intellispex.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Intellispex.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAB3D3141DD09E85007FEE35 /* OMEventFeedCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMEventFeedCell.h; sourceTree = "<group>"; };
 		FAB3D3151DD09E85007FEE35 /* OMEventFeedCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMEventFeedCell.m; sourceTree = "<group>"; };
+		FAF336ED1E15154100989F27 /* OMTermsAndConditionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMTermsAndConditionsViewController.h; sourceTree = "<group>"; };
+		FAF336EE1E15154100989F27 /* OMTermsAndConditionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMTermsAndConditionsViewController.m; sourceTree = "<group>"; };
+		FAF336F01E15157200989F27 /* terms_and_conditions.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = terms_and_conditions.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1666,6 +1671,8 @@
 				3EC673BE1AB82C2E00EB1216 /* OMSettingsViewController.m */,
 				3EABA90B1AB893B900EBD7B0 /* OMChangePasswordViewController.h */,
 				3EABA90C1AB893B900EBD7B0 /* OMChangePasswordViewController.m */,
+				FAF336ED1E15154100989F27 /* OMTermsAndConditionsViewController.h */,
+				FAF336EE1E15154100989F27 /* OMTermsAndConditionsViewController.m */,
 			);
 			name = Profile;
 			sourceTree = "<group>";
@@ -2146,6 +2153,7 @@
 			children = (
 				A9E986E51B2240E900B1BB92 /* PrivacyPolicy.docx */,
 				A81D7A801D6EF3B400D48B53 /* play_button@2x.png */,
+				FAF336F01E15157200989F27 /* terms_and_conditions.txt */,
 				8F3A27E31CF602A800999200 /* Font */,
 				8FE63D6A1CE70416002907FB /* Splash */,
 				6C9CA1C71B46697100806F96 /* Video */,
@@ -3141,6 +3149,7 @@
 				3CC691F2199FBE350064B4D0 /* NG.png in Resources */,
 				3EB66CCF1AB6186700E90054 /* video_longvideo_btn_pause@2x.png in Resources */,
 				3CC69225199FBE350064B4D0 /* TG.png in Resources */,
+				FAF336F11E15157200989F27 /* terms_and_conditions.txt in Resources */,
 				3CC691D3199FBE350064B4D0 /* LT.png in Resources */,
 				3CC691D2199FBE350064B4D0 /* LS.png in Resources */,
 				3CC69161199FBE350064B4D0 /* BA.png in Resources */,
@@ -3444,6 +3453,7 @@
 				3C0A5C551978FBB4009AEC85 /* OMSocialComment.m in Sources */,
 				B42058FC1DEB06690060F0A0 /* CLTextLabel.m in Sources */,
 				3E5611CB1AC49EAE00505444 /* OMProfileBioCell.m in Sources */,
+				FAF336EF1E15154100989F27 /* OMTermsAndConditionsViewController.m in Sources */,
 				3EB298AB1ACDD83400528552 /* OMMediaCell.m in Sources */,
 				B42058FA1DEB06690060F0A0 /* CLPickerDrum.m in Sources */,
 				3C4D1F3A1987A298001622B7 /* SlideNavigationContorllerAnimatorFade.m in Sources */,

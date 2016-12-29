@@ -27,5 +27,7 @@
 @property (nonatomic, assign) BOOL network_state;
 
 - (FTTabBarController *)tabBarController;
+- (void)showWelcomeVC;
+- (void)showAgreementVC;
 
 @end

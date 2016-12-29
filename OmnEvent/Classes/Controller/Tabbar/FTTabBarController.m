@@ -324,9 +324,11 @@
         }
         else if ([USER[@"loginType"] isEqualToString:@"facebook"])
         {
-            
             [imageViewForAvatar setImageWithURL:[NSURL URLWithString:USER[@"profileURL"]]];
-
+        }
+        
+        if (![[NSUserDefaults standardUserDefaults] boolForKey:AGREEMENT_AGREED]) {
+            [APP_DELEGATE showAgreementVC];
         }
     }
 }
@@ -357,6 +359,7 @@
         [FBSession setActiveSession:nil];
         [APP_DELEGATE setLogOut:YES];
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:LOG_IN];
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:AGREEMENT_AGREED];
         [[NSUserDefaults standardUserDefaults] synchronize];
         OMAppDelegate *appDelegate = (OMAppDelegate *)[UIApplication sharedApplication].delegate;
         [MBProgressHUD hideAllHUDsForView:appDelegate.window animated:YES];

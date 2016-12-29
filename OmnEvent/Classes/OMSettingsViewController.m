@@ -142,20 +142,25 @@
                     break;
                 case 1:
                 {
-                    [self rateOurApp];
+                    [self showTermsAndConditions];
                 }
                     break;
                 case 2:
                 {
-                    [self aboutOurApp];
+                    [self rateOurApp];
                 }
                     break;
                 case 3:
                 {
-                    [self suspendAccount];
+                    [self aboutOurApp];
                 }
                     break;
                 case 4:
+                {
+                    [self suspendAccount];
+                }
+                    break;
+                case 5:
                 {
                     [self deleteAccount];
                 }
@@ -212,6 +217,10 @@
 
     
     
+}
+
+- (void)showTermsAndConditions {
+    [self performSegueWithIdentifier:@"TermsSegue" sender:nil];
 }
 
 - (void)rateOurApp
