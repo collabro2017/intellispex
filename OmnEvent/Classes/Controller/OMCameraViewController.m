@@ -80,7 +80,7 @@
     imagePicker = [[UIImagePickerController alloc] init];
     imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     imagePicker.delegate = self;
-//    imagePicker.allowsEditing = YES;
+    imagePicker.allowsEditing = YES;
     
     [self performSelectorOnMainThread:@selector(initRecorder) withObject:nil waitUntilDone:NO];
     
@@ -736,17 +736,15 @@
     
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
     UIImage *image = [info objectForKey:UIImagePickerControllerEditedImage];
-    if (!image) {
-        image = [info objectForKey:UIImagePickerControllerOriginalImage];
-    }
     
-    //Resize image to square
-    CGSize newSize = CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.width);
-    UIGraphicsBeginImageContextWithOptions(newSize, NO, 0);
-    [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
-    UIImage* resizedImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-
+    float temp;
+    if (image.size.height>image.size.width) {
+        temp = image.size.height;
+    }
+    else
+        temp = image.size.width;
+    
+    
     [MBProgressHUD showMessag:@"Processing..." toView:self.view];
     
     [picker dismissViewControllerAnimated:YES completion:^{
@@ -755,7 +753,7 @@
         
         //[imageViewForPreview setImage:image];
         // for photo editing
-        [self sendImageOnEditViewWithScroll:resizedImage];
+        [self sendImageOnEditViewWithScroll:image];
         
         btnForVideo.enabled = YES;
         btnForVideo.hidden = NO;
