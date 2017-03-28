@@ -197,7 +197,7 @@
     }];
 }
 
--(void)removeNotificationBadge:(PFObject*)obj{
+-(void)removeNotificationBadge:(PFObject*)obj {
     PFUser *self_user = [PFUser currentUser];
     
     if (_event.badgeCount > 0) {
@@ -217,26 +217,22 @@
                     if(error == nil)
                     {
                         [arrNotifyActivity removeObject:obj];
-                        
                         [notiTable reloadData];
                         
                         if(_event.badgeCount >= 1) _event.badgeCount -= 1;
                         [[GlobalVar getInstance].gArrEventList replaceObjectAtIndex:_curEventIndex withObject:_event];
-                        
                         [GlobalVar getInstance].isPosting = NO;
-                        if ([arrNotifyActivity count] == 0) {
-                            [self backAction];
+                        if (self.delegate != nil) {
+                            if ([self.delegate respondsToSelector:@selector(notificationSelected:)]) {
+                                [self.delegate notificationSelected:obj];
+                                [self.navigationController popViewControllerAnimated:true];
+                            }
                         }
                     }
                 }];
-                
-                
-                
             }
-            
-            
         }
-    }else{
+    } else {
         [self backAction];
     }
 }

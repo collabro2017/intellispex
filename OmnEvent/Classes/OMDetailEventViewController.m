@@ -60,7 +60,7 @@
 #define kTag_PDF_Select         30000
 
 
-@interface OMDetailEventViewController ()<AVAudioPlayerDelegate,OMAdditionalTagViewControllerDelegate,MFMessageComposeViewControllerDelegate,MFMailComposeViewControllerDelegate, OMTagFolderViewControllerDelegate, UIViewControllerTransitioningDelegate, UIPickerViewDataSource,UIPickerViewDelegate, QLPreviewControllerDataSource, QLPreviewControllerDelegate>
+@interface OMDetailEventViewController ()<AVAudioPlayerDelegate,OMAdditionalTagViewControllerDelegate,MFMessageComposeViewControllerDelegate,MFMailComposeViewControllerDelegate, OMTagFolderViewControllerDelegate, UIViewControllerTransitioningDelegate, UIPickerViewDataSource,UIPickerViewDelegate, QLPreviewControllerDataSource, QLPreviewControllerDelegate, OMEventNotiViewControllerDelegate>
 {
     
     AVAudioPlayer *audioPlayer;
@@ -227,7 +227,28 @@
     // DetailEvent contents Loading...
     [self loadContents];
     arrPrevTagFriends = [currentObject[@"TagFriends"] copy];
-  
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    
+    [super viewWillAppear:animated];
+    
+    [UIApplication sharedApplication].statusBarOrientation = UIInterfaceOrientationPortrait;
+    OMAppDelegate* appDel = (OMAppDelegate* )[UIApplication sharedApplication].delegate;
+    
+    if (appDel.network_state) {
+        UIImage *btnImage = [UIImage imageNamed:@"online_state.png"];
+        [btnForNetState setImage:btnImage forState:UIControlStateNormal];
+    } else {
+        UIImage *btnImage = [UIImage imageNamed:@"offline_state.png"];
+        [btnForNetState setImage:btnImage forState:UIControlStateNormal];
+    }
+    
+    autoRefreshTimer = [NSTimer scheduledTimerWithTimeInterval: 10.0 target: self selector: @selector(callAfterSixtySecond:) userInfo: nil repeats: YES];
+    
+    //---------------------------------------------//
+    [self initializeBadges];
+    
     //processing bagde
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processBadges:) name:@"descount_bagdes" object:nil];
 }
@@ -245,27 +266,6 @@
 
 - (void)firstViewLoad {
     [self.navigationController popToRootViewControllerAnimated:YES];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    
-    [super viewWillAppear:animated];
-    
-    [UIApplication sharedApplication].statusBarOrientation = UIInterfaceOrientationPortrait;
-    OMAppDelegate* appDel = (OMAppDelegate* )[UIApplication sharedApplication].delegate;
- 
-    if (appDel.network_state) {
-        UIImage *btnImage = [UIImage imageNamed:@"online_state.png"];
-        [btnForNetState setImage:btnImage forState:UIControlStateNormal];
-    } else {
-        UIImage *btnImage = [UIImage imageNamed:@"offline_state.png"];
-        [btnForNetState setImage:btnImage forState:UIControlStateNormal];
-    }
-    
-    autoRefreshTimer = [NSTimer scheduledTimerWithTimeInterval: 10.0 target: self selector: @selector(callAfterSixtySecond:) userInfo: nil repeats: YES];
-    
-    //---------------------------------------------//
-    [self initializeBadges];
 }
 
 - (void)didReceiveMemoryWarning
@@ -3058,14 +3058,11 @@
     OMEventNotiViewController *notiVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NotiEventVC"];
     notiVC.event = (OMSocialEvent*)currentObject;
     notiVC.curEventIndex = curEventIndex;
-    
+    notiVC.delegate = self;
     [self.navigationController pushViewController:notiVC animated:YES];
 }
 
 -(void)processBadges:(NSNotification*)not{
-    //Remove the notification.
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"descount_bagdes" object:nil];
-    
     OMSocialEvent *temp = (OMSocialEvent*)[[GlobalVar getInstance].gArrEventList objectAtIndex:curEventIndex];
     
     if (temp.badgeCount == 0) {
@@ -3085,10 +3082,16 @@
         [lbl_card_count setText:[NSString stringWithFormat:@"%lu",(long)temp.badgeCount]];
         btnNotification.enabled = YES;
     }
-    
-    //Register again.
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processBadges:) name:@"descount_bagdes" object:nil];
 }
 
+#pragma mark - Delegate method of OMEventNotiViewController
+- (void)notificationSelected:(PFObject *)post {
+    NSInteger section = [arrForDetail indexOfObject:post];
+    if (section != NSNotFound) {
+        [self processBadges:nil];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:section+1];
+        [self.tblForDetailList scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    }
+}
 
 @end
