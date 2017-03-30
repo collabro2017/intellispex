@@ -263,8 +263,10 @@
             }];
         }
     }
-    else {
+    else if (![currentObj[@"country"] isEqualToString:@""]) {
         [lblForLocation setText:currentObj[@"country"]];
+    } else {
+        [lblForLocation setText:@"Unkown"];
     }
     
     // for badge processing
