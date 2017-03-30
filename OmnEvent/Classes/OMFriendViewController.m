@@ -18,8 +18,8 @@
     NSMutableArray *arrForFriends;
     NSMutableArray *arrForPeople;
     NSMutableArray *arrForObjects;
-    
     NSMutableArray *arrSearchString;
+    BOOL isShowProfileOpened;
 }
 
 @property (readwrite, nonatomic, strong) UIRefreshControl *refreshControl;
@@ -42,6 +42,7 @@
     
     [mainQ includeKey:@"FromUser"];
     [mainQ includeKey:@"ToUser"];
+    [mainQ whereKey:@"FromUser" equalTo:[PFUser currentUser]];
     
     [mainQ findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
     {
@@ -57,6 +58,11 @@
             if (objects.count == 0)
             {
                 NSLog(@"Not Found");
+                [arrForFriends removeAllObjects];
+                [arrForPeople removeAllObjects];
+                [arrForObjects removeAllObjects];
+                [tblForFriend reloadData];
+                [tblForSearch reloadData];
             }
             else
             {
@@ -66,22 +72,28 @@
                 
                 
                 NSLog(@"Current USer = %@",USER);
+                NSMutableArray *strUserObjectIds = [NSMutableArray array];
                 
                 for (PFObject *obj in objects)
                 {
-                    //NSLog(@"%@",[obj objectForKey:@"FromUser"]);
                     PFUser *user = (PFUser *)[obj objectForKey:@"FromUser"];
                     
                     if ([user.objectId isEqualToString:kIDOfCurrentUser] && !([[((PFUser *)obj[@"ToUser"]) objectForKey:@"visibility"] isEqualToString:@"Hidden"]))
                     {
                         if (obj[@"ToUser"])
                         {
-                            [arrForObjects addObject:obj];
-                            [arrForFriends addObject:obj[@"ToUser"]];
-                        
+                            //Fix issue for multiple friends
+                            PFUser *user = obj[@"ToUser"];
+                            if (![user.objectId isEqualToString:USER.objectId] && ![strUserObjectIds containsObject:user.objectId]) {
+                                [strUserObjectIds addObject:user.objectId];
+                                [arrForObjects addObject:obj];
+                                [arrForFriends addObject:user];
+                            }
                         }
                     }
                 }
+                [strUserObjectIds removeAllObjects];
+                strUserObjectIds = nil;
                 
                 NSMutableArray *tempArrForObjects = [NSMutableArray array];
                 NSMutableArray *tempArrForFriends = [NSMutableArray array];
@@ -134,8 +146,13 @@
                 //Apply Sorting
                 NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"username" ascending:YES
                                                                         selector:@selector(caseInsensitiveCompare:)];
-                [arrForObjects sortUsingDescriptors:@[sort]];
                 [arrForFriends sortUsingDescriptors:@[sort]];
+                
+                [arrForObjects sortUsingComparator:^NSComparisonResult(PFObject *obj1, PFObject *obj2) {
+                    PFUser *toUser1 = obj1[@"ToUser"];
+                    PFUser *toUser2 = obj2[@"ToUser"];
+                    return [toUser1.username caseInsensitiveCompare:toUser2.username];
+                }];
                 
                 [tblForFriend reloadData];
             }
@@ -156,6 +173,7 @@
     [mainQ includeKey:@"FromUser"];
     [mainQ includeKey:@"ToUser"];
     [mainQ orderByDescending:@"username"];
+    [mainQ whereKey:@"FromUser" equalTo:[PFUser currentUser]];
     
     [mainQ findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
      {
@@ -170,6 +188,11 @@
              if (objects.count == 0)
              {
                  NSLog(@"Not Found");
+                 [arrForFriends removeAllObjects];
+                 [arrForPeople removeAllObjects];
+                 [arrForObjects removeAllObjects];
+                 [tblForFriend reloadData];
+                 [tblForSearch reloadData];
              }
              else
              {
@@ -177,8 +200,7 @@
                  [arrForPeople removeAllObjects];
                  [arrForObjects removeAllObjects];
                  
-                 
-                 NSLog(@"Current USer = %@",USER);
+                 NSMutableArray *strUserObjectIds = [NSMutableArray array];
                  
                  for (PFObject *obj in objects)
                  {
@@ -189,11 +211,18 @@
                      {
                          if (obj[@"ToUser"])
                          {
-                             [arrForObjects addObject:obj];
-                             [arrForFriends addObject:obj[@"ToUser"]];
+                             //Fix issue for multiple friends
+                             PFUser *user = obj[@"ToUser"];
+                             if (![user.objectId isEqualToString:USER.objectId] && ![strUserObjectIds containsObject:user.objectId]) {
+                                 [strUserObjectIds addObject:user.objectId];
+                                 [arrForObjects addObject:obj];
+                                 [arrForFriends addObject:user];
+                             }
                          }
                      }
                  }
+                 [strUserObjectIds removeAllObjects];
+                 strUserObjectIds = nil;
                  
                  NSMutableArray *tempArrForObjects = [NSMutableArray array];
                  NSMutableArray *tempArrForFriends = [NSMutableArray array];
@@ -246,8 +275,12 @@
                  //Apply Sorting
                  NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"username" ascending:YES
                                                                          selector:@selector(caseInsensitiveCompare:)];
-                 [arrForObjects sortUsingDescriptors:@[sort]];
                  [arrForFriends sortUsingDescriptors:@[sort]];
+                 [arrForObjects sortUsingComparator:^NSComparisonResult(PFObject *obj1, PFObject *obj2) {
+                     PFUser *toUser1 = obj1[@"ToUser"];
+                     PFUser *toUser2 = obj2[@"ToUser"];
+                     return [toUser1.username caseInsensitiveCompare:toUser2.username];
+                 }];
                  
                  [tblForFriend reloadData];
                  
@@ -325,11 +358,16 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    [self reload:nil];
-    
+    if (!isShowProfileOpened) {
+        [self reload:nil];
+    }
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    isShowProfileOpened = NO;
+}
+    
 - (void)loadFriendsData:(NSString *)text
 {
     if (m_isSearchContent)
@@ -584,7 +622,7 @@
                         
                         [arrForFriends addObject:_obj];
                         [self reloadWithSearch];
-                        //[tblForSearch reloadData];
+//                        [tblForSearch reloadData];
                         
                     }];
 
