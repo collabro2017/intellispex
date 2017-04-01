@@ -337,6 +337,12 @@
         
     }
     //----------------------------------------------//*/
+    
+    if (btnForPlay) {
+        [btnForPlay removeFromSuperview];
+        btnForPlay = nil;
+    }
+
     if ([imageViewForMedia viewWithTag:11]) {
         
         PCSEQVisualizer *tempEQ = (PCSEQVisualizer *)[imageViewForMedia viewWithTag:11];
