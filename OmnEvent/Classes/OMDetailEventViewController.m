@@ -140,22 +140,34 @@
         else
         {
             [arrForDetail removeAllObjects];
- 
+            [arrForDetail addObjectsFromArray:objects];
+            
             OMAppDelegate* appDel = (OMAppDelegate *)[UIApplication sharedApplication].delegate;
             offline_data_num = appDel.m_offlinePosts.count;
             
-            for (NSUInteger i = 0; i < offline_data_num; i ++){
-                
-                PFObject *temp_object = [appDel.m_offlinePosts objectAtIndex: offline_data_num - i - 1];
+            for (NSUInteger i = 0; i < offline_data_num; i ++) {
+                PFObject *temp_object = [appDel.m_offlinePosts objectAtIndex:i];
                 PFObject *temp_targetEventObject = temp_object[@"targetEvent"];
                 
-                if ([temp_targetEventObject.objectId isEqualToString:currentObject.objectId]){
+                if ([temp_targetEventObject.objectId isEqualToString:currentObject.objectId]) {
                     [arrForDetail addObject:temp_object];
-                    [offlineURLs addObject:[appDel.m_offlinePostURLs objectAtIndex:offline_data_num - i - 1]];
+                    [offlineURLs addObject:[appDel.m_offlinePostURLs objectAtIndex:i]];
                 }
             }
             
-            [arrForDetail addObjectsFromArray:objects];
+            //Sort Posts on postOrder
+            if (appDel.m_offlinePosts.count > 0) {
+                [arrForDetail sortUsingComparator:^NSComparisonResult(PFObject *obj1, PFObject *obj2) {
+                    NSNumber *postOrder1 = obj1[@"postOrder"];
+                    NSNumber *postOrder2 = obj2[@"postOrder"];
+                    if (postOrder1.intValue > postOrder2.intValue) {
+                        return NSOrderedAscending;
+                    } else if (postOrder1.intValue < postOrder2.intValue) {
+                        return NSOrderedDescending;
+                    }
+                    return NSOrderedSame;
+                }];
+            }
             
             if (isActionSheetReverseSelected) {
                 arrForDetail = [[[arrForDetail reverseObjectEnumerator] allObjects] mutableCopy];
@@ -451,21 +463,34 @@
             if([arrForDetail count] != 0)[arrForDetail removeAllObjects];
             if([offlineURLs count] != 0)[offlineURLs removeAllObjects];
             
+            if([objects count] > 0) [arrForDetail addObjectsFromArray:objects];
+            
             OMAppDelegate* appDel = (OMAppDelegate *)[UIApplication sharedApplication].delegate;
-
             offline_data_num = appDel.m_offlinePosts.count;
-                
+            
             for (NSUInteger i = 0; i < offline_data_num; i++ ) {
-                PFObject *temp_object = [appDel.m_offlinePosts objectAtIndex: offline_data_num - i - 1];
+                PFObject *temp_object = [appDel.m_offlinePosts objectAtIndex:i];
                 PFObject *temp_targetEventObject = temp_object[@"targetEvent"];
-                    
+                
                 if ([temp_targetEventObject.objectId isEqualToString:currentObject.objectId]) {
                     [arrForDetail addObject:temp_object];
-                    [offlineURLs addObject:[appDel.m_offlinePostURLs objectAtIndex:offline_data_num - i - 1]];
+                    [offlineURLs addObject:[appDel.m_offlinePostURLs objectAtIndex:i]];
                 }
             }
             
-            if([objects count] > 0) [arrForDetail addObjectsFromArray:objects];
+            //Sort Posts on postOrder
+            if (appDel.m_offlinePosts.count > 0) {
+                [arrForDetail sortUsingComparator:^NSComparisonResult(PFObject *obj1, PFObject *obj2) {
+                    NSNumber *postOrder1 = obj1[@"postOrder"];
+                    NSNumber *postOrder2 = obj2[@"postOrder"];
+                    if (postOrder1.intValue > postOrder2.intValue) {
+                        return NSOrderedAscending;
+                    } else if (postOrder1.intValue < postOrder2.intValue) {
+                        return NSOrderedDescending;
+                    }
+                    return NSOrderedSame;
+                }];
+            }
             
             if (isActionSheetReverseSelected) {
                 arrForDetail = [[[arrForDetail reverseObjectEnumerator] allObjects] mutableCopy];
@@ -482,12 +507,14 @@
 
             // Current Test feature. lets check these again.
             PFUser *eventUser = currentObject[@"user"];
-            if([eventUser.objectId isEqualToString: USER.objectId] && appDel.network_state)
+            if([eventUser.objectId isEqualToString: USER.objectId])
             {
                 currentObject[@"postedObjects"] = arrForDetail;
-                [currentObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-                    if(error == nil) NSLog(@"DetailEventVC: added Post objs on postedObjects on Event");
-                }];
+                if (appDel.network_state) {
+                    [currentObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                        if(error == nil) NSLog(@"DetailEventVC: added Post objs on postedObjects on Event");
+                    }];
+                }
             }
             
            [tblForDetailList reloadData];
@@ -523,8 +550,33 @@
         {
             [arrForDetail removeAllObjects];
             [arrForDetail addObjectsFromArray:objects];
+            
             OMAppDelegate* appDel = (OMAppDelegate *)[UIApplication sharedApplication].delegate;
-            [arrForDetail addObjectsFromArray:appDel.m_offlinePosts];
+            offline_data_num = appDel.m_offlinePosts.count;
+            
+            for (NSUInteger i = 0; i < offline_data_num; i ++) {
+                PFObject *temp_object = [appDel.m_offlinePosts objectAtIndex:i];
+                PFObject *temp_targetEventObject = temp_object[@"targetEvent"];
+                
+                if ([temp_targetEventObject.objectId isEqualToString:currentObject.objectId]) {
+                    [arrForDetail addObject:temp_object];
+                    [offlineURLs addObject:[appDel.m_offlinePostURLs objectAtIndex:i]];
+                }
+            }
+            
+            //Sort Posts on postOrder
+            if (appDel.m_offlinePosts.count > 0) {
+                [arrForDetail sortUsingComparator:^NSComparisonResult(PFObject *obj1, PFObject *obj2) {
+                    NSNumber *postOrder1 = obj1[@"postOrder"];
+                    NSNumber *postOrder2 = obj2[@"postOrder"];
+                    if (postOrder1.intValue > postOrder2.intValue) {
+                        return NSOrderedAscending;
+                    } else if (postOrder1.intValue < postOrder2.intValue) {
+                        return NSOrderedDescending;
+                    }
+                    return NSOrderedSame;
+                }];
+            }
             
             if (isActionSheetReverseSelected) {
                 arrForDetail = [[[arrForDetail reverseObjectEnumerator] allObjects] mutableCopy];
@@ -645,29 +697,29 @@
                     [[UIApplication sharedApplication] endBackgroundTask:self.fileUploadBackgroundTaskId];
                 }];
                 
+                if ([currentObject[@"postedObjects"] containsObject:post]) {
+                    [currentObject[@"postedObjects"] removeObject:post];
+                }
                 
                 [post saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                    
                     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                    [GlobalVar getInstance].isPosting = NO;
                     if (succeeded) {
                         NSLog(@"Success ---- Post");
                         
                         
                         // add new Post object on postedObjects array: for badge
                         [currentObject[@"postedObjects"] addObject:post];
+                        [currentObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                            [GlobalVar getInstance].isPosting = NO;
+                        }];
                         
                         [post fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-                            
                             [[OMPushServiceManager sharedInstance] sendNotificationToTaggedFriends:object];
                             [appDel.m_offlinePosts removeObject:post];
-                            
                         }];
                         
                     } else {
-                        
                         NSLog(@"Error ---- Post = %@", error);
-                        
                     }
                     [[UIApplication sharedApplication] endBackgroundTask:self.fileUploadBackgroundTaskId];
                 }];
@@ -2651,24 +2703,17 @@
                      else if([arrForDetail count] != 0 && currentCellOfflineUrl == nil)
                      {
                          [GlobalVar getInstance].isPosting = YES;
-                        [tempObejct deleteInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-                            [MBProgressHUD hideHUDForView:self.view animated:YES];
-                            [GlobalVar getInstance].isPosting = NO;
-                            if (error == nil) {
-                                
-                                [self loadContents];
-                                
-                                
-                                if([currentObject[@"postedObjects"] containsObject:tempObejct])
-                                {
-                                    [currentObject[@"postedObjects"] removeObject:tempObejct];
-                                    if(error == nil) NSLog(@"DetailEventVC:Badge Processing - remove from one PostObj on Event Field");
-                                }
-                                
-                            }
-                        }];
+                         [tempObejct deleteInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                             [MBProgressHUD hideHUDForView:self.view animated:YES];
+                             [GlobalVar getInstance].isPosting = NO;
+                             if (error == nil) {
+                                 if([currentObject[@"postedObjects"] containsObject:tempObejct]) {
+                                     [currentObject[@"postedObjects"] removeObject:tempObejct];
+                                 }
+                                 [self loadContents];
+                             }
+                         }];
                      }
-                    
                 }
             }
                 break;
