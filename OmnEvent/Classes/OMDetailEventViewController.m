@@ -506,15 +506,22 @@
             }
 
             // Current Test feature. lets check these again.
-            PFUser *eventUser = currentObject[@"user"];
-            if([eventUser.objectId isEqualToString: USER.objectId])
-            {
-                currentObject[@"postedObjects"] = arrForDetail;
-                if (appDel.network_state) {
-                    [currentObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-                        if(error == nil) NSLog(@"DetailEventVC: added Post objs on postedObjects on Event");
-                    }];
-                }
+//            PFUser *eventUser = currentObject[@"user"];
+//            if([eventUser.objectId isEqualToString: USER.objectId])
+//            {
+//                currentObject[@"postedObjects"] = arrForDetail;
+//                if (appDel.network_state) {
+//                    [currentObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+//                        if(error == nil) NSLog(@"DetailEventVC: added Post objs on postedObjects on Event");
+//                    }];
+//                }
+//            }
+            
+            currentObject[@"postedObjects"] = arrForDetail;
+            if (appDel.network_state) {
+                [currentObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                    if(error == nil) NSLog(@"DetailEventVC: added Post objs on postedObjects on Event");
+                }];
             }
             
            [tblForDetailList reloadData];
