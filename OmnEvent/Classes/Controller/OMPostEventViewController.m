@@ -123,6 +123,8 @@
     tapGestureForBg.numberOfTapsRequired = 1;
     [tapGestureForBg setDelegate:self];
     [imageViewForPostImage addGestureRecognizer:tapGestureForBg];
+    
+    lblForCount.adjustsFontSizeToFitWidth = YES;
     lblForCount.text = [NSString stringWithFormat:@"%d", MAX_DESCRIPTION_LIMIT];
     countryLatLong = @"Unknown";
     
