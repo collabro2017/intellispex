@@ -94,6 +94,7 @@
     searchMode = _searchMode;
     [lblForUsername setText:user.username];
     [imageViewForAvatar setImage:[UIImage imageNamed:@""]];
+    [btnForFriendStatus setHidden:NO];
     
     if (user[@"Location"] != NULL) [lblForLocation setText:user[@"Location"]];
     
