@@ -361,42 +361,42 @@
     }
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    
-    PFUser *user = [[PFUser alloc] init];
-    [user setUsername:txtForUsername.text];
-    [user setEmail:txtForEmail.text.lowercaseString];
-    [user setPassword:txtForPassword.text];
-    user[@"loginType"] = @"email";
-    
-    PFFile *postFile = [PFFile fileWithName:@"avatar.jpg" data:UIImageJPEGRepresentation(avatarImg, 0.7)];
-    user[@"ProfileImage"] = postFile;
-    
-    [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+    PFQuery *query = [PFQuery queryWithClassName:@"_Role"];
+    [query getObjectInBackgroundWithId:@"Di56R0ITXB" block:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        PFUser *user = [[PFUser alloc] init];
+        [user setUsername:txtForUsername.text];
+        [user setEmail:txtForEmail.text.lowercaseString];
+        [user setPassword:txtForPassword.text];
+        user[@"loginType"] = @"email";
+        user[@"user_type"] = object;
         
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        PFFile *postFile = [PFFile fileWithName:@"avatar.jpg" data:UIImageJPEGRepresentation(avatarImg, 0.7)];
+        user[@"ProfileImage"] = postFile;
         
-        if (succeeded) {
-            PFInstallation *installation = [PFInstallation currentInstallation];
-            [installation setObject:user forKey:@"user"];
-            [installation setObject:user.objectId forKey:@"userID"];
-            [installation saveEventually];
-            [OMGlobal showAlertTips:@"Please verify your email address." title:@"Successfully signed up."];
-            [self.navigationController popViewControllerAnimated:YES];
-//            [OMGlobal setLogInUserDefault];
-//            [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+        [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
             
-        }
-        else
-        {
-            //@"Failed to Sign Up!"
-            [OMGlobal showAlertTips:[error localizedDescription] title:@"Failed to Sign Up!"];
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
             
-        }
+            if (succeeded) {
+                PFInstallation *installation = [PFInstallation currentInstallation];
+                [installation setObject:user forKey:@"user"];
+                [installation setObject:user.objectId forKey:@"userID"];
+                [installation saveEventually];
+                [OMGlobal showAlertTips:@"Please verify your email address." title:@"Successfully signed up."];
+                [self.navigationController popViewControllerAnimated:YES];
+                
+//                [OMGlobal setLogInUserDefault];
+//                [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+            }
+            else
+            {
+                //@"Failed to Sign Up!"
+                [OMGlobal showAlertTips:[error localizedDescription] title:@"Failed to Sign Up!"];
+            }
+        }];
     }];
     
-    
     //Request a background execution task to allow us to finish uploading the photo even if the app is background
-    
 }
 
 - (IBAction)cancelAction:(id)sender {
