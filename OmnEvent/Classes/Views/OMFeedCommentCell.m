@@ -555,18 +555,24 @@
     {
         beforeDescription = commentTextView.text;
         
-        if ([commentTextView.superview.superview.superview.superview isKindOfClass:[UITableView class]]){
-            
-            
+        if ([commentTextView.superview.superview.superview.superview isKindOfClass:[UITableView class]]) {
             CGPoint pointInTable = [textView.superview convertPoint:textView.frame.origin
                                                              toView:textView.superview.superview.superview.superview];
-            
             NSDictionary *userInfo = @{
                                        @"pointInTable_x": [[NSNumber numberWithFloat:pointInTable.x] stringValue],
                                        @"pointInTable_y": [[NSNumber numberWithFloat:pointInTable.y+30] stringValue],
                                        @"textFieldHeight": [[NSNumber numberWithFloat:textView.inputAccessoryView.frame.size.height] stringValue]
                                        };
-            
+            [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationKeyboardShow object:nil userInfo:userInfo];
+        }
+        else if ([textView.superview.superview.superview isKindOfClass:[UITableView class]]) { //for iOS 11
+            CGPoint pointInTable = [textView.superview convertPoint:textView.frame.origin
+                                                             toView:textView.superview.superview.superview];
+            NSDictionary *userInfo = @{
+                                       @"pointInTable_x": [[NSNumber numberWithFloat:pointInTable.x] stringValue],
+                                       @"pointInTable_y": [[NSNumber numberWithFloat:pointInTable.y+30] stringValue],
+                                       @"textFieldHeight": [[NSNumber numberWithFloat:textView.inputAccessoryView.frame.size.height] stringValue]
+                                       };
             [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationKeyboardShow object:nil userInfo:userInfo];
         }
     }
@@ -629,15 +635,22 @@
                                 
                                 [commentTextView resignFirstResponder];
                                 
-                                if ([textView.superview.superview.superview.superview isKindOfClass:[UITableView class]]){
+                                if ([textView.superview.superview.superview.superview isKindOfClass:[UITableView class]]) {
                                     CGPoint bottomPosition = [textView convertPoint:textView.frame.origin
                                                                              toView:textView.superview.superview.superview.superview];
-                                    
                                     NSDictionary *userInfo = @{
                                                                @"pointInTable_x": [[NSNumber numberWithFloat:bottomPosition.x] stringValue],
                                                                @"pointInTable_y": [[NSNumber numberWithFloat:bottomPosition.y] stringValue]
                                                                };
-                                    
+                                    [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationKeyboardHide object:nil userInfo:userInfo];
+                                }
+                                else if ([textView.superview.superview.superview isKindOfClass:[UITableView class]]) { //for iOS 11
+                                    CGPoint bottomPosition = [textView convertPoint:textView.frame.origin
+                                                                             toView:textView.superview.superview.superview];
+                                    NSDictionary *userInfo = @{
+                                                               @"pointInTable_x": [[NSNumber numberWithFloat:bottomPosition.x] stringValue],
+                                                               @"pointInTable_y": [[NSNumber numberWithFloat:bottomPosition.y] stringValue]
+                                                               };
                                     [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationKeyboardHide object:nil userInfo:userInfo];
                                 }
                             } else if (_error) {
@@ -686,15 +699,22 @@
                 
                 [commentTextView resignFirstResponder];
                 
-                if ([textView.superview.superview.superview.superview isKindOfClass:[UITableView class]]){
+                if ([textView.superview.superview.superview.superview isKindOfClass:[UITableView class]]) {
                     CGPoint bottomPosition = [textView convertPoint:textView.frame.origin
                                                              toView:textView.superview.superview.superview.superview];
-                    
                     NSDictionary *userInfo = @{
                                                @"pointInTable_x": [[NSNumber numberWithFloat:bottomPosition.x] stringValue],
                                                @"pointInTable_y": [[NSNumber numberWithFloat:bottomPosition.y] stringValue]
                                                };
-                    
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationKeyboardHide object:nil userInfo:userInfo];
+                }
+                else if ([textView.superview.superview.superview isKindOfClass:[UITableView class]]) { //for iOS 11
+                    CGPoint bottomPosition = [textView convertPoint:textView.frame.origin
+                                                             toView:textView.superview.superview.superview];
+                    NSDictionary *userInfo = @{
+                                               @"pointInTable_x": [[NSNumber numberWithFloat:bottomPosition.x] stringValue],
+                                               @"pointInTable_y": [[NSNumber numberWithFloat:bottomPosition.y] stringValue]
+                                               };
                     [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationKeyboardHide object:nil userInfo:userInfo];
                 }
             }
@@ -706,12 +726,19 @@
             if ([textView.superview.superview.superview.superview isKindOfClass:[UITableView class]]){
                 CGPoint bottomPosition = [textView convertPoint:textView.frame.origin
                                                          toView:textView.superview.superview.superview.superview];
-                
                 NSDictionary *userInfo = @{
                                            @"pointInTable_x": [[NSNumber numberWithFloat:bottomPosition.x] stringValue],
                                            @"pointInTable_y": [[NSNumber numberWithFloat:bottomPosition.y] stringValue]
                                            };
-                
+                [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationKeyboardHide object:nil userInfo:userInfo];
+            }
+            else if ([textView.superview.superview.superview isKindOfClass:[UITableView class]]) { //for iOS 11
+                CGPoint bottomPosition = [textView convertPoint:textView.frame.origin
+                                                         toView:textView.superview.superview.superview];
+                NSDictionary *userInfo = @{
+                                           @"pointInTable_x": [[NSNumber numberWithFloat:bottomPosition.x] stringValue],
+                                           @"pointInTable_y": [[NSNumber numberWithFloat:bottomPosition.y] stringValue]
+                                           };
                 [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationKeyboardHide object:nil userInfo:userInfo];
             }
         }
