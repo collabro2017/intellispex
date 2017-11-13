@@ -19,6 +19,7 @@
     IBOutlet UILabel *lblForNewEvent;
     IBOutlet UILabel *lblForBadge;
     IBOutlet UIButton *btnForVideo;
+    IBOutlet UIActivityIndicatorView    *activityIndicator;
 }
 
 @property (strong, nonatomic) id delegate;

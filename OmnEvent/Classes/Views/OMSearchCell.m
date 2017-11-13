@@ -24,11 +24,30 @@
     
     PFFile *postFile = (PFFile *)_currentObj[@"postImage"];
     if (postFile) {
-    
+        
+        __weak UIActivityIndicatorView * aiv = activityIndicator;
+        __weak UIImageView *imgView = imageViewForBG;
+        
+        [aiv startAnimating];
+        [aiv setHidesWhenStopped:YES];
+        
         if (imageViewForBG.image) {
             imageViewForBG.image = nil;
         }
-        [imageViewForBG setImageWithURL:[NSURL URLWithString:postFile.url] placeholderImage:nil];
+        //[imageViewForBG setImageWithURL:[NSURL URLWithString:postFile.url] placeholderImage:nil];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:postFile.url]];
+        [request addValue:@"image/*" forHTTPHeaderField:@"Accept"];
+        [imageViewForBG setImageWithURLRequest:request placeholderImage:nil success:^(NSURLRequest *reqeust, NSHTTPURLResponse *response, UIImage *image) {
+            
+            if(image != nil) {
+                imgView.image = image;
+            }
+            [aiv stopAnimating];
+            
+        } failure:^(NSURLRequest *requset, NSHTTPURLResponse *response, NSError *error){
+            [aiv stopAnimating];
+        }] ;
+        
     }
     
     if ([_currentObj[@"postType"] isEqualToString:@"video"]) {
