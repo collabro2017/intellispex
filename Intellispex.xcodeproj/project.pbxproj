@@ -1174,6 +1174,7 @@
 		6C9CA1CA1B46743F00806F96 /* tutorial.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = tutorial.mp4; sourceTree = "<group>"; };
 		6CD6E7661B5B3F650074578C /* OMSocialEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMSocialEvent.h; sourceTree = "<group>"; };
 		6CD6E7671B5B3F650074578C /* OMSocialEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMSocialEvent.m; sourceTree = "<group>"; };
+		790664D51F73887D00E6B361 /* Intellispex.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Intellispex.entitlements; sourceTree = "<group>"; };
 		8F18CAB61CF78E90005021BB /* FTWCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTWCache.h; sourceTree = "<group>"; };
 		8F18CAB71CF78E90005021BB /* FTWCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTWCache.m; sourceTree = "<group>"; };
 		8F18CAB81CF78E90005021BB /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
@@ -1718,6 +1719,7 @@
 		3C5E7E76197628DF000550F6 = {
 			isa = PBXGroup;
 			children = (
+				790664D51F73887D00E6B361 /* Intellispex.entitlements */,
 				3C5E7E88197628DF000550F6 /* OmnEvent */,
 				3C5E7EAA197628E0000550F6 /* OmnEventTests */,
 				3C5E7E81197628DF000550F6 /* Frameworks */,
@@ -2958,6 +2960,11 @@
 					3C5E7E7E197628DF000550F6 = {
 						DevelopmentTeam = 6M75VL4633;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -3751,10 +3758,11 @@
 			baseConfigurationReference = A3F398B9C8AA893916FCCCC7 /* Pods-Intellispex.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Intellispex.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Blake Ratcliff (87E9534LVP)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COMPRESS_PNG_FILES = YES;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 6M75VL4633;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3790,10 +3798,11 @@
 			baseConfigurationReference = F3DEAB0F3BE827825F894A85 /* Pods-Intellispex.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Intellispex.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Blake Ratcliff (87E9534LVP)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COMPRESS_PNG_FILES = YES;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 6M75VL4633;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
