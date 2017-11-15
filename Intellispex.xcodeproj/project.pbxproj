@@ -2937,6 +2937,7 @@
 				3C5E7E7D197628DF000550F6 /* Resources */,
 				16DDBE52417113BE5C9FEC97 /* [CP] Embed Pods Frameworks */,
 				D44882807EB12B03DDBA2FE6 /* [CP] Copy Pods Resources */,
+				FA6BBCA81FBC600A00644897 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -3399,7 +3400,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		D44882807EB12B03DDBA2FE6 /* [CP] Copy Pods Resources */ = {
@@ -3416,6 +3417,19 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Intellispex/Pods-Intellispex-resources.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		FA6BBCA81FBC600A00644897 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" 0a067d8721bdd88d80a9416ee132a539959e6208 517ed5abf03f1600173dff459a5ab148706414390403cb788c4e8af94aa0ce79";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -3761,6 +3775,7 @@
 				CODE_SIGN_ENTITLEMENTS = Intellispex.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Blake Ratcliff (87E9534LVP)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				COMPRESS_PNG_FILES = YES;
 				DEVELOPMENT_TEAM = 6M75VL4633;
 				ENABLE_BITCODE = NO;
@@ -3801,6 +3816,7 @@
 				CODE_SIGN_ENTITLEMENTS = Intellispex.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Blake Ratcliff (87E9534LVP)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				COMPRESS_PNG_FILES = YES;
 				DEVELOPMENT_TEAM = 6M75VL4633;
 				ENABLE_BITCODE = NO;
