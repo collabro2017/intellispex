@@ -14,5 +14,7 @@ pod 'Vertigo'
 pod 'UzysAssetsPickerController'
 pod 'PBJVideoPlayer'
 pod 'PBJVision'
+pod 'Fabric'
+pod 'Crashlytics'
 
 end
