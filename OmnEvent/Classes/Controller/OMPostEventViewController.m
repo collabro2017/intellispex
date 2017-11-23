@@ -43,6 +43,8 @@
     NSMutableArray *arrSelected;
     ///
     NSString *strTemp;
+    
+    BOOL progressHudShown;
 }
 
 @property (nonatomic, strong) CLLocationManager *locationManager;
@@ -607,6 +609,10 @@
             
             NSMutableArray *allPosts = curObj[@"postedObjects"];
             
+            if(allPosts == nil) {
+                allPosts = [[NSMutableArray alloc] init];
+            }
+            
             NSNumber *postOrder = [NSNumber numberWithInt:1];
             if (self.postOrder == -1) {
                 PFObject *item = allPosts.firstObject; //First Element will contain the object with highest postOrder
@@ -838,7 +844,11 @@
 }
 //------------------------------------------------------------------------------------------------------//
 -(void)uploadBulkImages{
-    [MBProgressHUD showMessag:@"Uploading..." toView:self.view];
+    
+    if(progressHudShown == false) {
+        progressHudShown = true;
+        [MBProgressHUD showMessag:@"Uploading..." toView:self.view];
+    }
     
     if ([_imageArray count] > 0){
         UIImage *tempImage = (UIImage*)[_imageArray firstObject];
@@ -858,6 +868,11 @@
         post[@"countryLatLong"] = countryLatLong;
         
         NSMutableArray *allPosts = curObj[@"postedObjects"];
+        
+        if(allPosts == nil) {
+            allPosts = [[NSMutableArray alloc] init];
+        }
+        
         NSNumber *postOrder = [NSNumber numberWithInt:1];
         if (self.postOrder == -1) {
             PFObject *item = allPosts.firstObject; //First Element will contain the object with highest postOrder
@@ -986,11 +1001,7 @@
                     curObj[@"postedObjects"] = allPosts;
                 }
                 
-                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                //[self.navigationController dismissViewControllerAnimated:YES completion:nil];
                 [[NSNotificationCenter defaultCenter] postNotificationName:kLoadComponentsData object:nil];
-                
-                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                 
                 [_imageArray removeObject:[_imageArray firstObject]];
                 [self uploadBulkImages];
@@ -1002,7 +1013,6 @@
                 [GlobalVar getInstance].isPosting = YES;
                 
                 [post saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                     
                     if (succeeded) {
                         NSLog(@"Success ---- Post");
@@ -1051,8 +1061,13 @@
         }
     }else{
         
+        
+        if(progressHudShown == true) {
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            progressHudShown = false;
+        }
+        
         [GlobalVar getInstance].isPosting = NO;
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         [self.navigationController dismissViewControllerAnimated:YES completion:nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:kLoadComponentsData object:nil];
         
