@@ -175,7 +175,8 @@
             if (isActionSheetReverseSelected) {
                 arrForDetail = [[[arrForDetail reverseObjectEnumerator] allObjects] mutableCopy];
             }
-
+            
+            [self loadAnyMissingComments];
             [tblForDetailList reloadData];
         }
     }];
@@ -527,6 +528,7 @@
                 }];
             }
             
+            [self loadAnyMissingComments];
            [tblForDetailList reloadData];
             
         }
@@ -592,10 +594,66 @@
                 arrForDetail = [[[arrForDetail reverseObjectEnumerator] allObjects] mutableCopy];
             }
             
+            [self loadAnyMissingComments];
+            
             [tblForDetailList reloadData];
         }
     }];
 }
+
+- (void)loadAnyMissingComments
+{
+    
+    for(int i = 0; i < arrForDetail.count; ++i) {
+        
+        PFObject *tempObj = [arrForDetail objectAtIndex:i];
+        NSMutableArray *arr = [[NSMutableArray alloc]init];
+        
+        if (tempObj[@"commentsArray"]) {
+            arr = tempObj[@"commentsArray"];
+        }
+        
+        
+        for(int j = 0; j < arr.count; ++j) {
+            PFObject* _obj = (PFObject* )[arr objectAtIndex:j];
+            NSString* strComments =  _obj[@"Comments"];
+            
+            if([strComments isKindOfClass:[NSNull class]] || strComments == nil) {
+                
+                PFQuery *query = [PFQuery queryWithClassName:@"Comments"];
+                [query whereKey:@"postMedia" equalTo:tempObj];
+                [query includeKey:@"Commenter"];
+                
+                NSError *error;
+                NSArray *objects = [query findObjects:&error];
+                
+                if(error == nil) {
+                    
+                    if ([objects count] == 0 || !objects) {
+                        break;
+                    }
+                    for (PFObject *commObj in objects)
+                    {
+                        NSString *objId = commObj.objectId;
+                        
+                        for(int k = 0; k < arr.count; ++k) {
+                            NSString *commObjID = tempObj[@"commentsArray"][k][@"objectId"];
+                            if([objId isEqualToString:commObjID])
+                            {
+                                tempObj[@"commentsArray"][k] = commObj;
+                            }
+                        }
+                    }
+                    
+                    break;
+                }
+            }
+            
+        }
+    }
+    
+}
+
 
 
 - (void)backAction
@@ -1405,7 +1463,11 @@
                 
                 PFObject* _obj = (PFObject* )[arr objectAtIndex:(arr.count - indexPath.row )];
                 NSString* strComments =  _obj[@"Comments"];
-                return [OMGlobal heightForCellWithPost:strComments] + 30;
+                
+                NSString *strComment = [strComments stringByReplacingOccurrencesOfString:@"  " withString:@""];
+                strComment = [strComment stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+                
+                return [OMGlobal heightForCellWithPost:strComment] + 30;
             }
         }
         else
@@ -1425,8 +1487,11 @@
                 
                 PFObject* _obj = (PFObject* )[arr objectAtIndex:(arr.count - indexPath.row )];
                 NSString* strComments =  _obj[@"Comments"];
+                
+                NSString *strComment = [strComments stringByReplacingOccurrencesOfString:@"  " withString:@""];
+                strComment = [strComment stringByReplacingOccurrencesOfString:@"\n" withString:@""];
 
-                return [OMGlobal heightForCellWithPost:strComments] + 30;
+                return [OMGlobal heightForCellWithPost:strComment] + 30;
                 
             }
         }
