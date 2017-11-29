@@ -115,8 +115,13 @@
             }
             
         }
-        _constraintForCommentHeight.constant = [OMGlobal heightForCellWithPost:_currentObj[@"Comments"]];
-        [_lblForDes setText:_currentObj[@"Comments"]];
+        
+        NSString *strComment = [_currentObj[@"Comments"] stringByReplacingOccurrencesOfString:@"  " withString:@""];
+        strComment = [strComment stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+        
+        
+        _constraintForCommentHeight.constant = [OMGlobal heightForCellWithPost:strComment];
+        [_lblForDes setText:strComment];
         
         //******************
         NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
