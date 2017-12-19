@@ -22,6 +22,7 @@
 #import "BBBadgeBarButtonItem.h"
 #import "Reachability.h"
 #import "OMAppDelegate.h"
+#import "OMUtilities.h"
 
 #define IS_OS_8_OR_LATER ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
 
@@ -359,6 +360,83 @@
     
 }
 
+- (NSString *) prepareFilePathPostfixWith:(NSString *) additionalString
+{
+    NSTimeInterval timestamp = [[[NSDate alloc] init] timeIntervalSince1970];
+    NSString *postFilePathPostfix = [NSString stringWithFormat:@"%@_%@_%f" ,additionalString, lblForTitle.text ,timestamp];
+    return postFilePathPostfix;
+}
+
+- (BOOL) addImageInPostForOfflineMode:(PFObject *) post image:(UIImage *) image
+{
+    NSString *offlinePostsDataDirPath = [OMUtilities getOfflinePostDataDirPath];
+    NSString *postFilePathPostfix = [self prepareFilePathPostfixWith:@"image"];
+    NSString *postFilePath = [offlinePostsDataDirPath stringByAppendingPathComponent:postFilePathPostfix];
+
+    BOOL blnResult = [UIImageJPEGRepresentation(image, 0.7) writeToFile:postFilePath atomically:YES];
+    
+    if(blnResult == YES) {
+        PFFile *postFile = [PFFile fileWithName:@"image.jpg" contentsAtPath:postFilePath];
+        post[@"postFile"]       = postFile;
+        post[@"fileLocalPath"] = postFilePathPostfix;
+    }
+    
+    return blnResult;
+}
+
+- (BOOL) addAudioInPostForOfflineMode:(PFObject *) post audioData:(NSData *) aData image:(UIImage *) image
+{
+    NSString *offlinePostsDataDirPath = [OMUtilities getOfflinePostDataDirPath];
+    NSString *postFilePathPostfix = [self prepareFilePathPostfixWith:@"image"];
+    NSString *postFilePath = [offlinePostsDataDirPath stringByAppendingPathComponent:postFilePathPostfix];
+    
+    BOOL blnResult = [UIImageJPEGRepresentation(image, 0.8f) writeToFile:postFilePath atomically:YES];
+    
+    if(blnResult == YES) {
+        
+        NSString *audioPostFilePathPostfix = [self prepareFilePathPostfixWith:@"audio"];
+        NSString *audioPostFilePath = [offlinePostsDataDirPath stringByAppendingPathComponent:audioPostFilePathPostfix];
+        [aData writeToFile:audioPostFilePath atomically:YES];
+        
+        PFFile *audioFile       = [PFFile fileWithName:@"audio.wav" data:aData];
+        post[@"postFile"]       = audioFile;
+        post[@"fileLocalPath"]  = audioPostFilePathPostfix;
+        
+        PFFile *postFile = [PFFile fileWithName:@"thumb.jpg" contentsAtPath:postFilePath];
+        post[@"thumbImage"]       = postFile;
+        post[@"thumbImageFileLocalPath"] = postFilePathPostfix;
+    }
+    
+    return blnResult;
+}
+
+- (BOOL) addVideoInPostForOfflineMode:(PFObject *) post videoData:(NSData *) vData image:(UIImage *) image
+{
+    NSString *offlinePostsDataDirPath = [OMUtilities getOfflinePostDataDirPath];
+    NSString *postFilePathPostfix = [self prepareFilePathPostfixWith:@"image"];
+    NSString *postFilePath = [offlinePostsDataDirPath stringByAppendingPathComponent:postFilePathPostfix];
+    
+    BOOL blnResult = [UIImageJPEGRepresentation(image, 0.8f) writeToFile:postFilePath atomically:YES];
+    
+    if(blnResult == YES) {
+        
+        NSString *videoPostFilePathPostfix = [self prepareFilePathPostfixWith:@"video"];
+        NSString *videoPostFilePath = [offlinePostsDataDirPath stringByAppendingPathComponent:videoPostFilePathPostfix];
+        [vData writeToFile:videoPostFilePath atomically:YES];
+        
+        PFFile *videoFile       = [PFFile fileWithName:@"video.mov" data:vData];
+        post[@"postFile"]       = videoFile;
+        post[@"fileLocalPath"]  = videoPostFilePathPostfix;
+        
+        PFFile *postFile = [PFFile fileWithName:@"thumb.jpg" contentsAtPath:postFilePath];
+        post[@"thumbImage"]       = postFile;
+        post[@"thumbImageFileLocalPath"] = postFilePathPostfix;
+    }
+    
+    return blnResult;
+}
+
+
 - (void)uploadAction
 {
     if ([textViewForDescription becomeFirstResponder]) {
@@ -644,32 +722,52 @@
             switch (captureOption) {
                 case kTypeCapturePhoto:
                 {
-                    /*
-                     PFFile *postFile        = [PFFile fileWithName:@"image.jpg" data:UIImageJPEGRepresentation(_imageForPost, 0.7)];		                    PFFile *postFile        = [PFFile fileWithName:@"image.jpg" data:UIImageJPEGRepresentation(_imageForPost, 0.7)];
-                     post[@"postFile"]       = postFile;		                    post[@"postFile"]       = postFile;
-                     PFFile *thumbFile       = [PFFile fileWithName:@"thumb.jpg" data:UIImageJPEGRepresentation([_imageForPost resizedImageToSize:CGSizeMake(THUMBNAIL_SIZE, THUMBNAIL_SIZE)], 0.8f)];		                    PFFile *thumbFile       = [PFFile fileWithName:@"thumb.jpg" data:UIImageJPEGRepresentation([_imageForPost resizedImageToSize:CGSizeMake(THUMBNAIL_SIZE, THUMBNAIL_SIZE)], 0.8f)];
-                     post[@"thumbImage"]     = thumbFile;		                    post[@"thumbImage"]     = thumbFile;
-                     //*/
-                    if (self.panoFlag == YES) {
-                        PFFile *postFile        = [PFFile fileWithName:@"image.jpg" data:UIImageJPEGRepresentation(_imageForPost, 0.7)];
-                        post[@"postFile"]       = postFile;
-                        PFFile *thumbFile       = [PFFile fileWithName:@"thumb.jpg" data:UIImageJPEGRepresentation(_imageForPost, 0.7f)];
-                        post[@"thumbImage"]     = thumbFile;
-                    }else{
-                        PFFile *postFile        = [PFFile fileWithName:@"image.jpg" data:UIImageJPEGRepresentation(_imageForPost, 0.7)];
-                        post[@"postFile"]       = postFile;
-                        PFFile *thumbFile       = [PFFile fileWithName:@"thumb.jpg" data:UIImageJPEGRepresentation([_imageForPost resizedImageToSize:CGSizeMake(THUMBNAIL_SIZE, THUMBNAIL_SIZE)], 0.8f)];
-                        post[@"thumbImage"]     = thumbFile;
+                    post[@"postType"]       = @"photo";
+                    
+                    
+                    OMAppDelegate* appDel = (OMAppDelegate* )[UIApplication sharedApplication].delegate;
+                    
+                    if (!appDel.network_state) {
+                        UIImage *tempImage = [UIImage imageWithData:UIImageJPEGRepresentation(_imageForPost, 0.7)];
+                        [self addImageInPostForOfflineMode:post image:tempImage];
                     }
+                    else{
+                    
+                        //image upload
+                        if (self.panoFlag == YES) {
+                            PFFile *postFile        = [PFFile fileWithName:@"image.jpg" data:UIImageJPEGRepresentation(_imageForPost, 0.7)];
+                            post[@"postFile"]       = postFile;
+                            PFFile *thumbFile       = [PFFile fileWithName:@"thumb.jpg" data:UIImageJPEGRepresentation(_imageForPost, 0.7f)];
+                            post[@"thumbImage"]     = thumbFile;
+                        }else{
+                            PFFile *postFile        = [PFFile fileWithName:@"image.jpg" data:UIImageJPEGRepresentation(_imageForPost, 0.7)];
+                            post[@"postFile"]       = postFile;
+                            PFFile *thumbFile       = [PFFile fileWithName:@"thumb.jpg" data:UIImageJPEGRepresentation([_imageForPost resizedImageToSize:CGSizeMake(THUMBNAIL_SIZE, THUMBNAIL_SIZE)], 0.8f)];
+                            post[@"thumbImage"]     = thumbFile;
+                        }
+                    }
+                    
                 }
                     break;
                 case kTypeCaptureVideo:
                 {
                     post[@"postType"]       = @"video";
-                    PFFile *thumbFile       = [PFFile fileWithName:@"thumb.jpg" data:UIImageJPEGRepresentation([thumbImageForVideo resizedImageToSize:CGSizeMake(THUMBNAIL_SIZE, THUMBNAIL_SIZE)], 0.8f)];
-                    post[@"thumbImage"]     = thumbFile;
-                    PFFile *videoFile       = [PFFile fileWithName:@"video.mov" data:mediaData];
-                    post[@"postFile"]       = videoFile;
+                    
+                    if(mediaData) {
+
+                        OMAppDelegate* appDel = (OMAppDelegate* )[UIApplication sharedApplication].delegate;
+                        
+                        if (!appDel.network_state) {
+                            [self addVideoInPostForOfflineMode:post videoData:mediaData image:[thumbImageForVideo resizedImageToSize:CGSizeMake(THUMBNAIL_SIZE, THUMBNAIL_SIZE)]];
+                        }
+                        else{
+                         
+                            PFFile *thumbFile       = [PFFile fileWithName:@"thumb.jpg" data:UIImageJPEGRepresentation([thumbImageForVideo resizedImageToSize:CGSizeMake(THUMBNAIL_SIZE, THUMBNAIL_SIZE)], 0.8f)];
+                            post[@"thumbImage"]     = thumbFile;
+                            PFFile *videoFile       = [PFFile fileWithName:@"video.mov" data:mediaData];
+                            post[@"postFile"]       = videoFile;
+                        }
+                    }
                     
                 }
                     break;
@@ -678,11 +776,22 @@
                     post[@"postType"]       = @"audio";
                     
                     if (audioData) {
-                        PFFile *audioFile       = [PFFile fileWithName:@"audio.wav" data:audioData];
-                        post[@"postFile"]       = audioFile;
                         
-                        PFFile *thumbFile       = [PFFile fileWithName:@"thumb.jpg" data:UIImageJPEGRepresentation([thumbImageForAudio resizedImageToSize:CGSizeMake(THUMBNAIL_SIZE, THUMBNAIL_SIZE)], 0.8f)];
-                        post[@"thumbImage"]     = thumbFile;
+                        
+                        OMAppDelegate* appDel = (OMAppDelegate* )[UIApplication sharedApplication].delegate;
+                        
+                        if (!appDel.network_state) {
+                        
+                            [self addAudioInPostForOfflineMode:post audioData:audioData image:[thumbImageForAudio resizedImageToSize:CGSizeMake(THUMBNAIL_SIZE, THUMBNAIL_SIZE)]];
+                        }
+                        else{
+                         
+                            PFFile *audioFile       = [PFFile fileWithName:@"audio.wav" data:audioData];
+                            post[@"postFile"]       = audioFile;
+                            
+                            PFFile *thumbFile       = [PFFile fileWithName:@"thumb.jpg" data:UIImageJPEGRepresentation([thumbImageForAudio resizedImageToSize:CGSizeMake(THUMBNAIL_SIZE, THUMBNAIL_SIZE)], 0.8f)];
+                            post[@"thumbImage"]     = thumbFile;
+                        }
                     }
                     else
                     {
@@ -769,19 +878,17 @@
                     
                     NSLog(@"Is Offline Mode");
                     
-                    [appDel.m_offlinePosts addObject:post];
-                   
+                    post[@"localTimestamp"] = [OMUtilities dateToString:[NSDate date] format:@"MMM dd yyyy hh:mm a"];
                     
-                    if (_outPutURL != nil){
-                        [appDel.m_offlinePostURLs addObject:_outPutURL];
-                    } else {
-                        NSURL *baseURL = [NSURL fileURLWithPath:@"file://path/to/user/"];
-                        [appDel.m_offlinePostURLs addObject:baseURL];
-                    }
+                    [post pinInBackgroundWithBlock:nil];
+                    
+                    [GlobalVar getInstance].isPosting = NO;
                     
                     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kLoadComponentsData object:nil];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kReLoadLocalComponentData object:nil];
+                    
+                    
 
                 } else {
                     
@@ -902,9 +1009,20 @@
         
         /**********************************************/
         post[@"postType"]       = @"photo";
-        //image upload
-        PFFile *postFile        = [PFFile fileWithName:@"image.jpg" data:UIImageJPEGRepresentation(tempImage, 0.7)];
-        post[@"postFile"]       = postFile;
+        
+        OMAppDelegate* appDel = (OMAppDelegate* )[UIApplication sharedApplication].delegate;
+        
+        if (!appDel.network_state) {
+            [self addImageInPostForOfflineMode:post image:tempImage];
+        }
+        else{
+            //image upload
+            PFFile *postFile        = [PFFile fileWithName:@"image.jpg" data:UIImageJPEGRepresentation(tempImage, 0.7)];
+            post[@"postFile"]       = postFile;
+            
+        }
+        
+        
         PFFile *thumbFile       = [PFFile fileWithName:@"thumb.jpg" data:UIImageJPEGRepresentation([tempImage resizedImageToSize:CGSizeMake(THUMBNAIL_SIZE, THUMBNAIL_SIZE)], 0.8f)];
         post[@"thumbImage"]     = thumbFile;
         /**********************************************/
@@ -979,15 +1097,6 @@
                 
                 NSLog(@"Is Offline Mode");
                 
-                [appDel.m_offlinePosts addObject:post];
-                
-                if (_outPutURL != nil){
-                    [appDel.m_offlinePostURLs addObject:_outPutURL];
-                } else {
-                    NSURL *baseURL = [NSURL fileURLWithPath:@"file://path/to/user/"];
-                    [appDel.m_offlinePostURLs addObject:baseURL];
-                }
-                
                 //Increment the postOrder for other posts
                 for (int i=0; i<=self.postOrder; i++) {
                     PFObject *item = allPosts[i];
@@ -1001,7 +1110,13 @@
                     curObj[@"postedObjects"] = allPosts;
                 }
                 
-                [[NSNotificationCenter defaultCenter] postNotificationName:kLoadComponentsData object:nil];
+
+                post[@"localTimestamp"] = [OMUtilities dateToString:[NSDate date] format:@"MMM dd yyyy hh:mm a"];
+                [post pinInBackgroundWithBlock:nil];
+                
+                [GlobalVar getInstance].isPosting = NO;
+                
+                [[NSNotificationCenter defaultCenter] postNotificationName:kReLoadLocalComponentData object:nil];
                 
                 [_imageArray removeObject:[_imageArray firstObject]];
                 [self uploadBulkImages];

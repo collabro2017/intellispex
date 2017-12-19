@@ -25,12 +25,11 @@
     PFFile *postFile = (PFFile *)_currentObj[@"postImage"];
     if (postFile) {
         
+        [activityIndicator setHidesWhenStopped:YES];
+        [activityIndicator startAnimating];
+        
         __weak UIActivityIndicatorView * aiv = activityIndicator;
         __weak UIImageView *imgView = imageViewForBG;
-        
-        [aiv startAnimating];
-        [aiv setHidesWhenStopped:YES];
-        
         if (imageViewForBG.image) {
             imageViewForBG.image = nil;
         }
@@ -48,6 +47,15 @@
             [aiv stopAnimating];
         }] ;
         
+    }
+    else{
+        PFFile *logo = (PFFile *)_currentObj[@"thumbImage"];
+        
+        if (logo) {
+            
+            [imageViewForBG setImageWithURL:[NSURL URLWithString:logo.url]];
+            
+        }
     }
     
     if ([_currentObj[@"postType"] isEqualToString:@"video"]) {

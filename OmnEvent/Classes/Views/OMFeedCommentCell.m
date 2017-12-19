@@ -517,6 +517,19 @@
         commentTextView.editable = YES;
     }
     
+    
+    if(currentUser != nil) {
+    
+        [self fetchIfNeeded];
+    }
+    else{
+        [self loadComment];
+    }
+    
+}
+
+- (void) fetchIfNeeded
+{
     [currentUser fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
         
         if (!error) {
@@ -546,12 +559,44 @@
         NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
         //    [dateFormat setDateFormat:@"EEE, MMM dd yyyy hh:mm a"];//Wed, Dec 14 2011 1:50 PM
         [dateFormat setDateFormat:@"MMM dd yyyy hh:mm a"];//Dec 14 2011 1:50 PM
+        //-----------------------------------------------------------------------
+        //NSString *str_date = [dateFormat stringFromDate:currentObj.createdAt];
         NSString *str_date = [dateFormat stringFromDate:commentObj.createdAt];
+        //-----------------------------------------------------------------------
         [lblForTime setText:str_date];
         
     }];
-    
 }
+
+- (void)loadComment
+{
+    PFQuery *query = [PFQuery queryWithClassName:@"Comments"];
+    [query whereKey:@"postMedia" equalTo:currentObj];
+    [query includeKey:@"Commenter"];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        
+        
+        if ([objects count] == 0 || !objects) {
+            return;
+        }
+        
+         
+         for (PFObject *commObj in objects)
+         {
+             
+             NSString *objId = commObj.objectId;
+             if([objId isEqualToString:commentObj[@"objectId"]])
+             {
+                 currentUser = commObj[@"Commenter"];
+                 commentObj = commObj;
+                 [self fetchIfNeeded];
+                 break;
+             }
+         }
+        
+    }];
+}
+
 
 - (void)textViewDidBeginEditing:(UITextView *)textView {
     if (textView == commentTextView)

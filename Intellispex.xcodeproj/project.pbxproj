@@ -13,6 +13,7 @@
 		0AB04E901B81613100A308ED /* OMFolderListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB04E8F1B81613100A308ED /* OMFolderListCell.m */; };
 		1F39C80C1B3A898000FA9FCE /* ParseFacebookUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F39C80B1B3A898000FA9FCE /* ParseFacebookUtils.framework */; };
 		1F39C80E1B3ADA8B00FA9FCE /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F39C80D1B3ADA8B00FA9FCE /* FacebookSDK.framework */; };
+		3199A8FD1FE9346800BB43EB /* OMUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 3199A8FC1FE9346700BB43EB /* OMUtilities.m */; };
 		3C0283AD198929EC00EA3864 /* OMEventCells.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C0283AC198929EC00EA3864 /* OMEventCells.xib */; };
 		3C0283BA198960D800EA3864 /* OMEventCells.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C0283B9198960D800EA3864 /* OMEventCells.m */; };
 		3C0283C1198973C100EA3864 /* OMPhotoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C0283C0198973C100EA3864 /* OMPhotoCell.m */; };
@@ -628,6 +629,8 @@
 		0AB04E8F1B81613100A308ED /* OMFolderListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMFolderListCell.m; sourceTree = "<group>"; };
 		1F39C80B1B3A898000FA9FCE /* ParseFacebookUtils.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseFacebookUtils.framework; sourceTree = "<group>"; };
 		1F39C80D1B3ADA8B00FA9FCE /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
+		3199A8FB1FE9346700BB43EB /* OMUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMUtilities.h; sourceTree = "<group>"; };
+		3199A8FC1FE9346700BB43EB /* OMUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMUtilities.m; sourceTree = "<group>"; };
 		3C0283AC198929EC00EA3864 /* OMEventCells.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OMEventCells.xib; sourceTree = "<group>"; };
 		3C0283B8198960D800EA3864 /* OMEventCells.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMEventCells.h; sourceTree = "<group>"; };
 		3C0283B9198960D800EA3864 /* OMEventCells.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMEventCells.m; sourceTree = "<group>"; };
@@ -1848,6 +1851,8 @@
 		3C5E7EC1197651E3000550F6 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				3199A8FB1FE9346700BB43EB /* OMUtilities.h */,
+				3199A8FC1FE9346700BB43EB /* OMUtilities.m */,
 				B42058661DEB06690060F0A0 /* CLImageEditor */,
 				B45ED2681DD9637800664B78 /* IQLabelView */,
 				B45ED26E1DD9637800664B78 /* PhotoTweaks */,
@@ -3394,13 +3399,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Intellispex-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		D44882807EB12B03DDBA2FE6 /* [CP] Copy Pods Resources */ = {
@@ -3409,9 +3417,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Intellispex/Pods-Intellispex-resources.sh",
+				"${PODS_ROOT}/PBJVision/Source/Shaders/Shader.fsh",
+				"${PODS_ROOT}/PBJVision/Source/Shaders/Shader.vsh",
+				"${PODS_ROOT}/UzysAssetsPickerController/UzysAssetsPickerController/Library/UzysAssetsPickerController.xib",
+				"${PODS_ROOT}/UzysAssetsPickerController/UzysAssetsPickerController/Library/UzysAssetPickerController.bundle",
+				"${PODS_ROOT}/Vertigo/Vertigo/TGRImageViewController.xib",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3590,6 +3605,7 @@
 				B42058F21DEB06690060F0A0 /* CLToolbarMenuItem.m in Sources */,
 				B42059041DEB06690060F0A0 /* _CLImageDrawViewController.m in Sources */,
 				3C0A5C5B1978FC08009AEC85 /* OMSocialFollow.m in Sources */,
+				3199A8FD1FE9346800BB43EB /* OMUtilities.m in Sources */,
 				0AB04E901B81613100A308ED /* OMFolderListCell.m in Sources */,
 				8FBFC4401D2906A300E33CD7 /* OMCameraPhotoViewController.m in Sources */,
 				3EC317E21ABE1A1B00541D39 /* MMNavigationSegue.m in Sources */,
