@@ -33,6 +33,14 @@
     
     IBOutlet UIButton *btnForMore;
     
+    IBOutlet UIImageView    *companyLogo;
+    IBOutlet UIView         *ccHeaderView;
+    IBOutlet UILabel        *lblEventTitle;
+    IBOutlet UILabel        *lblCompany;
+    IBOutlet UILabel        *lblTime;
+    IBOutlet UILabel        *lblAddress;
+    
+    
     
     NSMutableArray *likeUserArray;
     NSMutableArray *likerArr;
@@ -54,5 +62,7 @@
 - (IBAction)commentAction:(id)sender;
 - (IBAction)showCommentersAction:(id)sender;
 - (IBAction)moreAction:(id)sender;
+
+- (UIImage *) getHeaderSnapshot;
 
 @end

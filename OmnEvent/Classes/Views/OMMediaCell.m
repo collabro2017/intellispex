@@ -10,7 +10,7 @@
 #import "OMSocialEvent.h"
 #import "FTWCache.h"
 #import "NSString+MD5.h"
-
+#import "OMUtilities.h"
 
 @implementation OMMediaCell
 {
@@ -203,15 +203,23 @@
     
     [lblForUsername setText:user.username];
     
-    [lblForTimer setText:[OMGlobal showTime:currentObj.createdAt]];
-    
     //******************
     NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
     //    [dateFormat setDateFormat:@"EEE, MMM dd yyyy hh:mm a"];//Wed, Dec 14 2011 1:50 PM
     [dateFormat setDateFormat:@"MMM dd yyyy hh:mm a"];//Dec 14 2011 1:50 PM
     
     NSString *str_date = [dateFormat stringFromDate:currentObj.createdAt];
-    [lblForTimer setText:str_date];
+    
+    if(str_date == nil || str_date.length == 0) {
+        str_date = currentObj[@"localTimestamp"];
+        if(str_date == nil || str_date.length == 0) {
+            str_date = [dateFormat stringFromDate:[NSDate date]];
+        }
+        [lblForTimer setText:str_date];
+    }
+    else{
+        [lblForTimer setText:str_date];
+    }
     
     [lblForTimer setTextColor:HEXCOLOR(0x6F7179FF)];
     
@@ -384,6 +392,20 @@
             NSString *urlString = [_offline_url absoluteString];
             _videoPlayerController.videoPath = urlString;
         }
+        else{
+            if(_file != nil) {
+                
+                if([_file isDataAvailable] == FALSE) {
+                    NSString *fileLocalPath = currentObj[@"fileLocalPath"];
+                    
+                    if(fileLocalPath != nil) {
+                        NSString * offlinePostsDataDirPath = [OMUtilities getOfflinePostDataDirPath];
+                        NSString *fullPath = [offlinePostsDataDirPath stringByAppendingPathComponent:fileLocalPath];
+                        _videoPlayerController.videoPath = fullPath;
+                    }
+                }
+            }
+        }
         
         [viewForMedia bringSubviewToFront:btnForVideoPlay];
         [viewForMedia bringSubviewToFront:btnCheckForExport];
@@ -399,16 +421,39 @@
         }
         
         if (_file != nil){
-            
-            [imageViewForMedia setImage:[UIImage imageWithData:_file.getData]];
+            [self setImageFor:imageViewForMedia fileObj:_file localFileName:currentObj[@"fileLocalPath"]];
         }
-        
-        if (!postImgFile) {
+        else if (!postImgFile) {
             
             PFFile *postFile = (PFFile *)currentObj[@"postFile"];
             
             if (postFile) {
-                [imageViewForMedia setImageWithURL:[NSURL URLWithString:postFile.url]];
+                
+                if (postFile.url != nil) {
+                    
+                    [imageLoaderIndicator startAnimating];
+                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                        
+                        UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:postFile.url]]];
+                        if(img != nil) {
+                            
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                // Update the UI
+                                [imageLoaderIndicator stopAnimating];
+                                [imageViewForMedia setImage:img];
+                            });
+                        }
+                        else{
+                            [self setImageFor:imageViewForMedia fileObj:postFile localFileName:currentObj[@"fileLocalPath"]];
+                        }
+                    });
+                }
+                else{
+                    [self setImageFor:imageViewForMedia fileObj:postFile localFileName:currentObj[@"fileLocalPath"]];
+                }
+            }
+            else{
+                [self setImageFor:imageViewForMedia fileObj:postFile localFileName:currentObj[@"fileLocalPath"]];
             }
         }
         
@@ -428,9 +473,25 @@
         if (thumbImageFile){
             
             if (thumbImageFile.url != nil) {
-                [imageViewForMedia setImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:thumbImageFile.url]]]];
+                
+                [imageLoaderIndicator startAnimating];
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                    
+                    UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:thumbImageFile.url]]];
+                    if(img != nil) {
+                    
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            // Update the UI
+                            [imageLoaderIndicator stopAnimating];
+                            [imageViewForMedia setImage:img];
+                        });
+                    }
+                    else{
+                        [self setImageFor:imageViewForMedia fileObj:thumbImageFile localFileName:currentObj[@"thumbImageFileLocalPath"]];
+                    }
+                });
             } else {
-                [imageViewForMedia setImage:[UIImage imageWithData:thumbImageFile.getData]];
+                [self setImageFor:imageViewForMedia fileObj:thumbImageFile localFileName:currentObj[@"thumbImageFileLocalPath"]];
             }
         } else
             [imageViewForMedia setImage:[UIImage imageNamed:@"layer_audio"]];  ////audio special
@@ -468,7 +529,7 @@
     
     //display comment count
     
-    if (currentObj[@"commentsUsers"]) {
+    if (currentObj[@"commentsArray"]) {
         
         [btnForCommentCount setTitle:[NSString stringWithFormat:@"%lu",(unsigned long) [currentObj[@"commentsUsers"] count]] forState:UIControlStateNormal];
         
@@ -505,6 +566,118 @@
     }
     
     [self setLikeButtonStatus:liked];
+    
+}
+
+- (void) setImageFor:(UIImageView *) imageView fileObj:(PFFile *) fileObj localFileName:(NSString *) localFileName
+{
+    if([fileObj isDataAvailable] == YES) {
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // Update the UI
+            [imageLoaderIndicator startAnimating];
+        });
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            
+            UIImage *img = [UIImage imageWithData:fileObj.getData];
+            
+            if(img != nil) {
+            
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    // Update the UI
+                    [imageLoaderIndicator stopAnimating];
+                    [imageView setImage:img];
+                });
+            }
+            else{
+                NSString *fileLocalPath = localFileName;
+                
+                if(fileLocalPath != nil) {
+                    NSString * offlinePostsDataDirPath = [OMUtilities getOfflinePostDataDirPath];
+                    NSString *fullPath = [offlinePostsDataDirPath stringByAppendingPathComponent:fileLocalPath];
+                    UIImage *img = [UIImage imageWithContentsOfFile:fullPath];
+                    
+                    if(img != nil) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            // Update the UI
+                            [imageLoaderIndicator stopAnimating];
+                            [imageView setImage:img];
+                        });
+                    }
+                    else{
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            // Update the UI
+                            [imageLoaderIndicator stopAnimating];
+                        });
+                    }
+                    
+                }
+                else{
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        // Update the UI
+                        [imageLoaderIndicator stopAnimating];
+                    });
+                }
+            }
+            
+        });
+    }
+    else{
+        
+        
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // Update the UI
+            [imageLoaderIndicator startAnimating];
+        });
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            
+            if(fileObj.getData != nil) {
+                UIImage *img = [UIImage imageWithData:fileObj.getData];
+                
+                if(img != nil) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        // Update the UI
+                        [imageLoaderIndicator stopAnimating];
+                        [imageView setImage:img];
+                    });
+                }
+            }
+            else{
+                NSString *fileLocalPath = localFileName;
+                
+                if(fileLocalPath != nil) {
+                    NSString * offlinePostsDataDirPath = [OMUtilities getOfflinePostDataDirPath];
+                    NSString *fullPath = [offlinePostsDataDirPath stringByAppendingPathComponent:fileLocalPath];
+                    UIImage *img = [UIImage imageWithContentsOfFile:fullPath];
+                    
+                    if(img != nil) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            // Update the UI
+                            [imageLoaderIndicator stopAnimating];
+                            [imageView setImage:img];
+                        });
+                    }
+                    else{
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            // Update the UI
+                            [imageLoaderIndicator stopAnimating];
+                        });
+                    }
+                }
+                else{
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        // Update the UI
+                        [imageLoaderIndicator stopAnimating];
+                    });
+                }
+            }
+        });
+        
+    }
+
 }
 
 - (void)setLikeButtonStatus:(BOOL) _status {
