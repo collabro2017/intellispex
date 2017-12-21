@@ -320,12 +320,6 @@
         }
     }
     
-    // Display image
-    
-    if (imageViewForMedia.image) {
-        imageViewForMedia.image = nil;
-    }
-    
     if (_playButton) {
         
         [_playButton removeFromSuperview];
@@ -362,13 +356,20 @@
     
     [_videoPlayerController.view setHidden:YES];
     
-    PFFile *postImgFile = (PFFile *)currentObj[@"thumbImage"];
+    // Display image
     
-    if (postImgFile) {
-        [imageViewForMedia setImageWithURL:[NSURL URLWithString:postImgFile.url] placeholderImage:nil];
+    if (imageViewForMedia.image) {
+        //imageViewForMedia.image = nil;
     }
     
     if ([currentObj[@"postType"] isEqualToString:@"video"]) {
+        
+        PFFile *postImgFile = (PFFile *)currentObj[@"thumbImage"];
+        
+        if (postImgFile) {
+            [imageViewForMedia setImageWithURL:[NSURL URLWithString:postImgFile.url] placeholderImage:nil];
+        }
+        
         [btnForVideoPlay setHidden:NO];
         [_videoPlayerController.view setHidden:NO];
         
@@ -411,6 +412,8 @@
         [viewForMedia bringSubviewToFront:btnCheckForExport];
         
     } else if ([currentObj[@"postType"] isEqualToString:@"photo"]) {
+        
+        PFFile *postImgFile = (PFFile *)currentObj[@"thumbImage"];
         
         [btnForVideoPlay setHidden:YES];
         [_videoPlayerController.view setHidden:YES];
