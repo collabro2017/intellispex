@@ -587,10 +587,6 @@
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
             
-            if (isActionSheetReverseSelected) {
-                tempArray = [[[tempArray reverseObjectEnumerator] allObjects] mutableCopy];
-            }
-            
             //Save the postOrder for those posts who don't have postOrder with null value
             for (int i=0; i<tempArray.count; i++) {
                 PFObject *item = tempArray[i];
@@ -613,6 +609,10 @@
                 }
                 return NSOrderedSame;
             }];
+            
+            if (isActionSheetReverseSelected) {
+                tempArray = [[[tempArray reverseObjectEnumerator] allObjects] mutableCopy];
+            }
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 // Update the UI
