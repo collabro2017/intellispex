@@ -21,7 +21,6 @@
     AVAudioPlayer *audioPlayer;
     
     IBOutlet UIImageView *imageViewForAvatar;
-    
     IBOutlet UIButton *btnCheckForExport;
     
     IBOutlet UILabel *lblForUsername;
@@ -37,7 +36,8 @@
     IBOutlet UIButton *btnForLike;
     
     IBOutlet UIButton *btnForLikeCount;
-        
+    
+    
     IBOutlet UIButton *btnForComment;
     
     IBOutlet UIButton *btnForCommentCount;

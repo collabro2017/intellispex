@@ -236,9 +236,9 @@
     //display comment count
     
     
-    if (currentObj[@"commentsUsers"]) {
+    if (currentObj[@"commentsArray"]) {
         
-        [btnForCommentCount setTitle:[NSString stringWithFormat:@"%lu",(unsigned long) [currentObj[@"commentsUsers"] count]] forState:UIControlStateNormal];
+        [btnForCommentCount setTitle:[NSString stringWithFormat:@"%lu",(unsigned long) [currentObj[@"commentsArray"] count]] forState:UIControlStateNormal];
         
     }
     else
@@ -366,7 +366,7 @@
                                    };
         [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationKeyboardShow object:nil userInfo:userInfo];
     }
-    else if ([textView.superview.superview.superview isKindOfClass:[UITableView class]]) { //for iOS 11
+    else if ([textView.superview.superview.superview isKindOfClass:[UITableView class]]) { //For iOS 11
         CGPoint pointInTable = [textView.superview convertPoint:textView.frame.origin
                                                          toView:textView.superview.superview.superview];
         NSDictionary *userInfo = @{
@@ -449,7 +449,7 @@
             [lblForTitle resignFirstResponder];
         }
         
-        if ([textView.superview.superview.superview.superview isKindOfClass:[UITableView class]]){
+        if ([textView.superview.superview.superview.superview isKindOfClass:[UITableView class]]) {
             CGPoint bottomPosition = [textView convertPoint:textView.frame.origin
                                                      toView:textView.superview.superview.superview.superview];
             NSDictionary *userInfo = @{
@@ -458,7 +458,7 @@
                                        };
             [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationKeyboardHide object:nil userInfo:userInfo];
         }
-        else if ([textView.superview.superview.superview isKindOfClass:[UITableView class]]) { //for iOS 11
+        else if ([textView.superview.superview.superview isKindOfClass:[UITableView class]]) {//for iOS 11
             CGPoint bottomPosition = [textView convertPoint:textView.frame.origin
                                                      toView:textView.superview.superview.superview];
             NSDictionary *userInfo = @{
@@ -479,6 +479,7 @@
     
     return NO;
 }
+
 //---------------------------------------------------------------------------------------------//
 - (void) setEditing:(BOOL)editing animated:(BOOL)animated
 {
@@ -498,4 +499,5 @@
     }
 }
 /***********************************************************************************************/
+
 @end

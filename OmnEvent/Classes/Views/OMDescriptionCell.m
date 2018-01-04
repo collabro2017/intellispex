@@ -26,7 +26,7 @@
     
     _user = _currentObj[@"user"];
     
-    PFUser *self_user = [PFUser currentUser];
+    PFUser *self_user = [PFUser currentUser];    
     
     if (![_user.objectId isEqualToString:self_user.objectId]) {
         txtViewForDescription.editable = NO;
@@ -116,7 +116,7 @@
                                            };
                 [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationKeyboardHide object:nil userInfo:userInfo];
             }
-            else if ([textView.superview.superview.superview isKindOfClass:[UITableView class]]) { //for iOS 11
+            else if ([textView.superview.superview.superview isKindOfClass:[UITableView class]]){ //for iOS 11
                 CGPoint bottomPosition = [textView convertPoint:textView.frame.origin
                                                          toView:textView.superview.superview.superview];
                 NSDictionary *userInfo = @{
@@ -125,6 +125,7 @@
                                            };
                 [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationKeyboardHide object:nil userInfo:userInfo];
             }
+            
             return NO;
         }
         else if (textView.text.length < MAX_DESCRIPTION_LIMIT || [text isEqualToString:@""]) {

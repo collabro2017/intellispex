@@ -112,7 +112,7 @@
             return 1;
             break;
         case 1:
-            return 5;
+            return 6;
             break;
         case 2:
             return 1;
@@ -214,9 +214,6 @@
         //        [mailView release];
         
     }
-
-    
-    
 }
 
 - (void)showTermsAndConditions {

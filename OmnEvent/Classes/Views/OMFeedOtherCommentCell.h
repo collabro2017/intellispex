@@ -1,6 +1,6 @@
 //
 //  OMFeedOtherCommentCell.h
-//  INTELLISPEX
+//  ICYMI
 //
 //  Created by lion on 4/25/16.
 //  Copyright © 2016 ellisa. All rights reserved.

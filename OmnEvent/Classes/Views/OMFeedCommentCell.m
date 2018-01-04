@@ -41,7 +41,6 @@
     comment_number = _number;
     event_flag = YES;
     imageViewForProfile.image = nil;
-    
     PFUser *self_user = [PFUser currentUser];
     
     if (![currentUser.objectId isEqualToString:self_user.objectId]){
@@ -248,7 +247,7 @@
                                 
                                 [commentTextView setText:_comment];
                                 [lblForUsername setText:currentUser.username];
-                                
+
                                 NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
                                 [dateFormat setDateFormat:@"MMM dd yyyy hh:mm a"];
                                 NSString *str_date = [dateFormat stringFromDate:currentCommentObj.createdAt];
@@ -342,7 +341,6 @@
 // for post comment cell
 - (void)configCell:(PFObject *)tempObj EventObject:(PFObject *) eventObject commentType:(NSInteger)curType
 {
-    
     currentType = curType;
     imageViewForProfile.image = nil;
     //currentType = kTypePostComment;
@@ -437,18 +435,19 @@
         
         //******************
         NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-        [dateFormat setDateFormat:@"MMM dd yyyy hh:mm a"];
+        //    [dateFormat setDateFormat:@"EEE, MMM dd yyyy hh:mm a"];//Wed, Dec 14 2011 1:50 PM
+        [dateFormat setDateFormat:@"MMM dd yyyy hh:mm a"];//Dec 14 2011 1:50 PM
         NSString *str_date = [dateFormat stringFromDate:currentObj.createdAt];
-        [lblForTime setText:str_date];        
+        [lblForTime setText:str_date];
+        
     }];
 }
 
 - (void)configPostCell:(PFObject *)comObj PostObject:(PFObject*)postObj EventObject:(PFObject *)eventObject CommentType:(NSInteger)curType
 {
     currentType = curType;
-    imageViewForProfile.image = nil;
     //currentType = kTypePostComment;
-    
+    imageViewForProfile.image = nil;
     currentObj = postObj;
     commentObj = comObj;
     
@@ -613,7 +612,7 @@
                                        };
             [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationKeyboardShow object:nil userInfo:userInfo];
         }
-        else if ([textView.superview.superview.superview isKindOfClass:[UITableView class]]) { //for iOS 11
+        else if ([commentTextView.superview.superview.superview isKindOfClass:[UITableView class]]) { //for iOS 11
             CGPoint pointInTable = [textView.superview convertPoint:textView.frame.origin
                                                              toView:textView.superview.superview.superview];
             NSDictionary *userInfo = @{
@@ -747,7 +746,7 @@
                 
                 [commentTextView resignFirstResponder];
                 
-                if ([textView.superview.superview.superview.superview isKindOfClass:[UITableView class]]) {
+                if ([textView.superview.superview.superview.superview isKindOfClass:[UITableView class]]){
                     CGPoint bottomPosition = [textView convertPoint:textView.frame.origin
                                                              toView:textView.superview.superview.superview.superview];
                     NSDictionary *userInfo = @{
@@ -771,7 +770,7 @@
         {
             [commentTextView resignFirstResponder];
             
-            if ([textView.superview.superview.superview.superview isKindOfClass:[UITableView class]]){
+            if ([textView.superview.superview.superview.superview isKindOfClass:[UITableView class]]) {
                 CGPoint bottomPosition = [textView convertPoint:textView.frame.origin
                                                          toView:textView.superview.superview.superview.superview];
                 NSDictionary *userInfo = @{
@@ -780,7 +779,7 @@
                                            };
                 [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationKeyboardHide object:nil userInfo:userInfo];
             }
-            else if ([textView.superview.superview.superview isKindOfClass:[UITableView class]]) { //for iOS 11
+            else if ([textView.superview.superview.superview isKindOfClass:[UITableView class]]){ //for iOS 11
                 CGPoint bottomPosition = [textView convertPoint:textView.frame.origin
                                                          toView:textView.superview.superview.superview];
                 NSDictionary *userInfo = @{

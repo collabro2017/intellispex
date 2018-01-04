@@ -77,9 +77,6 @@
     inputBar.resignFirstResponderWhenSend = YES;    
     [self.view addSubview:inputBar];
     
-    
-    // Do any additional setup after loading the view.
-    
     [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
     UIBarButtonItem *backBarButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"btn_back_profile"] style:UIBarButtonItemStylePlain target:self action:@selector(backAction)];
     
@@ -122,11 +119,6 @@
     }
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    [inputBar.textField becomeFirstResponder];
-}
-
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -134,6 +126,11 @@
     self.title = @"Comments";
     [self loadComments];
     [self loadController];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [inputBar.textField becomeFirstResponder];
 }
 
 //- (void)viewWillDisappear:(BOOL)animated
@@ -217,7 +214,8 @@
 }
 
 #pragma mark - Delegate method of UITextField
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
     if ([textField isEqual:inputBar.textField]) {
         if (textField.text.length < MAX_COMMENT_LIMIT || [string isEqualToString:@""]) {
             return YES;

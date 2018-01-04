@@ -129,7 +129,7 @@
     
     lblForCount.adjustsFontSizeToFitWidth = YES;
     lblForCount.text = [NSString stringWithFormat:@"%d", MAX_DESCRIPTION_LIMIT];
-    countryLatLong = @"Unknown";
+
     
     /////
     UIToolbar *toolbar = [[UIToolbar alloc] init];
@@ -152,14 +152,18 @@
     
     textFieldRoomItemPicker.isOptionalDropDown = NO;
     [textFieldRoomItemPicker setItemList:[NSArray arrayWithObjects:@"", @"Living Room", @"Family Room", @"Den",
-                                          @"Foyer / Entry", @"Mud Room", @"Kitchen 1",@"Kitchen 2", @"Bathroom 1", @"Bathroom 2", @"Bathroom 3", @"Half Bathroom", @"Bedroom 1", @"Bedroom 2", @"Bedroom 3", @"Bedroom 4", @"Bedroom 5", @"Bedroom 6", @"Bedroom 7", @"Office", @"Library", @"Storage 1", @"Storage 2", @"Storage 3", @"Storage 4", @"Storage 5", @"Mechanical Room 1", @"Mechanical Room 2", @"Mechanical Room 3", @"Dining Room", @"Kitchenette", @"Hallway 1", @"Hallway 2", @"Hallway 3", @"Hallway 4", @"Garage 1", @"Garage 2", @"Garage 3", @"Garage Door 1", @"Garage Door 2", @"Garage Door 3", @"Garage Door 4", @"Deck/porch/balcony/lanai 1", @"Deck/porch/balcony/lanai 2", @"Interior Stairs 1", @"Interior Stairs 2", @"Interior Stairs 3", @"Exterior Stairs 1", @"Exterior Stairs 2", @"Exterior Stairs 3", @"Roof 1", @"Roof 2", @"Roof 3", @"Roof 4", @"Roof 5", @"Driveway", @"Electrical Panel 1", @"Electrical Panel 2", @"Electrical Panel 3", @"Electrical Meter 1", @"Electrical Meter 2", @"Electrical Meter 3", @"Water Meter 1", @"Water Meter 2", @"Water Meter 3", @"Gas Meter 1", @"Gas Meter 2", @"Gas Meter 3", @"Water Heater 1", @"Water Heater 2", @"Water Heater 3", @"Boiler 1", @"Boiler 2", @"Furnace 1", @"Furnace 2", @"Furnace 3", @"A/C condenser 1", @"A/C condenser 2", @"A/C condenser 3", @"Windows", @"Gutters / Downspouts", @"Exterior Surfaces", nil]];
+@"Foyer / Entry", @"Mud Room", @"Kitchen 1",@"Kitchen 2", @"Bathroom 1", @"Bathroom 2", @"Bathroom 3", @"Half Bathroom", @"Bedroom 1", @"Bedroom 2", @"Bedroom 3", @"Bedroom 4", @"Bedroom 5", @"Bedroom 6", @"Bedroom 7", @"Office", @"Library", @"Storage 1", @"Storage 2", @"Storage 3", @"Storage 4", @"Storage 5", @"Mechanical Room 1", @"Mechanical Room 2", @"Mechanical Room 3", @"Dining Room", @"Kitchenette", @"Hallway 1", @"Hallway 2", @"Hallway 3", @"Hallway 4", @"Garage 1", @"Garage 2", @"Garage 3", @"Garage Door 1", @"Garage Door 2", @"Garage Door 3", @"Garage Door 4", @"Deck/porch/balcony/lanai 1", @"Deck/porch/balcony/lanai 2", @"Interior Stairs 1", @"Interior Stairs 2", @"Interior Stairs 3", @"Exterior Stairs 1", @"Exterior Stairs 2", @"Exterior Stairs 3", @"Roof 1", @"Roof 2", @"Roof 3", @"Roof 4", @"Roof 5", @"Driveway", @"Electrical Panel 1", @"Electrical Panel 2", @"Electrical Panel 3", @"Electrical Meter 1", @"Electrical Meter 2", @"Electrical Meter 3", @"Water Meter 1", @"Water Meter 2", @"Water Meter 3", @"Gas Meter 1", @"Gas Meter 2", @"Gas Meter 3", @"Water Heater 1", @"Water Heater 2", @"Water Heater 3", @"Boiler 1", @"Boiler 2", @"Furnace 1", @"Furnace 2", @"Furnace 3", @"A/C condenser 1", @"A/C condenser 2", @"A/C condenser 3", @"Windows", @"Gutters / Downspouts", @"Exterior Surfaces", nil]];
     
     textFieldDescriptionPicker.isOptionalDropDown = NO;
     [textFieldDescriptionPicker setItemList:[NSArray arrayWithObjects:@"", @"For Reference", @"Comment", nil]];
     strTemp = @"";
+
     ////-----------
     UITapGestureRecognizer *singleFingerTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
     [self.view addGestureRecognizer:singleFingerTap];
+    
+    //Initialize the variable with empty string
+    countryLatLong = @"";
 }
 
 - (void)didReceiveMemoryWarning {
@@ -337,7 +341,7 @@
             
         default:
             if ([_imageArray count] > 0) {
-                [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+                 [self.navigationController dismissViewControllerAnimated:YES completion:nil];
             }else{
                 [self.navigationController popViewControllerAnimated:YES];
             }
@@ -447,10 +451,10 @@
         
         [lblForTitle resignFirstResponder];
     }
+    
     //------------------------------------------//
     if ([_imageArray count] > 0) {
         [self uploadBulkImages];
-        
         return;
     }
     //------------------------------------------//
@@ -618,6 +622,7 @@
                 post[@"TagFriendAuthorities"] = arrForTaggedFriendAuthor;
             }
             
+            
             post[@"country"] = lblForLocation.text;
             post[@"countryLatLong"] = countryLatLong;
             post[@"postType"] = _postType;
@@ -690,14 +695,14 @@
             if(allPosts == nil) {
                 allPosts = [[NSMutableArray alloc] init];
             }
-            
+                      
             NSNumber *postOrder = [NSNumber numberWithInt:1];
             if (self.postOrder == -1) {
                 PFObject *item = allPosts.firstObject; //First Element will contain the object with highest postOrder
                 if (item != nil || ![item isEqual:[NSNull null]]) {
                     int newOrder = [item[@"postOrder"] intValue] + 1;
                     postOrder = [NSNumber numberWithInt:newOrder];
-                }
+                }                
             }
             else if (allPosts.count > 0) {
                 PFObject *item = allPosts[self.postOrder];
@@ -810,6 +815,7 @@
             }
             
             //Request a background execution task to allow us to finish uploading the photo even if the app is background
+            
             self.fileUploadBackgroundTaskId = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
                 [[UIApplication sharedApplication] endBackgroundTask:self.fileUploadBackgroundTaskId];
             }];
@@ -949,6 +955,7 @@
             break;
     }
 }
+
 //------------------------------------------------------------------------------------------------------//
 -(void)uploadBulkImages{
     
@@ -956,7 +963,6 @@
         progressHudShown = true;
         [MBProgressHUD showMessag:@"Uploading..." toView:self.view];
     }
-    
     if ([_imageArray count] > 0){
         UIImage *tempImage = (UIImage*)[_imageArray firstObject];
         
@@ -1004,6 +1010,7 @@
                 [arrPostLookedFlags removeObject:USER.objectId];
             }
         }
+
         NSLog(@"PostEventVC: Tagged Friend = %@", arrPostLookedFlags);
         if([arrPostLookedFlags count] > 0) post[@"usersBadgeFlag"] = arrPostLookedFlags;
         
@@ -1025,6 +1032,7 @@
         
         PFFile *thumbFile       = [PFFile fileWithName:@"thumb.jpg" data:UIImageJPEGRepresentation([tempImage resizedImageToSize:CGSizeMake(THUMBNAIL_SIZE, THUMBNAIL_SIZE)], 0.8f)];
         post[@"thumbImage"]     = thumbFile;
+        
         /**********************************************/
         
         //Request a background execution task to allow us to finish uploading the photo even if the app is background
@@ -1156,7 +1164,7 @@
                         {
                             
                         }
-                        
+                    
                         
                         [_imageArray removeObject:tempImage];
                         [self uploadBulkImages];
@@ -1176,7 +1184,6 @@
         }
     }else{
         
-        
         if(progressHudShown == true) {
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             progressHudShown = false;
@@ -1186,9 +1193,12 @@
         [self.navigationController dismissViewControllerAnimated:YES completion:nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:kLoadComponentsData object:nil];
         
+        
+        
     }
 }
 //------------------------------------------------------------------------------------------------------//
+
 - (void)dupPostForNewEvent:(PFObject*)targetEvent
 {
     
@@ -1361,15 +1371,23 @@
 - (void)selectedCells:(OMTagListViewController *)fsCategoryVC didFinished:(NSMutableArray *)_dict
 {
     [fsCategoryVC.navigationController dismissViewControllerAnimated:YES completion:^{
-        arrForTaggedFriend = [_dict copy];
-        
-        int i = 0;
+        [arrForTaggedFriend removeAllObjects];
         [arrForTaggedFriendAuthor removeAllObjects];
-        while (i < [arrForTaggedFriend count] ) {
-            [arrForTaggedFriendAuthor addObject:@"Full"];
-            i++;
+        for (int i=0; i<3; i++) {
+            NSArray *list = _dict[i];
+            if (list.count > 0) {
+                for (PFUser *user in list) {
+                    [arrForTaggedFriend addObject:user.objectId];
+                    if (i==0) {
+                        [arrForTaggedFriendAuthor addObject:@"Full"];
+                    } else if (i==1) {
+                        [arrForTaggedFriendAuthor addObject:@"View Only"];
+                    } else if (i==2) {
+                        [arrForTaggedFriendAuthor addObject:@"Comment Only"];
+                    }
+                }
+            }
         }
-        
     }];
 }
 
@@ -1515,12 +1533,12 @@
         }
         
     }
+
     [self clearSelectListText];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    
     [textViewForDescription becomeFirstResponder];
     
     return NO;
@@ -1551,6 +1569,7 @@
     lblForCount.text = [NSString stringWithFormat:@"%u",max_num - textView.text.length];
     
     if ([lblForCount.text isEqualToString:@"0"]) {
+        
         if ([textViewForDescription becomeFirstResponder]) {
             
             [textViewForDescription resignFirstResponder];
@@ -1559,6 +1578,7 @@
             
             [lblForTitle resignFirstResponder];
         }
+
         lblForCount.textColor = [UIColor redColor];
     }
 }
@@ -1612,12 +1632,12 @@
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
-    
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
     [picker dismissViewControllerAnimated:YES completion:^{
         
     }];
 }
+
 //-------
 -(void)textField:(nonnull IQDropDownTextField*)textField didSelectItem:(nullable NSString*)item
 {
@@ -1656,8 +1676,9 @@
             }
             strTemp = @"";
         }
-        
+
     }
+    
     [self clearSelectListText];
     [self.view endEditing:YES];
 }
@@ -1666,8 +1687,6 @@
     textFieldDescriptionPicker.text = @"";
     textFieldRoomItemPicker.text = @"";
 }
-//-------
-
 //-------
 //The event handling method.
 -(void)handleSingleTap:(UITapGestureRecognizer *)recognizer{
@@ -1680,6 +1699,7 @@
         
         [lblForTitle resignFirstResponder];
     }
-    
+
 }
+
 @end

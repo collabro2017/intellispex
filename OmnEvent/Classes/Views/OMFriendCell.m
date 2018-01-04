@@ -93,7 +93,7 @@
     index = _index;
     searchMode = _searchMode;
     [lblForUsername setText:user.username];
-    [imageViewForAvatar setImage:[UIImage imageNamed:@""]];
+    imageViewForAvatar.image = [UIImage imageNamed:@""];
     [btnForFriendStatus setHidden:NO];
     
     if (user[@"Location"] != NULL) [lblForLocation setText:user[@"Location"]];
@@ -113,8 +113,6 @@
     NSInteger i = 0;
     if ([user.objectId isEqualToString:USER.objectId]) {
         [btnForFriendStatus setHidden:YES];
-    } else {
-        [btnForFriendStatus setHidden:NO];
     }
     
     for (PFUser *cUser in tempArrayFriend) {

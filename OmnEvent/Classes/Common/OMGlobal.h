@@ -27,7 +27,6 @@
 
 #define SYSTEM_VERSION_LESS_THAN(v) ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
-
 typedef enum {
     
     kTypeUploadEvent = 0,
@@ -105,7 +104,6 @@ typedef enum {
 @property (strong, nonatomic) NSMutableArray *gArrSelectedList;
 @property (strong, nonatomic) PFObject *gEventObj;
 @property (strong, nonatomic) PFFile *gThumbImg;
-
 +(GlobalVar*)getInstance;
 
 @end

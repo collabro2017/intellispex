@@ -42,7 +42,21 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>20</string>
+	<string>29</string>
+	<key>Fabric</key>
+	<dict>
+		<key>APIKey</key>
+		<string>0a067d8721bdd88d80a9416ee132a539959e6208</string>
+		<key>Kits</key>
+		<array>
+			<dict>
+				<key>KitInfo</key>
+				<dict/>
+				<key>KitName</key>
+				<string>Crashlytics</string>
+			</dict>
+		</array>
+	</dict>
 	<key>FacebookAppID</key>
 	<string>1770868383173778</string>
 	<key>FacebookDisplayName</key>
@@ -51,7 +65,6 @@
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-		<string>instagram</string>
 		<string>fbapi</string>
 		<string>fbapi20130214</string>
 		<string>fbapi20130410</string>
@@ -65,6 +78,7 @@
 		<string>fbauth</string>
 		<string>fbauth2</string>
 		<string>fb-messenger-api20140430</string>
+		<string>instagram</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
@@ -98,11 +112,11 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>$(PRODUCT_NAME) uses camera</string>
+	<string>$(PRODUCT_NAME) uses camera to capture images &amp; videos for media posts</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Intellispex wants to use your current location</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>$(PRODUCT_NAME) uses microphone</string>
+	<string>$(PRODUCT_NAME) uses microphone to capture voice memo for audio posts</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>$(PRODUCT_NAME) uses photos</string>
 	<key>UIAppFonts</key>
@@ -140,19 +154,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-    <key>Fabric</key>
-    <dict>
-        <key>APIKey</key>
-        <string>0a067d8721bdd88d80a9416ee132a539959e6208</string>
-        <key>Kits</key>
-        <array>
-            <dict>
-                <key>KitInfo</key>
-                <dict/>
-                <key>KitName</key>
-                <string>Crashlytics</string>
-            </dict>
-        </array>
-    </dict>
 </dict>
 </plist>

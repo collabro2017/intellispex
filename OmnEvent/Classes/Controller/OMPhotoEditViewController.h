@@ -8,11 +8,11 @@
 
 #import <UIKit/UIKit.h>
 /////
+//#import "PECropViewController.h"
 #import "OMDrawTextViewController.h"
 #import "PhotoTweaksViewController.h"
 #import "OMAddTextViewController.h"
 /////
-
 
 @interface OMPhotoEditViewController : UIViewController<PhotoTweaksViewControllerDelegate, DrawTextViewControllerDelegate, AddTextViewControllerDelegate>
 {
@@ -37,17 +37,16 @@
     
     
     IBOutlet UIView *viewForBottom;
+    //----------------------------------------
     
-
-    
-    
+    IBOutlet UIScrollView *scrollView;
 }
 
 - (IBAction)backAction:(id)sender;
-
 - (IBAction)nextAction:(id)sender;
 - (IBAction)cropAction:(id)sender;
 - (IBAction)penAndTextAction:(id)sender;
+
 
 @property (strong, nonatomic) UIImage *preImage;
 
@@ -57,5 +56,4 @@
 @property (nonatomic, assign) int       postOrder;
 @property (nonatomic, strong) NSString *postType;
 @property (nonatomic) BOOL editFlag;
-
 @end

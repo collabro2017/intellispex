@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "OMBaseViewController.h"
+//------------------------------
+#import "UIButton+Badge.h"
+#import "OMSocialEvent.h"
 
 @interface OMDetailEventViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,UINavigationControllerDelegate,UIImagePickerControllerDelegate,UIActionSheetDelegate,UIAlertViewDelegate,UIDocumentInteractionControllerDelegate,MPMediaPickerControllerDelegate>
 {
@@ -38,7 +41,6 @@
     IBOutlet NSLayoutConstraint *DetailTableBottomHeight;
     
     IBOutlet UIButton *btnForNetState;
-    
     IBOutlet UIButton *btnReverse;
     BOOL isActionSheetReverseSelected;
     //------------------

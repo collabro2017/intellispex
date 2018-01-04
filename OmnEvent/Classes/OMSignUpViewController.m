@@ -39,6 +39,7 @@
     
     UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAvatar:)];
     [imgViewForAvatar addGestureRecognizer:gesture];
+    [OMGlobal setCircleView:imgViewForAvatar borderColor:[UIColor greenColor]];
     // Do any additional setup after loading the view.
     
     tempValue = constraintForTopspace.constant;
@@ -69,11 +70,6 @@
     [super viewWillAppear:animated];
     
     self.navigationController.navigationBarHidden = YES;
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    [OMGlobal setCircleView:imgViewForAvatar borderColor:[UIColor greenColor]];
 }
 
 #pragma mark - UIKeyboard Delegate Methods
@@ -275,32 +271,26 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    
-}
-
-- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex{
-    
+//    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
     picker.delegate = self;
     picker.allowsEditing = YES;
     switch (buttonIndex) {
         case 0:
         {
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                picker.sourceType = UIImagePickerControllerSourceTypeCamera;
-                picker.cameraCaptureMode = UIImagePickerControllerCameraCaptureModePhoto;
-                picker.cameraDevice = UIImagePickerControllerCameraDeviceRear;
-                [self presentViewController:picker animated:YES completion:nil];
-                
-            }];
+            
+            picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+            picker.cameraCaptureMode = UIImagePickerControllerCameraCaptureModePhoto;
+            picker.cameraDevice = UIImagePickerControllerCameraDeviceRear;
+            [self presentViewController:picker animated:YES completion:nil];
 
+            
+            
             break;
         }
         case 1:
         {
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                picker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
-                [self presentViewController:picker animated:YES completion:nil];
-            }];
+            picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+            [self presentViewController:picker animated:YES completion:nil];
 
             break;
         }
@@ -362,7 +352,8 @@
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     PFQuery *query = [PFQuery queryWithClassName:@"_Role"];
-    [query getObjectInBackgroundWithId:@"Di56R0ITXB" block:^(PFObject * _Nullable object, NSError * _Nullable error) {
+    [query getObjectInBackgroundWithId:@"XVr1sAmAQl" block:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        
         PFUser *user = [[PFUser alloc] init];
         [user setUsername:txtForUsername.text];
         [user setEmail:txtForEmail.text.lowercaseString];
@@ -384,9 +375,10 @@
                 [installation saveEventually];
                 [OMGlobal showAlertTips:@"Please verify your email address." title:@"Successfully signed up."];
                 [self.navigationController popViewControllerAnimated:YES];
-                
+
 //                [OMGlobal setLogInUserDefault];
 //                [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+                
             }
             else
             {
@@ -397,6 +389,7 @@
     }];
     
     //Request a background execution task to allow us to finish uploading the photo even if the app is background
+    
 }
 
 - (IBAction)cancelAction:(id)sender {

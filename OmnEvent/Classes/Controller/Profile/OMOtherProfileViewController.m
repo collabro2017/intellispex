@@ -51,6 +51,7 @@ typedef enum {
     arrForPhoto         = [NSMutableArray array];
     arrForFollowers     = [NSMutableArray array];
     arrForFollowings    = [NSMutableArray array];
+    
     // Do any additional setup after loading the view.
     
     
@@ -540,16 +541,12 @@ typedef enum {
             break;
         case TableRowsFavorite:
         {
-            
         }
             break;
         default:
             break;
     }
-
 }
-
-
 
 //- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 //{

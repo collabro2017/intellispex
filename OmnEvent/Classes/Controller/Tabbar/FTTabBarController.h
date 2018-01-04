@@ -9,8 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "OMGlobal.h"
 @class PopUpMenuView;
+
 //-------------------------------------
 #import "ZCImagePickerController.h"
+
 @interface FTTabBarController : UIViewController<UIActionSheetDelegate, ZCImagePickerControllerDelegate>
 {
     
@@ -26,10 +28,12 @@
     
     
     IBOutlet NSLayoutConstraint *constraintForNotificationHeight;
+    
     UIActionSheet *actionSheet;
     //---------------------------------
     NSMutableArray *_imageArray;
     UIPopoverController *_popoverController;
+    
 }
 
 - (IBAction)showTutorialVideoAction:(id)sender;
@@ -67,7 +71,9 @@
         audioData:(NSData *)_audioData postOrder:(int)_postOrder;
 
 - (void) setSelectedIndex:(int)index;
+
 - (void)hideTabView:(BOOL) _hidden;
+
 - (void)signOut;
 
 @end

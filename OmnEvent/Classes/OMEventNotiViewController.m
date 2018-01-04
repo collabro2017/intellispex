@@ -201,7 +201,6 @@
     PFUser *self_user = [PFUser currentUser];
     
     if (_event.badgeCount > 0) {
-        
         if(obj != nil)
         {
             NSMutableArray *temp = [[NSMutableArray alloc] init];
@@ -232,8 +231,9 @@
                 }];
             }
         }
-    } else {
+    } else{
         [self backAction];
     }
 }
+
 @end

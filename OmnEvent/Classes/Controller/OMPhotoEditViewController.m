@@ -7,7 +7,7 @@
 //
 
 #import "OMPhotoEditViewController.h"
-#import "OMPostEventViewController.h"
+#import "OMPostEventViewController.H"
 
 @interface OMPhotoEditViewController ()
 
@@ -29,20 +29,28 @@
 {
     [super viewWillAppear:animated];
     
+    //imageViewForPreview.contentMode = UIViewContentModeScaleAspectFit;
+    
     if (!_editFlag) {
         [imageViewForPreview setImage:_preImage];
     }
+    
 }
 /*
-#pragma mark - Navigation
+-(void)viewDidLayoutSubviews{
+    
+    float rate = _preImage.size.width/_preImage.size.height;
+    float height = IS_IPAD?768: 320;
+    CGSize scrollFrame = CGSizeMake(height * rate, height);
+    scrollView.contentSize = scrollFrame;
+    scrollView.scrollEnabled = YES;
+    
+    imageViewForPreview.frame = CGRectMake(0, 0, height * rate, height);
+    imageViewForPreview.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    imageViewForPreview.contentMode = UIViewContentModeScaleAspectFit;
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
 }
-*/
-
+//*/
 - (IBAction)backAction:(id)sender {
     
     [self.navigationController popViewControllerAnimated:YES];
@@ -50,6 +58,7 @@
 }
 
 - (IBAction)nextAction:(id)sender {
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     
     OMPostEventViewController *postEventVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PostEventVC"];
     
@@ -62,8 +71,8 @@
     [postEventVC setPostOrder:_postOrder];
     
     [self.navigationController pushViewController:postEventVC animated:YES];
+    
 }
-
 //*******************************************************************
 
 #pragma mark - Crop Action methods
@@ -142,7 +151,6 @@
     frame = CGRectMake(0, 0, IS_IPAD?768: 320,IS_IPAD?768: 320);
     imageViewForPreview.frame = frame;
     imageViewForPreview.image = dtImage;
-    
 }
 
 - (void)atViewControllerDidCancel:(OMAddTextViewController *)controller

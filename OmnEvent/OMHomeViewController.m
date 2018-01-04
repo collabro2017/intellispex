@@ -97,6 +97,7 @@
     
     [super viewDidLoad];
     
+  
     currentUser = [PFUser currentUser];
     NSLog(@"current user object id = %@", currentUser.objectId);
     is_grid = YES;
@@ -106,7 +107,7 @@
     tableViewForFeeds.hidden = YES;
     tableViewForFeeds.separatorStyle = UITableViewCellSeparatorStyleNone;
     tableViewForFeeds.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    
+
     arrForFeed = [NSMutableArray array];
     arrForTagFriends = [NSMutableArray array];
     arrForComments = [NSMutableArray array];
@@ -138,6 +139,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadEventWithGlobal) name:kLoadEventDataWithGlobal object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createDupEvent) name:kOpenPostEvent object:nil];
+    
+    
 }
 
 //Notification Methods
@@ -167,7 +170,7 @@
     [mainQuery includeKey:@"user"];
     [mainQuery includeKey:@"postedObjects"];
     [mainQuery setLimit:1000];
-
+    
     if(standUser != nil){
         [mainQuery whereKey:@"user" equalTo:standUser];
     }
@@ -203,9 +206,7 @@
 
 - (void)showBadge:(NSNotification *)_notification {
 //    NSDictionary *userInfo = _notification.userInfo;
-//    
 //    if ([userInfo objectForKey:@"request"]) {
-//        
 //        NSString *idOfTargetEvent = [userInfo objectForKey:@"request"];
 //        for (OMSocialEvent *event in arrForFeed) {
 //            if ([event.objectId isEqualToString:idOfTargetEvent]) {
@@ -216,7 +217,7 @@
 //                }
 //            }
 //        }
-//        [collectionViewForFeed reloadData];
+//       [collectionViewForFeed reloadData];
 //    }
     
     if (is_grid) {
@@ -231,7 +232,7 @@
     [super viewWillAppear:animated];
     
     NSLog(@"Event count && Event Global count = %i, %i",
-          (int)[arrForFeed count],(int)[[GlobalVar getInstance].gArrEventList count]);
+    (int)[arrForFeed count],(int)[[GlobalVar getInstance].gArrEventList count]);
     
     if (arrForFeed.count > 0) {
         int notificationsCount = 0;
@@ -372,39 +373,39 @@
     for( OMSocialEvent *eventObj in arrForFirstArray)
     {
         NSInteger postBadgeCount = 0;
-        
+       
         if(eventObj[@"postedObjects"] != nil && [eventObj[@"postedObjects"] count] > 0)
         {
-            for (PFObject *postObj in eventObj[@"postedObjects"])
-            {
-                if((NSNull*)postObj != [NSNull null])
+                for (PFObject *postObj in eventObj[@"postedObjects"])
                 {
-                    
-                    if(postObj[@"usersBadgeFlag"] && [postObj[@"usersBadgeFlag"] count] > 0)
+                    if((NSNull*)postObj != [NSNull null])
                     {
-                        for(NSString *userId in postObj[@"usersBadgeFlag"])
+                    
+                       if(postObj[@"usersBadgeFlag"] && [postObj[@"usersBadgeFlag"] count] > 0)
                         {
-                            if ([userId isEqualToString:currentUser.objectId]) {
-                                postBadgeCount++;
-                                NSLog(@"---found badge count----%i",(int) postBadgeCount);
+                            for(NSString *user in postObj[@"usersBadgeFlag"])
+                            {
+                                if ([user isEqualToString:currentUser.objectId]) {
+                                    postBadgeCount++;
+                                    NSLog(@"---found badge count----%i",(int) postBadgeCount);
+                                }
                             }
                         }
                     }
+                    else
+                    {
+                        NSLog(@" -- this object has one <null> obj --");
+                    }
+                    
                 }
-                else
-                {
-                    NSLog(@" -- this object has one <null> obj --");
-                }
-                
-            }
-            
+
         }
         eventObj.badgeCount = postBadgeCount;
         if(eventObj[@"eventBadgeFlag"] != nil && [eventObj[@"eventBadgeFlag"] count] > 0)
         {
-            if ([eventObj[@"eventBadgeFlag"] containsObject:currentUser.objectId])
+            if ([eventObj[@"eventBadgeFlag"] containsObject:currentUser])
             {
-                eventObj.badgeNewEvent = 1;
+                     eventObj.badgeNewEvent = 1;
             }
         }
         
@@ -420,7 +421,7 @@
     
     if (is_grid) [collectionViewForFeed reloadData];
     else [tableViewForFeeds reloadData];
- 
+   
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         if (is_grid) [collectionViewForFeed reloadData];
         else [tableViewForFeeds reloadData];
@@ -442,27 +443,27 @@
     OMSocialEvent *eventSocialObj = (OMSocialEvent *)event_obj;
     
     NSDate *lastLoadTime = [[NSUserDefaults standardUserDefaults] objectForKey:@"lastUpdateLocalDatastore"];
-    
+        
     if (!lastLoadTime) {
-        lastLoadTime = [NSDate date];
-        [[NSUserDefaults standardUserDefaults] setObject:lastLoadTime forKey:@"lastUpdateLocalDatastore"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
+         lastLoadTime = [NSDate date];
+         [[NSUserDefaults standardUserDefaults] setObject:lastLoadTime forKey:@"lastUpdateLocalDatastore"];
+         [[NSUserDefaults standardUserDefaults] synchronize];
     }
-    
+        
     NSDate *postTime = [event_obj updatedAt];
     NSComparisonResult result = [lastLoadTime compare:postTime];
-    
+        
     BOOL newEventFlag = NO;
-    
+        
     if (result == NSOrderedSame || result == NSOrderedAscending){
-        newEventFlag = YES;
+          newEventFlag = YES;
     }
-    
+        
     PFQuery *temp_mainQuery = [PFQuery queryWithClassName:@"Post"];
     [temp_mainQuery whereKey:@"targetEvent" equalTo:event_obj];
     [temp_mainQuery orderByDescending:@"createdAt"];
     [temp_mainQuery findObjectsInBackgroundWithBlock:^(NSArray *post_objects, NSError *error) {
-        
+            
         if (error != nil) {
             eventSocialObj.badgeCount = 0;
             [arrForFeed addObject:eventSocialObj];
@@ -470,7 +471,7 @@
         else
         {
             NSUInteger temp_badge_number = 0;
-            
+                
             if (newEventFlag){
                 temp_badge_number = post_objects.count;
             }
@@ -491,22 +492,22 @@
                     }
                 }
             }
-            
+                
             eventSocialObj.badgeCount = temp_badge_number;
             [arrForFeed addObject:eventSocialObj];
             if([arrForFirstArray count] > 0)[arrForFirstArray removeObjectAtIndex:0];
-            
+                
         }
-        
+            
         if([arrForFeed count] % 6 == 0)
         {
             if (is_grid) [collectionViewForFeed reloadData];
             else [tableViewForFeeds reloadData];
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         }
-        
-        if ([arrForFirstArray count] > 0){
             
+        if ([arrForFirstArray count] > 0){
+                
             [self estimateBadgeCount];
         }
         else
@@ -515,7 +516,7 @@
             NSDate* lastUpdatedate = [NSDate date];
             [[NSUserDefaults standardUserDefaults] setObject:lastUpdatedate forKey:@"lastUpdateLocalDatastore"];
             [[NSUserDefaults standardUserDefaults] synchronize];
-            
+                
             if (is_grid) [collectionViewForFeed reloadData];
             else [tableViewForFeeds reloadData];
         }
@@ -528,7 +529,7 @@
     // Show PostViewController
     
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-    
+
     OMPostEventViewController *postEventVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PostEventVC"];
     [postEventVC setImageForPost:nil];
     [postEventVC setPostType:@"image"]; //Post Type  :  image , video, audio
@@ -538,7 +539,7 @@
     [postEventVC setCurObj:nil];
     
     [self.navigationController pushViewController:postEventVC animated:YES];
-    
+        
 }
 
 - (void)postNewEvent {
@@ -585,8 +586,9 @@
     }];
 }
 
+
 - (void)addTagFriends:(NSMutableArray *)_dict {
-    
+
     NSLog(@"%@",currentObject[@"TagFriends"]);
     NSMutableArray *arrForTags = [NSMutableArray array];
     [arrForTags addObjectsFromArray:currentObject[@"TagFriends"]];
@@ -604,7 +606,7 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    OMSocialEvent *obj = (OMSocialEvent *)[arrForFeed objectAtIndex:indexPath.item];
+    OMSocialEvent *obj = (OMSocialEvent *)[arrForFeed objectAtIndex:indexPath.row];
     
     OMSearchCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kSearchCell forIndexPath:indexPath];
     [cell setDelegate:self];
@@ -652,6 +654,7 @@
         
         [GlobalVar getInstance].gEventIndex = indexPath.item;
         
+                
         [detailEventVC setCurrentObject:event];
         [self.navigationController pushViewController:detailEventVC animated:YES];
         
@@ -679,28 +682,28 @@
     }
     PFObject *postedObj = [arrForPosts firstObject];
     
-    if(![postedObj isEqual:[NSNull null]] && postedObj != nil)
-    {
-        NSMutableArray *temp = [[NSMutableArray alloc] init];
-        temp = [postedObj[@"usersBadgeFlag"] mutableCopy];
-        
-        if ([temp containsObject:currentUser.objectId])
+        if(![postedObj isEqual:[NSNull null]] && postedObj != nil)
         {
-            [temp removeObject:currentUser.objectId];
+            NSMutableArray *temp = [[NSMutableArray alloc] init];
+            temp = [postedObj[@"usersBadgeFlag"] mutableCopy];
             
-            postedObj[@"usersBadgeFlag"] = temp;
-            [postedObj saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-                if(error == nil) NSLog(@"DetailEventVC: Post Badge remove when open Detail view...");
+            if ([temp containsObject:currentUser.objectId])
+            {
+                [temp removeObject:currentUser.objectId];
                 
-                if ([arrForPosts count] > 0) {
-                    [arrForPosts removeObjectAtIndex:0];
-                    [self postBadgeProcess];
-                }
-                
-                
-            }];
+                postedObj[@"usersBadgeFlag"] = temp;
+                [postedObj saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                    if(error == nil) NSLog(@"DetailEventVC: Post Badge remove when open Detail view...");
+                    
+                    if ([arrForPosts count] > 0) {
+                        [arrForPosts removeObjectAtIndex:0];
+                        [self postBadgeProcess];
+                    }
+                  
+                    
+                }];
+            }
         }
-    }
 }
 
 #pragma mark  UITableViewDataSource
@@ -800,7 +803,7 @@
 - (void)shareEvent:(PFObject *)_obj {
     
     UIActionSheet *shareAction1 = nil;
-    
+
     NSString *status = @"Close";
     postImgView = [[UIImageView alloc] init];
     PFFile *file = (PFFile *)_obj[@"thumbImage"];
@@ -824,11 +827,11 @@
     else
     {
         shareAction1 = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Share via Email" otherButtonTitles:@"Facebook",@"Twitter",@"Instagram", @"Report", nil];
-        
+
     }
     
     [shareAction1 showInView:self.view];
-    
+
     shareAction1.tag = 2000;;
 }
 
@@ -882,7 +885,7 @@
 #pragma mark UIActionSheet Delegate
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    
+
     if (actionSheet.tag == 2000) {
         
         
@@ -940,7 +943,7 @@
             default:
                 break;
         }
-        
+
     }
     
     
@@ -1039,7 +1042,6 @@
 - (void)shareViaInstagram
 {
     UIImage * screenshot = postImgView.image;//[[CCDirector sharedDirector] screenshotUIImage];
-    
     // UIImage *screenshot = [UIImage imageNamed:@"splash@2x.png"];
     NSString *savePath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Screenshot.igo"];
     
@@ -1056,6 +1058,7 @@
         
         dic.annotation = [NSDictionary dictionaryWithObject:@"Uploaded using #ICYMI App" forKey:@"InstagramCaption"];
         //[dic presentOpenInMenuFromRect:CGRectZero inView:self.view animated:YES];
+        
         if (IS_IPAD) {
             [self performSelector:@selector(openDicOniPad:) withObject:nil  afterDelay:0.5];
         }
@@ -1067,11 +1070,12 @@
     {
         [OMGlobal showAlertTips:@"Please install Instagram app" title:nil];
     }
-    
 }
+
 -(void)openDicOniPad:(id)sender{
     [dic presentOpenInMenuFromRect:self.view.bounds inView:self.view animated:YES];
 }
+
 #pragma mark UIAlertView
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex

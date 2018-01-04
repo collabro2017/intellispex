@@ -13,6 +13,7 @@
 //------------------------
 #import "CLImageEditor.h"
 #import "OMPanoViewController.h"
+
 @class DeleteButton;
 
 @interface OMCameraViewController : UIViewController<SBVideoRecorderDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIScrollViewDelegate, CLImageEditorDelegate, OMPanoViewControllerDelegate> {
@@ -60,6 +61,7 @@
     UIImagePickerController *imagePicker;
     
     MBProgressHUD *hud;
+    
 }
 
 @property (nonatomic, assign) BOOL addVideoMode;
@@ -72,6 +74,10 @@
 
 - (IBAction)topButtonsAction:(id)sender;
 - (IBAction)bottomButtonsAction:(id)sender;
+
 //--------------------------------------------------
 @property (nonatomic, assign) BOOL panoFlag;
+
+
+
 @end

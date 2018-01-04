@@ -191,7 +191,7 @@
         if (textField.text.length < MAX_COMMENT_LIMIT || [string isEqualToString:@""]) {
             return YES;
         }
-    }
+    }    
     return NO;
 }
 
@@ -206,7 +206,7 @@
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     PFObject *commentObject = [PFObject objectWithClassName:@"EventComment"];
     commentObject[@"Commenter"] = currentUser;
-    NSLog(@"%@",currentObject.objectId);
+    NSLog(@"=================================%@",currentObject.objectId);
     commentObject[@"targetEvent"] = currentObject;
     commentObject[@"Comments"] = str;
     [commentObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {

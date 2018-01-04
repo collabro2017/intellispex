@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "IQDropDownTextField.h"
+
 @interface OMPostEventViewController : UIViewController<UITextFieldDelegate,UITextViewDelegate>
 {
     
@@ -38,6 +39,7 @@
     IBOutlet IQDropDownTextField *textFieldLocationPicker;
     IBOutlet IQDropDownTextField *textFieldRoomItemPicker;
     IBOutlet IQDropDownTextField *textFieldDescriptionPicker;
+    
 }
 @property (assign, nonatomic) UIBackgroundTaskIdentifier fileUploadBackgroundTaskId;
 
@@ -52,7 +54,6 @@
 @property (nonatomic) kTypeUpload       uploadOption;
 @property (nonatomic) kTypeCapture      captureOption;
 @property (nonatomic) kTypeRecord       audioOption;
-
 //-----------------------------------------------------
 @property (nonatomic, strong) NSMutableArray *imageArray;
 @property (nonatomic, assign) BOOL panoFlag;

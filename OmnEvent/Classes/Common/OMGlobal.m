@@ -258,8 +258,8 @@ static GlobalVar *_instance = nil;
     
     
     CGRect textRect = [str boundingRectWithSize:CGSizeMake([UIScreen mainScreen].bounds.size.width - 60.0f, CGFLOAT_MAX)
-                                        options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading
-                                     attributes:attributes
+                                         options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading
+                                      attributes:attributes
                                          context:nil];
     CGSize sizeToFit = textRect.size;
     

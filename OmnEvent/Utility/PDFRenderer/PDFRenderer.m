@@ -39,7 +39,7 @@
     CFRange currentRange = CFRangeMake(0, 0);
     CTFrameRef frameRef = CTFramesetterCreateFrame(frameSetter, currentRange, framePath, NULL);
     CGPathRelease(framePath);
-            
+    
     // Get the graphics context.
     CGContextRef currentContext = UIGraphicsGetCurrentContext();
     
@@ -60,7 +60,7 @@
     
     CFRelease(frameRef);
     CFRelease(stringRef);
-    CFRelease(frameSetter);    
+    CFRelease(frameSetter);
 }
 
 +(void)drawLineFromPoint:(CGPoint)from toPoint:(CGPoint)to
@@ -125,7 +125,7 @@
         
         [PDFRenderer drawImage:newImage inRect:frame];
     }
-
+    
     [PDFRenderer drawText:user.username inFrame:CGRectMake(51 * rScale, (nCurrOffset + 20) * rScale, 211 * rScale, 21 * rScale) fontName:@"Roboto-Regular" fontSize:12 * rScale fontColor:[UIColor blackColor]];
     
     NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
@@ -144,7 +144,7 @@
     }
     
     [PDFRenderer drawText:currentObj[@"title"] inFrame:CGRectMake(51 * rScale, (nCurrOffset + nTitleHeight + 40) * rScale, 250 * rScale, nTitleHeight * rScale) fontName:@"HelveticaNeue-Light" fontSize:12 * rScale fontColor:[UIColor grayColor]];
-    
+
     nCurrOffset += nTitleHeight;
     nCurrOffset += 40;
     
@@ -161,16 +161,16 @@
     nCurrOffset += nDescHeight;
     nCurrOffset += 20;
     //------------------------------------------------------------//
-
+    
     if ((nCurrOffset + 27) * rScale > PDF_CONTENT_HEIGHT) {
         UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, PDF_PAGE_WIDTH, PDF_PAGE_HEIGHT), nil); // start second page
         nCurrOffset = PDF_START_OffSet;
     }
     
     if (currentObj[@"commentsUsers"])
-        [PDFRenderer drawText:[NSString stringWithFormat:@"%lu",(unsigned long) [currentObj[@"commentsUsers"] count]] inFrame:CGRectMake(149 * rScale, (nCurrOffset + 27) * rScale, 46 * rScale, 30 * rScale) fontName:@"HelveticaNeue-Light" fontSize:15 * rScale  fontColor:[UIColor grayColor]];
+    [PDFRenderer drawText:[NSString stringWithFormat:@"%lu",(unsigned long) [currentObj[@"commentsUsers"] count]] inFrame:CGRectMake(149 * rScale, (nCurrOffset + 27) * rScale, 46 * rScale, 30 * rScale) fontName:@"HelveticaNeue-Light" fontSize:15 * rScale  fontColor:[UIColor grayColor]];
     else
-        [PDFRenderer drawText:[NSString stringWithFormat:@"0"] inFrame:CGRectMake(149 * rScale, (nCurrOffset + 27) * rScale, 46 * rScale, 30 * rScale) fontName:@"Roboto-Medium" fontSize:15 * rScale fontColor:[UIColor grayColor]];
+    [PDFRenderer drawText:[NSString stringWithFormat:@"0"] inFrame:CGRectMake(149 * rScale, (nCurrOffset + 27) * rScale, 46 * rScale, 30 * rScale) fontName:@"Roboto-Medium" fontSize:15 * rScale fontColor:[UIColor grayColor]];
     
     UIImage* comment = [UIImage imageNamed:@"btn_comment"];
     CGRect frame = CGRectMake(115 * rScale, (nCurrOffset) * rScale, 16 * rScale, 16 * rScale);
@@ -187,20 +187,20 @@
     {
         likeCount = 0;
     }
-
+    
     UIImage* like;
     
     if (likeCount)
-        like = [UIImage imageNamed:@"btn_like_selected"];
+    like = [UIImage imageNamed:@"btn_like_selected"];
     else
-        like = [UIImage imageNamed:@"btn_like_unselected"];
+    like = [UIImage imageNamed:@"btn_like_unselected"];
     
     frame = CGRectMake(19 * rScale, (nCurrOffset- 5) * rScale, 16 * rScale, 16 * rScale);
     
     [PDFRenderer drawImage:like inRect:frame];
     
     [PDFRenderer drawText:[NSString stringWithFormat:@"%d",likeCount] inFrame:CGRectMake(59 * rScale, (nCurrOffset + 27) * rScale, 46 * rScale, 30 * rScale) fontName:@"HelveticaNeue-Light" fontSize:15 * rScale  fontColor:[UIColor grayColor]];
-
+    
     UIImage* more = [UIImage imageNamed:@"btn_more"];
     frame = CGRectMake(289 * rScale, (nCurrOffset) * rScale, 16 * rScale, 4 * rScale);
     
@@ -236,7 +236,7 @@
         
         [commenter fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
             if (!error) {
-               
+                
                 if ((nCurrOffset + 8) * rScale > PDF_CONTENT_HEIGHT) {
                     UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, PDF_PAGE_WIDTH, PDF_PAGE_HEIGHT), nil); // start second page
                     nCurrOffset = PDF_START_OffSet;
@@ -267,7 +267,7 @@
                 }
                 
                 [PDFRenderer drawText:commenter.username inFrame:CGRectMake(51 * rScale, (nCurrOffset + 20) * rScale, 211 * rScale, 21 * rScale) fontName:@"Roboto-Regular" fontSize:12 * rScale fontColor:[UIColor blackColor]];
-
+                
                 NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
                 [dateFormat setDateFormat:@"MMM dd yyyy hh:mm a"];//Dec 14 2011 1:50 PM
                 
@@ -278,7 +278,7 @@
                 
                 //-----------------------------------------------------------//
                 int nDesHeight = [OMGlobal getBoundingOfString:tempObj[@"Comments"] width:250].height;
-
+                
                 if (((nCurrOffset + nDesHeight) * rScale) > PDF_CONTENT_HEIGHT)
                 {
                     UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, PDF_PAGE_WIDTH, PDF_PAGE_HEIGHT), nil); // start second page
@@ -306,7 +306,7 @@
         [PDFRenderer drawLineFromPoint:from toPoint:to];
         nCurrOffset += 20;
     }
-
+    
     return nCurrOffset;
 }
 
@@ -345,9 +345,9 @@
         
         [PDFRenderer drawImage:newImage inRect:frame];
     }
-
+    
     if (user)
-        [PDFRenderer drawText:user.username inFrame:CGRectMake(51 * rScale, (nCurrOffset + 20) * rScale, 211 * rScale, 21 * rScale) fontName:@"Roboto-Regular" fontSize:12 * rScale fontColor:[UIColor blackColor]];
+    [PDFRenderer drawText:user.username inFrame:CGRectMake(51 * rScale, (nCurrOffset + 20) * rScale, 211 * rScale, 21 * rScale) fontName:@"Roboto-Regular" fontSize:12 * rScale fontColor:[UIColor blackColor]];
     
     NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
     [dateFormat setDateFormat:@"MMM dd yyyy hh:mm a"];//Dec 14 2011 1:50 PM
@@ -385,7 +385,7 @@
     }
     
     if (currentObj[@"title"])
-        [PDFRenderer drawText:currentObj[@"title"] inFrame:CGRectMake(25 * rScale, (nCurrOffset + nDescTitleHeight + 60) * rScale, 250 * rScale, nDescTitleHeight * rScale) fontName:@"Roboto-Regular" fontSize:11 * rScale fontColor:[UIColor blackColor]];
+    [PDFRenderer drawText:currentObj[@"title"] inFrame:CGRectMake(25 * rScale, (nCurrOffset + nDescTitleHeight + 60) * rScale, 250 * rScale, nDescTitleHeight * rScale) fontName:@"Roboto-Regular" fontSize:11 * rScale fontColor:[UIColor blackColor]];
     
     nCurrOffset += nDescTitleHeight;
     nCurrOffset += 60;
@@ -438,9 +438,9 @@
     }
     
     if (currentObj[@"commentsUsers"])
-        [PDFRenderer drawText:[NSString stringWithFormat:@"%lu",(unsigned long) [currentObj[@"commentsUsers"] count]] inFrame:CGRectMake(149 * rScale, (nCurrOffset + 27) * rScale, 46 * rScale, 30 * rScale) fontName:@"HelveticaNeue-Light" fontSize:15 * rScale  fontColor:[UIColor grayColor]];
+    [PDFRenderer drawText:[NSString stringWithFormat:@"%lu",(unsigned long) [currentObj[@"commentsUsers"] count]] inFrame:CGRectMake(149 * rScale, (nCurrOffset + 27) * rScale, 46 * rScale, 30 * rScale) fontName:@"HelveticaNeue-Light" fontSize:15 * rScale  fontColor:[UIColor grayColor]];
     else
-        [PDFRenderer drawText:[NSString stringWithFormat:@"0"] inFrame:CGRectMake(149 * rScale, (nCurrOffset + 27) * rScale, 46 * rScale, 30 * rScale) fontName:@"Roboto-Medium" fontSize:15 * rScale fontColor:[UIColor grayColor]];
+    [PDFRenderer drawText:[NSString stringWithFormat:@"0"] inFrame:CGRectMake(149 * rScale, (nCurrOffset + 27) * rScale, 46 * rScale, 30 * rScale) fontName:@"Roboto-Medium" fontSize:15 * rScale fontColor:[UIColor grayColor]];
     
     UIImage* comment = [UIImage imageNamed:@"btn_comment"];
     CGRect frame = CGRectMake(115 * rScale, (nCurrOffset) * rScale, 16 * rScale, 16 * rScale);
@@ -461,9 +461,9 @@
     UIImage* like;
     
     if (likeCount)
-        like = [UIImage imageNamed:@"btn_like_selected"];
+    like = [UIImage imageNamed:@"btn_like_selected"];
     else
-        like = [UIImage imageNamed:@"btn_like_unselected"];
+    like = [UIImage imageNamed:@"btn_like_unselected"];
     
     frame = CGRectMake(19 * rScale, (nCurrOffset- 5) * rScale, 16 * rScale, 16 * rScale);
     
@@ -512,13 +512,13 @@
     UIGraphicsBeginPDFContextToFile(filePath, CGRectZero, nil);
     // Mark the beginning of a new page.
     UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, PDF_PAGE_WIDTH, PDF_PAGE_HEIGHT), nil);
-
+    
     [PDFRenderer drawText:@"Hello World" inFrame:CGRectMake(150, 150, 300, 50) fontName:@"Times" fontSize:36 fontColor:[UIColor blackColor]];
     
     CGPoint from = CGPointMake(0, 0);
     CGPoint to = CGPointMake(200, 300);
     [PDFRenderer drawLineFromPoint:from toPoint:to];
-
+    
     UIImage* logo = [UIImage imageNamed:@"apple-icon.png"];
     CGRect frame = CGRectMake(20, 100, 60, 60);
     
@@ -540,7 +540,7 @@
     PFObject *currentObject = [contentDic objectForKey:@"currentObject"];
     PFUser* user = currentObject[@"user"];
     PFFile *postImgFile = (PFFile *)currentObject[@"thumbImage"];
-
+    
     if (postImgFile) {
     
         
@@ -605,14 +605,14 @@
         [PDFRenderer drawText:user.username inFrame:CGRectMake(51 * rScale, 40 * rScale, 211 * rScale, 21 * rScale)
                      fontName:@"Roboto-Medium" fontSize:15 * rScale fontColor:[UIColor whiteColor]];
     }
-
+    
     [PDFRenderer drawRect:CGRectMake(8 * rScale, 281 * rScale, 180 * rScale, 31 * rScale)];
-
+    
     [PDFRenderer drawRect:CGRectMake(267 * rScale, 281 * rScale, 45 * rScale, 31 * rScale)];
     
     UIImage* logo = [UIImage imageNamed:@"btn_more_white"];
     CGRect frame = CGRectMake(279 * rScale, 293 * rScale, 16 * rScale, 4 * rScale);
-
+    
     [PDFRenderer drawImage:logo inRect:frame];
     
     UIImage* comment = [UIImage imageNamed:@"btn_comment_white"];
@@ -633,20 +633,20 @@
     UIImage* like;
     
     if (likeCount)
-        like = [UIImage imageNamed:@"btn_like_white_selected"];
+    like = [UIImage imageNamed:@"btn_like_white_selected"];
     else
-        like = [UIImage imageNamed:@"btn_like_white"];
+    like = [UIImage imageNamed:@"btn_like_white"];
     
     frame = CGRectMake(19 * rScale, 287 * rScale, 16 * rScale, 16 * rScale);
     
     [PDFRenderer drawImage:like inRect:frame];
     
     [PDFRenderer drawText:[NSString stringWithFormat:@"%d",likeCount] inFrame:CGRectMake(57 * rScale, 317 * rScale, 46 * rScale, 30 * rScale) fontName:@"Roboto-Medium" fontSize:15 * rScale fontColor:[UIColor whiteColor]];
-
+    
     if (currentObject[@"commenters"])
-        [PDFRenderer drawText:[NSString stringWithFormat:@"%lu",(unsigned long) [currentObject[@"commenters"] count]] inFrame:CGRectMake(149 * rScale, 317 * rScale, 46 * rScale, 30 * rScale) fontName:@"Roboto-Medium" fontSize:15 * rScale  fontColor:[UIColor whiteColor]];
+    [PDFRenderer drawText:[NSString stringWithFormat:@"%lu",(unsigned long) [currentObject[@"commenters"] count]] inFrame:CGRectMake(149 * rScale, 317 * rScale, 46 * rScale, 30 * rScale) fontName:@"Roboto-Medium" fontSize:15 * rScale  fontColor:[UIColor whiteColor]];
     else
-        [PDFRenderer drawText:[NSString stringWithFormat:@"0"] inFrame:CGRectMake(144 * rScale, 317 * rScale, 46 * rScale, 30 * rScale) fontName:@"Roboto-Medium" fontSize:15 * rScale fontColor:[UIColor whiteColor]];
+    [PDFRenderer drawText:[NSString stringWithFormat:@"0"] inFrame:CGRectMake(144 * rScale, 317 * rScale, 46 * rScale, 30 * rScale) fontName:@"Roboto-Medium" fontSize:15 * rScale fontColor:[UIColor whiteColor]];
     
     int nLblDescW = 250;
     int nLblDescH = [OMGlobal getBoundingOfString:currentObject[@"description"] width:nLblDescW].height;
@@ -737,7 +737,7 @@
                 
                 [commenter fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
                     
-                    if (!error) {                        
+                    if (!error) {
                         NSLog(@"%@",commenter.username);
                         if ((nCurrentOffset + 8) * rScale > PDF_CONTENT_HEIGHT)
                         {
@@ -788,7 +788,7 @@
                         if ((nCurrentOffset * rScale) > PDF_CONTENT_HEIGHT) {
                             UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, PDF_PAGE_WIDTH, PDF_PAGE_HEIGHT), nil); // start second page
                             nCurrentOffset = PDF_START_OffSet;
-                        }                        
+                        }
                     }
                 }];
             }
@@ -847,7 +847,7 @@
             
             
             NSMutableArray *arr = nil;
-
+            
             if (tempObj[@"commentsArray"]) {
                 
                 arr = tempObj[@"commentsArray"];
@@ -891,7 +891,7 @@
     UIGraphicsBeginPDFContextToFile(filePath, CGRectZero, nil);
     // Mark the beginning of a new page.
     UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, PDF_PAGE_WIDTH, PDF_PAGE_HEIGHT), nil);
-        
+    
     //open template file
     CFURLRef url = CFURLCreateWithFileSystemPath (NULL, (__bridge CFStringRef)templatePath, kCFURLPOSIXPathStyle, 0);
     CGPDFDocumentRef templateDocument = CGPDFDocumentCreateWithURL(url);
@@ -913,7 +913,7 @@
     //flip context back
     CGContextTranslateCTM(context, 0.0, templatePageBounds.size.height);
     CGContextScaleCTM(context, 1.0, -1.0);
-
+    
     // Edit body
     [PDFRenderer drawText:@"Hello World" inFrame:CGRectMake(150, 550, 300, 50) fontName:@"Times" fontSize:36 fontColor:[UIColor blackColor]];
     

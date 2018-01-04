@@ -30,7 +30,7 @@
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-
+    
     // Configure the view for the selected state
 }
 
@@ -39,7 +39,7 @@
     if ([delegate respondsToSelector:@selector(showProfile:)]) {
         [delegate performSelector:@selector(showProfile:) withObject:user];
     }
-
+    
 }
 
 - (void)setCurrentObj:(PFObject *)obj
@@ -100,16 +100,16 @@
     
     [lblForUsername setText:user.username];
     
-//    [_lblForTime setText:[OMGlobal showTime:_currentObj.createdAt]];
-//    _constraintForHeight.constant = [OMGlobal heightForCellWithPost:_currentObj[@"description"]];
-//    [_lblForDes setText:_currentObj[@"description"]];
-
-//    if (_currentObj[@"country"]) {
-//
-//        [_lblForLocation setText:_currentObj[@"country"]];
-//    }
-//    else
-//        [_lblForLocation setText:@"Unknown"];
+    //    [_lblForTime setText:[OMGlobal showTime:_currentObj.createdAt]];
+    //    _constraintForHeight.constant = [OMGlobal heightForCellWithPost:_currentObj[@"description"]];
+    //    [_lblForDes setText:_currentObj[@"description"]];
+    
+    //    if (_currentObj[@"country"]) {
+    //
+    //        [_lblForLocation setText:_currentObj[@"country"]];
+    //    }
+    //    else
+    //        [_lblForLocation setText:@"Unknown"];
     
     
     if (imageViewForPost.image) {
@@ -150,7 +150,7 @@
         likeCount = 0;
     }
     likerArr = [NSMutableArray array];
-
+    
     likeUserArray = [NSMutableArray array];
     
     if (_currentObj[@"likers"]) {
@@ -164,7 +164,7 @@
     if (_currentObj[@"likers"]) {
         [likeUserArray addObjectsFromArray:_currentObj[@"likers"]];
         [likerArr addObjectsFromArray:_currentObj[@"likeUserArray"]];
-
+        
     }
     if ([likeUserArray containsObject:USER.objectId]) {
         liked = YES;
@@ -174,8 +174,6 @@
         liked = NO;
     }
     [self setLikeButtonStatus:liked];
-    
-    
 }
 
 - (void)setLikeButtonStatus:(BOOL) _status
@@ -215,7 +213,7 @@
         [btnForLikeCount setTitle:[NSString stringWithFormat:@"%ld",(long)++likeCount] forState:UIControlStateNormal];
         [likeUserArray addObject:USER.objectId];
         [likerArr addObject:USER];
-
+        
         [_currentObj setObject:likeUserArray forKey:@"likers"];
         [_currentObj setObject:likerArr forKey:@"likeUserArray"];
         [_currentObj saveEventually];
@@ -227,7 +225,7 @@
     if ([delegate respondsToSelector:@selector(showLikersOfEvent:)]) {
         [delegate performSelector:@selector(showLikersOfEvent:) withObject:_currentObj];
     }
-
+    
 }
 
 - (IBAction)commentAction:(id)sender {

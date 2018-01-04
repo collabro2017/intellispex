@@ -28,7 +28,6 @@
 @synthesize searchBarForEvent;
 - (void)reload:(__unused id)sender
 {
-    
     [(UIRefreshControl*)sender beginRefreshing];
     
     PFQuery *subQuery1 = [PFQuery queryWithClassName:@"Event"];
@@ -39,6 +38,7 @@
     PFQuery *mainQuery = [PFQuery orQueryWithSubqueries:@[subQuery1, subQuery2]];
     [mainQuery orderByDescending:@"createdAt"];
     [mainQuery includeKey:@"user"];
+    
     [mainQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         
         [(UIRefreshControl*)sender endRefreshing];
@@ -58,7 +58,6 @@
     
 }
 
-/*
 -(void)viewWillLayoutSubviews{
     if (IS_IPAD) {
         CGRect frame = self.searchBarForEvent.frame;
@@ -70,8 +69,6 @@
         }
     }
 }
-*/
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -135,7 +132,6 @@
 
 - (void)searchRequestWithKey:(NSString *)searchKey
 {
-    
     PFQuery *eventQuery = [PFQuery queryWithClassName:kClassEvent];
     [eventQuery whereKey:@"eventname" hasPrefix:searchKey];
     
@@ -160,7 +156,7 @@
     PFQuery *subQuery2 = [PFQuery queryWithClassName:kClassEvent];
     [subQuery2 whereKey:@"deletedAt" equalTo:@""];
     
-    PFQuery *query = [PFQuery orQueryWithSubqueries:@[ eventQuery, eventQueryCapitalized, eventQueryLowerCase, descriptionQuery, descriptionQueryCapitalized, descriptionQueryLowerCase, subQuery1, subQuery2]];
+    PFQuery *query = [PFQuery orQueryWithSubqueries:@[eventQuery, eventQueryCapitalized, eventQueryLowerCase, descriptionQuery, descriptionQueryCapitalized, descriptionQueryLowerCase, subQuery1, subQuery2]];
     [query orderByDescending:@"createdAt"];
     [query includeKey:@"user"];
 
@@ -249,6 +245,7 @@
     PFQuery *mainQuery = [PFQuery orQueryWithSubqueries:@[subQuery1, subQuery2]];
     [mainQuery orderByDescending:@"createdAt"];
     [mainQuery includeKey:@"user"];
+    
     [mainQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         

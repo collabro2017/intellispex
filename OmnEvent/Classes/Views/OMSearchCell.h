@@ -26,4 +26,5 @@
 @property (strong, nonatomic) OMSocialEvent *currentObj;
 @property (strong, nonatomic) PFUser   *user;
 
+
 @end

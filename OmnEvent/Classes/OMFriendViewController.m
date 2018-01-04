@@ -58,6 +58,7 @@
             if (objects.count == 0)
             {
                 NSLog(@"Not Found");
+                
                 [arrForFriends removeAllObjects];
                 [arrForPeople removeAllObjects];
                 [arrForObjects removeAllObjects];
@@ -82,16 +83,18 @@
                     {
                         if (obj[@"ToUser"])
                         {
+                            [arrForObjects addObject:obj];
+                            
                             //Fix issue for multiple friends
                             PFUser *user = obj[@"ToUser"];
                             if (![user.objectId isEqualToString:USER.objectId] && ![strUserObjectIds containsObject:user.objectId]) {
                                 [strUserObjectIds addObject:user.objectId];
-                                [arrForObjects addObject:obj];
                                 [arrForFriends addObject:user];
                             }
                         }
                     }
                 }
+                
                 [strUserObjectIds removeAllObjects];
                 strUserObjectIds = nil;
                 
@@ -188,6 +191,7 @@
              if (objects.count == 0)
              {
                  NSLog(@"Not Found");
+                 
                  [arrForFriends removeAllObjects];
                  [arrForPeople removeAllObjects];
                  [arrForObjects removeAllObjects];
@@ -199,7 +203,6 @@
                  [arrForFriends removeAllObjects];
                  [arrForPeople removeAllObjects];
                  [arrForObjects removeAllObjects];
-                 
                  NSMutableArray *strUserObjectIds = [NSMutableArray array];
                  
                  for (PFObject *obj in objects)
@@ -209,18 +212,16 @@
                      
                      if ([user.objectId isEqualToString:kIDOfCurrentUser] && !([[((PFUser *)obj[@"ToUser"]) objectForKey:@"visibility"] isEqualToString:@"Hidden"]))
                      {
-                         if (obj[@"ToUser"])
-                         {
-                             //Fix issue for multiple friends
-                             PFUser *user = obj[@"ToUser"];
-                             if (![user.objectId isEqualToString:USER.objectId] && ![strUserObjectIds containsObject:user.objectId]) {
-                                 [strUserObjectIds addObject:user.objectId];
-                                 [arrForObjects addObject:obj];
-                                 [arrForFriends addObject:user];
-                             }
+                         //Fix issue for multiple friends
+                         PFUser *user = obj[@"ToUser"];
+                         if (![user.objectId isEqualToString:USER.objectId] && ![strUserObjectIds containsObject:user.objectId]) {
+                             [strUserObjectIds addObject:user.objectId];
+                             [arrForObjects addObject:obj];
+                             [arrForFriends addObject:user];
                          }
                      }
                  }
+                 
                  [strUserObjectIds removeAllObjects];
                  strUserObjectIds = nil;
                  
@@ -255,7 +256,6 @@
                                      break;
                                  }
                              }
-                             
                              
                              if (!isFound && !isFoundMutalFriend && !([[((PFUser *)anotherObj[@"ToUser"]) objectForKey:@"visiblity"] isEqualToString:@"Hidden"]))
                              {
@@ -367,7 +367,7 @@
     [super viewDidAppear:animated];
     isShowProfileOpened = NO;
 }
-    
+
 - (void)loadFriendsData:(NSString *)text
 {
     if (m_isSearchContent)
@@ -413,13 +413,9 @@
     PFQuery *queryForStateLowerCaseString = [PFUser query];
     [queryForStateLowerCaseString whereKey:@"State" containsString:[text lowercaseString]];
     
-    
     PFQuery *finalQuery = [PFQuery orQueryWithSubqueries:[NSArray arrayWithObjects:query, queryCapitalizedString,queryLowerCaseString, queryForCity, queryForCityCapitalizedString, queryForCityLowerCaseString, queryForState, queryForStateCapitalizedString, queryForStateUpperCaseString, queryForStateLowerCaseString, nil]];
     
-    
 //    [finalQuery findObjectsInBackgroundWithTarget:self selector:@selector(searchPeopleWithResult:error:)];
-
-    
     [finalQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
 //        [MBProgressHUD hideHUDForView:self.view animated:YES];
         m_isSearchContent = NO;
@@ -429,14 +425,13 @@
             
             for (PFUser *aUser in objects) {
                 NSString* strVisibility = [aUser objectForKey:@"visibility"];
-                NSLog(@"Visibility = %@", strVisibility);
                 
                 if (![strVisibility isEqualToString:@"Hidden"]) {
                     
                     [arrForPeople addObject:aUser];
                 }
             }
-
+            
             //Apply Sorting
             NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"username" ascending:YES
                                                                     selector:@selector(caseInsensitiveCompare:)];
@@ -517,12 +512,13 @@
     {
         if (nUserType == 2)
         {
-            OMOtherProfileViewController *otherProfileVC = [self.storyboard instantiateViewControllerWithIdentifier:@"OtherProfileVC"];
+            isShowProfileOpened = YES;
+            OMOtherProfileViewController *otherProfileVC = [self.storyboard
+                                                            instantiateViewControllerWithIdentifier:@"OtherProfileVC"];
             otherProfileVC.is_type = 0;
             otherProfileVC.userType = nUserType;
             [otherProfileVC setTargetUser:aUser];
             otherProfileVC.isPrivate = NO;
-            
             [self.navigationController pushViewController:otherProfileVC animated:YES];
         }
         else
@@ -532,23 +528,23 @@
     }
     else if ([strVisibility isEqualToString:@"Private"])
     {
+        isShowProfileOpened = YES;
         OMOtherProfileViewController *otherProfileVC = [self.storyboard instantiateViewControllerWithIdentifier:@"OtherProfileVC"];
         otherProfileVC.is_type = 0;
         otherProfileVC.userType = nUserType;
         [otherProfileVC setTargetUser:aUser];
         otherProfileVC.isPrivate = YES;
-        
         [self.navigationController pushViewController:otherProfileVC animated:YES];
     }
     else if ([strVisibility isEqualToString:@"Public"])
     {
-    OMOtherProfileViewController *otherProfileVC = [self.storyboard instantiateViewControllerWithIdentifier:@"OtherProfileVC"];
-    otherProfileVC.is_type = 0;
+        isShowProfileOpened = YES;
+        OMOtherProfileViewController *otherProfileVC = [self.storyboard instantiateViewControllerWithIdentifier:@"OtherProfileVC"];
+        otherProfileVC.is_type = 0;
         otherProfileVC.userType = nUserType;
         [otherProfileVC setTargetUser:aUser];
         otherProfileVC.isPrivate = NO;
-    
-    [self.navigationController pushViewController:otherProfileVC animated:YES];
+        [self.navigationController pushViewController:otherProfileVC animated:YES];
     }
 }
 
@@ -622,7 +618,7 @@
                         
                         [arrForFriends addObject:_obj];
                         [self reloadWithSearch];
-//                        [tblForSearch reloadData];
+                        //[tblForSearch reloadData];
                         
                     }];
 

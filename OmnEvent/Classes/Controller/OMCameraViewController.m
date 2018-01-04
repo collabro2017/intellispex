@@ -27,6 +27,7 @@
 
 //-----------------------------------------
 #import "OMPanoViewController.h"
+
 #define TIMER_INTERVAL 0.05f
 
 #define TAG_ALERTVIEW_CLOSE_CONTROLLER 10086
@@ -70,7 +71,7 @@
 - (void)viewDidLoad {
     
     [super viewDidLoad];
-    
+    NSLog(@"Here Photo!");
     isPhotoMode = YES;
     
     defaultValue = constraintForVideoControl.constant;
@@ -80,10 +81,10 @@
     imagePicker = [[UIImagePickerController alloc] init];
     imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     imagePicker.delegate = self;
-    imagePicker.allowsEditing = YES;
+//    imagePicker.allowsEditing = YES;
     
     [self performSelectorOnMainThread:@selector(initRecorder) withObject:nil waitUntilDone:NO];
-    
+   
     [self initTopBar];
     [self initPhotoControls];
     [self initVideoControls];
@@ -91,9 +92,9 @@
     [SBCaptureToolKit createVideoFolderIfNotExist];
     [self initProgressBar];
     
-    //    CGRect frame = imageViewForPreview.frame;
-    //    frame = CGRectMake(0, 0, IS_IPAD?768: 320, IS_IPAD?768: 320);
-    //    imageViewForPreview.frame = CGRectMake(0, 0, IS_IPAD?768: 320, IS_IPAD?768: 320);
+//    CGRect frame = imageViewForPreview.frame;
+//    frame = CGRectMake(0, 0, IS_IPAD?768: 320, IS_IPAD?768: 320);
+//    imageViewForPreview.frame = CGRectMake(0, 0, IS_IPAD?768: 320, IS_IPAD?768: 320);
     // for photo editing
     scrollViewForPreview.delegate = self;
     
@@ -107,7 +108,7 @@
     twoFingerTapRecognizer.numberOfTouchesRequired = 2;
     [scrollViewForPreview addGestureRecognizer:twoFingerTapRecognizer];
     
-    // [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(drawFocusView) userInfo:nil repeats:NO];
+   // [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(drawFocusView) userInfo:nil repeats:NO];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -143,7 +144,7 @@
     CGRect frame = imageViewForPreview.frame;
     frame = CGRectMake(0, 0, IS_IPAD?768: 320,IS_IPAD?768: 320);
     imageViewForPreview.frame = frame;
-    
+
     scrollViewForPreview.zoomScale = 1.0;
     scrollViewForPreview.minimumZoomScale = 1.0;
     scrollViewForPreview.maximumZoomScale = 10.0f;
@@ -269,7 +270,7 @@
     [btnForFront setImage:[UIImage imageNamed:@"record_lensflip_highlighted.png"] forState:UIControlStateSelected];
     [btnForFront setImage:[UIImage imageNamed:@"record_lensflip_highlighted.png"] forState:UIControlStateHighlighted];
     btnForFront.enabled = [_recorder isFrontCameraSupported];
-    
+
     //Flash button
     
     [btnForFlash setImage:[UIImage imageNamed:@"record_flashlight_normal.png"] forState:UIControlStateNormal];
@@ -277,7 +278,7 @@
     [btnForFlash setImage:[UIImage imageNamed:@"record_flashlight_highlighted.png"] forState:UIControlStateHighlighted];
     [btnForFlash setImage:[UIImage imageNamed:@"record_flashlight_highlighted.png"] forState:UIControlStateSelected];
     btnForFlash.enabled = _recorder.isTorchSupported;
-    
+
 }
 
 - (void)initPhotoControls {
@@ -294,7 +295,7 @@
         case kTypeCaptureAll:
         {
             [btnForVideo setHidden:YES];
-            
+
         }
             break;
         case kTypeCaptureVideo:
@@ -382,7 +383,7 @@
         
     }];
     
-    
+
 }
 
 - (void)initVideoControls {
@@ -399,11 +400,11 @@
         [lblForTimer setHidden:NO];
     }
     [OMGlobal setCircleView:imageViewForRedTimer borderColor:nil];
-    
+
     
     //ok Button
     
-    
+
     btnForOk.enabled = NO;
     
     [btnForOk setBackgroundImage:[UIImage imageNamed:@"record_icon_hook_normal_bg.png"] forState:UIControlStateNormal];
@@ -451,7 +452,7 @@
     
     UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(setFocuseTap:)];
     [viewForPreview addGestureRecognizer:singleTap];
-    
+
 }
 
 - (void)setFocuseTap:(UITapGestureRecognizer*)recognizer
@@ -509,10 +510,10 @@
                                      [btnForClose setImage:[UIImage imageNamed:@"btn_back_profile"] forState:UIControlStateNormal];
                                      
                                  }
-                                 
+
                              }
                              
-                             
+                            
                          }];
         
     }
@@ -521,7 +522,7 @@
 //  Hide/Show Video Control Views
 
 - (void)hideVideoControllView:(BOOL)_bool {
-    
+
     if (_bool) {
         constraintForVideoControl.constant = defaultValue;
         [self updateLayoutWithAnimate:YES showProgress:_bool];
@@ -534,7 +535,7 @@
 // Take a Photo
 - (void)capturePhoto {
     
-    [_recorder captureStillImage];
+    [_recorder captureStillImage];    
     [MBProgressHUD showMessag:@"Processing..." toView:self.view];
 }
 
@@ -555,34 +556,34 @@
 #pragma mark - Touch Event
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     
-    //    if (_isProcessingData) {
-    //        return;
-    //    }
-    //
-    //    if (btnForDelete.style == DeleteButtonStyleDelete) {
-    //        [btnForDelete setButtonStyle:DeleteButtonStyleNormal];
-    //        [_progressBar setLastProgressToStyle:ProgressBarProgressStyleNormal];
-    //        return;
-    //    }
-    //
-    // UITouch *touch = [touches anyObject];
+//    if (_isProcessingData) {
+//        return;
+//    }
+//    
+//    if (btnForDelete.style == DeleteButtonStyleDelete) {
+//        [btnForDelete setButtonStyle:DeleteButtonStyleNormal];
+//        [_progressBar setLastProgressToStyle:ProgressBarProgressStyleNormal];
+//        return;
+//    }
+//    
+   // UITouch *touch = [touches anyObject];
     
-    // CGPoint touchPoint = [touch locationInView:viewForPreview];
-    //    if (CGRectContainsPoint(btnForRecord.frame, touchPoint)) {
-    //        NSString *filePath = [SBCaptureToolKit getVideoSaveFilePathString];
-    //        [_recorder startRecordingToOutputFileURL:[NSURL fileURLWithPath:filePath]];
-    //    }
-    //
-    // touchPoint = [touch locationInView:self.view];
-    // if (CGRectContainsPoint(_recorder.preViewLayer.frame, touchPoint)) {
-    //     [self showFocusRectAtPoint:touchPoint];
-    //     [_recorder focusInPoint:touchPoint];
-    // }
+   // CGPoint touchPoint = [touch locationInView:viewForPreview];
+//    if (CGRectContainsPoint(btnForRecord.frame, touchPoint)) {
+//        NSString *filePath = [SBCaptureToolKit getVideoSaveFilePathString];
+//        [_recorder startRecordingToOutputFileURL:[NSURL fileURLWithPath:filePath]];
+//    }
+//    
+   // touchPoint = [touch locationInView:self.view];
+   // if (CGRectContainsPoint(_recorder.preViewLayer.frame, touchPoint)) {
+   //     [self showFocusRectAtPoint:touchPoint];
+   //     [_recorder focusInPoint:touchPoint];
+   // }
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    
+
 }
 //When Tap Delete Button
 
@@ -608,7 +609,7 @@
     
     [_progressBar stopShining];
     [_progressBar setLastProgressToWidth:0];
-    
+
     if (_recorder.isRecording) {
         [_recorder stopCurrentVideoRecording];
     }
@@ -645,7 +646,7 @@
     
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     UIImage *image = [_image resizedImageToSize:CGSizeMake(POSTIMAGE_SIZE, POSTIMAGE_SIZE)];
-    /*
+/*
     OMPostEventViewController *postEventVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PostEventVC"];
     
     [postEventVC setImageForPost:image];
@@ -654,10 +655,12 @@
     [postEventVC setUploadOption:uploadOption];
     [postEventVC setCaptureOption:captureOption];
     [postEventVC setCurObj:curObj];
+    [postEventVC setPostOrder:_postOrder];
     
     [self.navigationController pushViewController:postEventVC animated:YES];
-    */
-    /*
+//*/
+    
+/*
     OMPhotoEditViewController *photoEditVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoEditVC"];
     
     [photoEditVC setPreImage:image];
@@ -669,7 +672,7 @@
     [photoEditVC setPostOrder:_postOrder];
     
     [self.navigationController pushViewController:photoEditVC animated:YES];
-    //*/
+//*/
     
     CLImageEditor *editor = [[CLImageEditor alloc] initWithImage:image];
     editor.delegate = self;
@@ -679,7 +682,9 @@
     [[CLImageEditorTheme theme] setToolIconColor:@"white"];
     [self presentViewController:editor animated:YES completion:nil];
     
+    
 }
+
 #pragma mark - CLimageEditor delegate
 - (void)imageEditorDidCancel:(CLImageEditor *)editor
 {
@@ -712,6 +717,7 @@
     }];
     
 }
+
 - (void)showPreviewForVideo:(NSURL *)_url
 {
     
@@ -736,24 +742,26 @@
     
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
     UIImage *image = [info objectForKey:UIImagePickerControllerEditedImage];
-    
-    float temp;
-    if (image.size.height>image.size.width) {
-        temp = image.size.height;
+    if (!image) {
+        image = [info objectForKey:UIImagePickerControllerOriginalImage];
     }
-    else
-        temp = image.size.width;
     
+    //Resize image to square
+    CGSize newSize = CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.width);
+    UIGraphicsBeginImageContextWithOptions(newSize, NO, 0);
+    [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+    UIImage* resizedImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
     
     [MBProgressHUD showMessag:@"Processing..." toView:self.view];
-    
+
     [picker dismissViewControllerAnimated:YES completion:^{
         
         [viewForCamera setHidden:YES];
         
         //[imageViewForPreview setImage:image];
         // for photo editing
-        [self sendImageOnEditViewWithScroll:image];
+        [self sendImageOnEditViewWithScroll:resizedImage];
         
         btnForVideo.enabled = YES;
         btnForVideo.hidden = NO;
@@ -767,7 +775,7 @@
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
     [picker dismissViewControllerAnimated:YES completion:^{
         [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
-        
+
     }];
 }
 #pragma mark - SBVideoRecorderDelegate
@@ -780,14 +788,14 @@
 }
 
 - (void)captureManagerStillImageCaptured:(SBVideoRecorder *)videoRecorder image:(UIImage *)image {
-    
+
     
     self.isProcessingData = NO;
     
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     
     [_recorder stopCurrentVideoRecording];
-    
+
     // Hide the previewlayer when get image or video for new Event/Post
     //[_recorder.preViewLayer setHidden:YES];
     [viewForCamera setHidden:YES];
@@ -800,7 +808,7 @@
     
     btnForVideo.enabled = YES;
     btnForVideo.hidden = NO;
-    
+
 }
 
 //Record Video
@@ -828,7 +836,7 @@
         
         [_progressBar stopShining];
         [_progressBar setLastProgressToWidth:0];
-        
+
         if(videoDuration > MIN_VIDEO_DUR && videoDuration < MAX_VIDEO_DUR)
         {
             if(_recorder.isRecording)
@@ -862,14 +870,14 @@
     
     [self.progressBar addProgressView];
     
-    //  [btnForDelete setButtonStyle:DeleteButtonStyleNormal];
+//  [btnForDelete setButtonStyle:DeleteButtonStyleNormal];
     
     lblForTimer.text = [NSString stringWithFormat:@"%02d:%02d",min,second];
     imageViewForRedTimer.hidden = NO;
     [self performSelector:@selector(incrementTime:) withObject:nil afterDelay:1.0];
     [self performSelector:@selector(animateRecordView) withObject:nil afterDelay:0.5];
     btnForRecord.enabled = YES;
-    
+
 }
 
 #pragma mark ---------rotate(only when this controller is presented, the code below effect)-------------
@@ -906,7 +914,7 @@
 - (void)showFocusRectAtPoint:(CGPoint)point
 {
     //if(_focusRectView.alpha != 0.0f) return;
-    
+        
     _focusRectView.alpha = 1.0f;
     _focusRectView.center = point;
     _focusRectView.transform = CGAffineTransformMakeScale(1.5f, 1.5f);
@@ -952,8 +960,8 @@
                         isPhotoMode = !isPhotoMode;
                         [self hideVideoControllView:isPhotoMode];
                     }
-                    
-                    
+
+
                 }
                     break;
                 case kTypeCapturePhoto:
@@ -972,8 +980,8 @@
                 default:
                     break;
             }
-            
-            
+           
+
         }
             break;
         case TAG_TOP_BUTTON + 1:
@@ -1020,7 +1028,7 @@
     switch (button.tag) {
         case TAG_PHOTO_BUTTON:
         {
-            
+            NSLog(@"Here Capture!!!");
             //Capture Action : if camera button -> Photo , else video button //
             if (isPhotoMode) {
                 
@@ -1045,7 +1053,7 @@
         case TAG_PHOTO_BUTTON + 1:
         {
             //Show Album View Controller
-            
+
             imagePicker.navigationBar.tintColor = [UIColor whiteColor];
             [self.navigationController presentViewController:imagePicker animated:YES completion:nil];
         }
@@ -1109,7 +1117,7 @@
     panoVC.delegate = self;
     
     [self.navigationController pushViewController:panoVC animated:YES];
-    
+
 }
 
 #pragma mark - OMPanoramViewControllerDelegate

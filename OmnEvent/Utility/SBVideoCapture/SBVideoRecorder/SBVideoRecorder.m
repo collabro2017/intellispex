@@ -119,7 +119,7 @@
     if ([backCamera isExposureModeSupported:AVCaptureExposureModeContinuousAutoExposure]) {
         [backCamera setExposureMode:AVCaptureExposureModeContinuousAutoExposure];
     }
-    
+
     [backCamera unlockForConfiguration];
     
     self.videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:backCamera error:nil];
@@ -189,14 +189,14 @@
 
 - (void)outMediaFile:(NSURL*)filePath
 {
-    
+ 
 }
 
 
 - (void)mergeAndExportVideosAtFileURLs:(NSArray *)fileURLArray
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        
+       
         NSError *error = nil;
         
         CGSize renderSize = CGSizeMake(0, 0);
@@ -207,12 +207,12 @@
         
         CMTime totalDuration = kCMTimeZero;
         
-        
+       
         NSMutableArray *assetTrackArray = [[NSMutableArray alloc] init];
         NSMutableArray *assetArray = [[NSMutableArray alloc] init];
         for (NSURL *fileURL in fileURLArray) {
             AVAsset *asset = [AVAsset assetWithURL:fileURL];
-            
+
             if (!asset) {
                 continue;
             }
@@ -229,7 +229,7 @@
         CGFloat renderW = MIN(renderSize.width, renderSize.height);
         
         for (int i = 0; i < [assetArray count] && i < [assetTrackArray count]; i++) {
-            
+          
             
             AVAsset *asset = (AVAsset*)[assetArray objectAtIndex:i];
             AVAssetTrack *assetTrack = [assetTrackArray objectAtIndex:i];
@@ -396,31 +396,31 @@
 
 - (void)focusWithMode:(AVCaptureFocusMode)focusMode exposeWithMode:(AVCaptureExposureMode)exposureMode atDevicePoint:(CGPoint)point monitorSubjectAreaChange:(BOOL)monitorSubjectAreaChange {
     //    NSLog(@"focus point: %f %f", point.x, point.y);
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        AVCaptureDevice *device = [_videoDeviceInput device];
-        NSError *error = nil;
-        if ([device lockForConfiguration:&error]) {
-            if ([device isFocusPointOfInterestSupported]) {
+	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+		AVCaptureDevice *device = [_videoDeviceInput device];
+		NSError *error = nil;
+		if ([device lockForConfiguration:&error]) {
+			if ([device isFocusPointOfInterestSupported]) {
                 [device setFocusPointOfInterest:point];
             }
             
             if ([device isFocusModeSupported:focusMode]) {
-                [device setFocusMode:focusMode];
-            }
+				[device setFocusMode:focusMode];
+			}
             
-            if ([device isExposurePointOfInterestSupported]) {
+			if ([device isExposurePointOfInterestSupported]) {
                 [device setExposurePointOfInterest:point];
             }
             
             if ([device isExposureModeSupported:exposureMode]) {
-                [device setExposureMode:exposureMode];
-            }
+				[device setExposureMode:exposureMode];
+			}
             
-            [device setSubjectAreaChangeMonitoringEnabled:monitorSubjectAreaChange];
-            [device unlockForConfiguration];
-        } else {
+			[device setSubjectAreaChangeMonitoringEnabled:monitorSubjectAreaChange];
+			[device unlockForConfiguration];
+		} else {
         }
-    });
+	});
 }
 
 
@@ -630,26 +630,26 @@
     
     [self.stillImageOutput captureStillImageAsynchronouslyFromConnection:stillImageConnection
                                                        completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error)
-     {
-         
-         if (imageDataSampleBuffer != NULL) {
-             NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
-             UIImage *image = [[UIImage alloc] initWithData:imageData];
-             if ([[self delegate] respondsToSelector:@selector(captureManagerStillImageCaptured:image:)]) {
-                 [[self delegate] captureManagerStillImageCaptured:self image:image];
-             }
-         }
-         else {
-             if ([[self delegate] respondsToSelector:@selector(captureManager:didFailWithError:)]) {
-                 [[self delegate] captureManager:self didFailWithError:error];
-             }
-         }
-     }];
+    {
+        
+        if (imageDataSampleBuffer != NULL) {
+            NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
+            UIImage *image = [[UIImage alloc] initWithData:imageData];
+            if ([[self delegate] respondsToSelector:@selector(captureManagerStillImageCaptured:image:)]) {
+                [[self delegate] captureManagerStillImageCaptured:self image:image];
+            }
+        }
+        else {
+            if ([[self delegate] respondsToSelector:@selector(captureManager:didFailWithError:)]) {
+                [[self delegate] captureManager:self didFailWithError:error];
+            }
+        }
+    }];
 }
 
 - (BOOL)isRecording
 {
-    return [[self movieFileOutput] isRecording];
+   return [[self movieFileOutput] isRecording];
 }
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer

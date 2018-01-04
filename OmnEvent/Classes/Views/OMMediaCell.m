@@ -35,7 +35,7 @@
 
 - (IBAction)onCheckBtn:(id)sender {
     UIButton* tmp = (UIButton*)sender;
-    NSLog(@"Check Tag === %ld", (long)[tmp tag]);
+    NSLog(@"Check Tag === %d", [tmp tag]);
     
     if([[GlobalVar getInstance].gArrPostList count] > 0)
     {
@@ -51,12 +51,13 @@
             [[GlobalVar getInstance].gArrSelectedList addObject:selectedObj];
             [btnCheckForExport setImage:[UIImage imageNamed:@"btn_check_icon"] forState:UIControlStateNormal];
         }
+        
     }
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-    
+
     // Configure the view for the selected state
 }
 
@@ -84,6 +85,7 @@
 
 - (void)setCurrentObj:(PFObject *)obj {
     
+    //PFObject *object = obj;
     currentObj = obj;
     
     [btnCheckForExport setTag:curPostIndex];
@@ -105,6 +107,10 @@
     }
     [btnCheckForExport setHidden:!checkMode];
     
+    //----------------------------------------//
+    NSLog(@"================================ %d", checkMode);
+    //----------------------------------------//
+    
     
     UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showDetailPage:)];
     gesture.numberOfTapsRequired = 1;
@@ -122,8 +128,8 @@
     
     PFUser *eventUser = eventObj[@"user"];
     PFUser *self_user = [PFUser currentUser];
-    
-    
+
+   
     NSMutableArray *arrForTagFriends = [NSMutableArray array];
     NSMutableArray *arrForTagFriendAuthorities  = [NSMutableArray array];
     
@@ -198,16 +204,16 @@
     {
         [OMGlobal setImageURLWithAsync:user[@"profileURL"] positionView:self displayImgView:imageViewForAvatar];
     }
-    
+
     //display Username
     
     [lblForUsername setText:user.username];
     
     //******************
     NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-    //    [dateFormat setDateFormat:@"EEE, MMM dd yyyy hh:mm a"];//Wed, Dec 14 2011 1:50 PM
+//    [dateFormat setDateFormat:@"EEE, MMM dd yyyy hh:mm a"];//Wed, Dec 14 2011 1:50 PM
     [dateFormat setDateFormat:@"MMM dd yyyy hh:mm a"];//Dec 14 2011 1:50 PM
-    
+
     NSString *str_date = [dateFormat stringFromDate:currentObj.createdAt];
     
     if(str_date == nil || str_date.length == 0) {
@@ -222,7 +228,7 @@
     }
     
     [lblForTimer setTextColor:HEXCOLOR(0x6F7179FF)];
-    
+
     //*******************
     
     txtViewForTitle.text = currentObj[@"title"];
@@ -266,18 +272,22 @@
                     lblForLocation.text = result;
                     
                     currentObj[@"countryLatLong"] = result;
-                    [currentObj saveInBackground];
+                    [obj saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                        if (succeeded) {
+                            NSLog(@"=========================================== Success!!!");
+                        }else{
+                            NSLog(@"=========================================== Error : %@", error.localizedDescription);
+                        }
+                    }];
                 }
             }];
         }
-    }
-    else if (![currentObj[@"country"] isEqualToString:@""]) {
-        [lblForLocation setText:currentObj[@"country"]];
     } else {
-        [lblForLocation setText:@"Unkown"];
+        [lblForLocation setText:currentObj[@"country"]];
     }
     
     // for badge processing
+    
     if(curEventIndex >= 0)
     {
         OMSocialEvent *socialTemp = [[GlobalVar getInstance].gArrEventList objectAtIndex:curEventIndex];
@@ -296,13 +306,14 @@
                     [lblForTimer setTextColor:[UIColor redColor]];
                     
                     [temp removeObject:self_user.objectId];
-                    currentObj[@"usersBadgeFlag"] = temp;
-                    [currentObj saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                    obj[@"usersBadgeFlag"] = temp;
+                    [obj saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
                         if(error == nil)
                         {
                             NSLog(@"DetailEventVC: Post Badge remove when open Detail view...");
                             [NSTimer scheduledTimerWithTimeInterval: 2.0 target: self selector: @selector(delayChangeTextColor:) userInfo: nil repeats: NO];
                             [GlobalVar getInstance].isPosting = NO;
+                            
                         }
                     }];
                     
@@ -312,7 +323,6 @@
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [[NSNotificationCenter defaultCenter] postNotificationName:@"descount_bagdes" object:nil];
                     });
-                    
                 }
                 
                 //[[NSNotificationCenter defaultCenter] postNotificationName:kLoadEventDataWithGlobal object:nil];
@@ -320,22 +330,17 @@
         }
     }
     
-    // Display image
-    
-    if (imageViewForMedia.image) {
-        imageViewForMedia.image = nil;
-    }
-    
     if (_playButton) {
         
         [_playButton removeFromSuperview];
         _playButton = nil;
     }
+    btnForPlay.hidden = YES;
+    
     //-------------------------------------------------//
     // Fixed the blue check button.
     /////////////////////////////////////////////////////
     /*
-
     if ([self viewWithTag:10]) {
         
         UIButton *button = (UIButton *)[self viewWithTag:10];
@@ -345,30 +350,31 @@
         
     }
     //----------------------------------------------//*/
-    
-    if (btnForPlay) {
-        [btnForPlay removeFromSuperview];
-        btnForPlay = nil;
-    }
-
     if ([imageViewForMedia viewWithTag:11]) {
         
         PCSEQVisualizer *tempEQ = (PCSEQVisualizer *)[imageViewForMedia viewWithTag:11];
         
         [tempEQ removeFromSuperview];
         tempEQ = nil;
-        
-    }
     
+    }
+
     [_videoPlayerController.view setHidden:YES];
     
-    PFFile *postImgFile = (PFFile *)currentObj[@"thumbImage"];
+    // Display image
     
-    if (postImgFile) {
-        [imageViewForMedia setImageWithURL:[NSURL URLWithString:postImgFile.url] placeholderImage:nil];
+    if (imageViewForMedia.image) {
+        //imageViewForMedia.image = nil;
     }
     
     if ([currentObj[@"postType"] isEqualToString:@"video"]) {
+        
+        PFFile *postImgFile = (PFFile *)currentObj[@"thumbImage"];
+        
+        if (postImgFile) {
+            [imageViewForMedia setImageWithURL:[NSURL URLWithString:postImgFile.url] placeholderImage:nil];
+        }
+        
         [btnForVideoPlay setHidden:NO];
         [_videoPlayerController.view setHidden:NO];
         
@@ -390,7 +396,7 @@
         _videoPlayerController.videoPath = videoFile.url;
         if (_file != nil && _offline_url){
             NSString *urlString = [_offline_url absoluteString];
-            _videoPlayerController.videoPath = urlString;
+            _videoPlayerController.videoPath = urlString;            
         }
         else{
             if(_file != nil) {
@@ -411,6 +417,8 @@
         [viewForMedia bringSubviewToFront:btnCheckForExport];
         
     } else if ([currentObj[@"postType"] isEqualToString:@"photo"]) {
+        
+        PFFile *postImgFile = (PFFile *)currentObj[@"thumbImage"];
         
         [btnForVideoPlay setHidden:YES];
         [_videoPlayerController.view setHidden:YES];
@@ -461,7 +469,7 @@
         
         [_videoPlayerController.view setHidden:YES];
         [btnForVideoPlay setHidden:YES];
-        
+
         if (_videoPlayerController.view) {
             
             [_videoPlayerController.view removeFromSuperview];
@@ -500,6 +508,7 @@
         btnForPlay.tag = 10;
         btnForPlay.center = imageViewForMedia.center;
         [btnForPlay setImage:[UIImage imageNamed:@"btn_playaudio"] forState:UIControlStateNormal];
+        btnForPlay.hidden = NO;
         [viewForMedia addSubview:btnForPlay];
         
         [btnForPlay addTarget:self action:@selector(playAudio) forControlEvents:UIControlEventTouchUpInside];
@@ -513,7 +522,7 @@
         eq.frame = frame;
         [imageViewForMedia addSubview:eq];
         [eq setHidden:YES];
-        
+
     } else {
         
         PFFile *postFile = (PFFile *)currentObj[@"postFile"];
@@ -531,7 +540,7 @@
     
     if (currentObj[@"commentsArray"]) {
         
-        [btnForCommentCount setTitle:[NSString stringWithFormat:@"%lu",(unsigned long) [currentObj[@"commentsUsers"] count]] forState:UIControlStateNormal];
+        [btnForCommentCount setTitle:[NSString stringWithFormat:@"%lu",(unsigned long) [currentObj[@"commentsArray"] count]] forState:UIControlStateNormal];
         
     } else
         [btnForCommentCount setTitle:[NSString stringWithFormat:@"0"] forState:UIControlStateNormal];
@@ -552,7 +561,7 @@
         [btnForLikeCount setTitle:[NSString stringWithFormat:@"%ld",(long)likeCount] forState:UIControlStateNormal];
         [likeUserArray addObjectsFromArray:currentObj[@"likers"]];
         [likerArr addObjectsFromArray:currentObj[@"likeUserArray"]];
-        
+
     } else
         [btnForLikeCount setTitle:@"0" forState:UIControlStateNormal];
     
@@ -720,7 +729,7 @@
 }
 
 - (void)videoPlayerReady:(PBJVideoPlayerController *)videoPlayer {
-    
+
 }
 
 - (void)videoPlayerPlaybackStateDidChange:(PBJVideoPlayerController *)videoPlayer {
@@ -731,7 +740,7 @@
             [btnForVideoPlay setHidden:NO];
             [GlobalVar getInstance].isPosting = NO;
             
-            
+
         }
             break;
         case PBJVideoPlayerPlaybackStatePlaying:
@@ -746,7 +755,7 @@
             [btnForVideoPlay setHidden:NO];
             [GlobalVar getInstance].isPosting = NO;
             
-            
+
         }
             break;
         case PBJVideoPlayerPlaybackStateFailed:
@@ -792,31 +801,31 @@
             }
             
             audioPlayer = [[AVAudioPlayer alloc] initWithData:fetchedData error:nil];
-            
-            /*
-             // Cached Data tried for Speed....
-             NSString *key = [audioFile.url MD5Hash];
-             NSData *fetchedData = [FTWCache objectForKey:key];
-             if(fetchedData)
-             {
-             audioPlayer = [[AVAudioPlayer alloc] initWithData:fetchedData error:nil];
-             }
-             else
-             {
-             NSData *data;
-             if (audioFile.url != nil){
-             data = [NSData dataWithContentsOfURL:[NSURL URLWithString:audioFile.url]];
-             }
-             else{
-             data = audioFile.getData;
-             }
-             [FTWCache setObject:data forKey:key];
-             audioPlayer = [[AVAudioPlayer alloc] initWithData:data error:nil];
-             NSLog(@"Cached Data loading....");
-             }
+           
+            /* 
+            // Cached Data tried for Speed....
+            NSString *key = [audioFile.url MD5Hash];
+            NSData *fetchedData = [FTWCache objectForKey:key];
+            if(fetchedData)
+            {
+                audioPlayer = [[AVAudioPlayer alloc] initWithData:fetchedData error:nil];
+            }
+            else
+            {
+                NSData *data;
+                if (audioFile.url != nil){
+                    data = [NSData dataWithContentsOfURL:[NSURL URLWithString:audioFile.url]];
+                }
+                else{
+                    data = audioFile.getData;
+                }
+                [FTWCache setObject:data forKey:key];
+                audioPlayer = [[AVAudioPlayer alloc] initWithData:data error:nil];
+                NSLog(@"Cached Data loading....");
+            }
              */
             
-            
+          
             audioPlayer.delegate = self;
             [audioPlayer play];
             
@@ -833,7 +842,7 @@
     
     if (audioPlayer.isPlaying) {
         audioPlayer = nil;
-        
+
         [audioPlayer stop];
         [btnForPlay setImage:[UIImage imageNamed:@"play_button"] forState:UIControlStateNormal];
         [eq stop];
@@ -883,7 +892,7 @@
         [likerArr addObject:USER];
         [currentObj setObject:likeUserArray forKey:@"likers"];
         [currentObj setObject:likerArr forKey:@"likeUserArray"];
-        
+
         [currentObj saveInBackground];
     }
 }
@@ -893,7 +902,7 @@
     if ([delegate respondsToSelector:@selector(showLikersOfPost:)]) {
         [delegate performSelector:@selector(showLikersOfPost:) withObject:currentObj];
     }
-    
+
 }
 
 - (IBAction)commentAction:(id)sender {
@@ -901,7 +910,7 @@
     if ([delegate respondsToSelector:@selector(showComments:)]) {
         [delegate performSelector:@selector(showComments:) withObject:currentObj];
     }
-    
+
 }
 
 - (IBAction)showCommentersAction:(id)sender {
@@ -913,7 +922,7 @@
         
         [delegate performSelector:@selector(sharePost:) withObject:self];
     }
-    
+
 }
 
 - (IBAction)playAction:(id)sender {
@@ -924,13 +933,13 @@
             [btnForVideoPlay setHidden:YES];
             
             [_videoPlayerController playFromBeginning];
-            
+           
             
         }
             break;
         case PBJVideoPlayerPlaybackStatePlaying:
         {
-            
+           
             [btnForVideoPlay setHidden:NO];
             [_videoPlayerController pause];
         }
@@ -971,11 +980,12 @@
                                    @"pointInTable_y": [[NSNumber numberWithFloat:pointInTable.y + 40] stringValue],
                                    @"textFieldHeight": [[NSNumber numberWithFloat:textView.inputAccessoryView.frame.size.height] stringValue]
                                    };
+        
         [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationKeyboardShow object:nil userInfo:userInfo];
     }
     else if ([textView.superview.superview.superview isKindOfClass:[UITableView class]]) { //for iOS 11
         CGPoint pointInTable = [textView.superview convertPoint:textView.frame.origin
-                                                         toView:textView.superview.superview.superview];
+                                                         toView:textView.superview.superview.superview];        
         NSDictionary *userInfo = @{
                                    @"pointInTable_x": [[NSNumber numberWithFloat:pointInTable.x] stringValue],
                                    @"pointInTable_y": [[NSNumber numberWithFloat:pointInTable.y + 40] stringValue],
@@ -1054,22 +1064,26 @@
             [txtViewForDes resignFirstResponder];
         }
         
-        if ([textView.superview.superview.superview.superview isKindOfClass:[UITableView class]]){
+        if ([textView.superview.superview.superview.superview isKindOfClass:[UITableView class]]) {
             CGPoint bottomPosition = [textView convertPoint:textView.frame.origin
                                                      toView:textView.superview.superview.superview.superview];
+            
             NSDictionary *userInfo = @{
                                        @"pointInTable_x": [[NSNumber numberWithFloat:bottomPosition.x] stringValue],
                                        @"pointInTable_y": [[NSNumber numberWithFloat:bottomPosition.y] stringValue]
                                        };
+            
             [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationKeyboardHide object:nil userInfo:userInfo];
         }
-        else if ([textView.superview.superview.superview isKindOfClass:[UITableView class]]) { //for iOS 11
+        else if ([textView.superview.superview.superview isKindOfClass:[UITableView class]]) { //iOS 11
             CGPoint bottomPosition = [textView convertPoint:textView.frame.origin
                                                      toView:textView.superview.superview.superview];
+            
             NSDictionary *userInfo = @{
                                        @"pointInTable_x": [[NSNumber numberWithFloat:bottomPosition.x] stringValue],
                                        @"pointInTable_y": [[NSNumber numberWithFloat:bottomPosition.y] stringValue]
                                        };
+            
             [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationKeyboardHide object:nil userInfo:userInfo];
         }
     }
@@ -1104,4 +1118,5 @@
     }
 }
 /***********************************************************************************************/
+
 @end

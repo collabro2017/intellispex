@@ -62,6 +62,7 @@
 #define kTag_PDF_Select         30000
 #define kTag_PDF_Profile_Mode   40000
 
+
 @interface OMDetailEventViewController ()<AVAudioPlayerDelegate,OMAdditionalTagViewControllerDelegate,MFMessageComposeViewControllerDelegate,MFMailComposeViewControllerDelegate, OMTagFolderViewControllerDelegate, UIViewControllerTransitioningDelegate, UIPickerViewDataSource,UIPickerViewDelegate, QLPreviewControllerDataSource, QLPreviewControllerDelegate, OMEventNotiViewControllerDelegate>
 {
     
@@ -152,7 +153,7 @@
                 [self populateFeedWith:objects];
             }
             else{
-                [self checkLocalageStorage];
+                [self checkLocalStorage];
             }
         }
         
@@ -201,7 +202,7 @@
     
     is_type = @"";
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkLocalageStorage) name:kReLoadLocalComponentData object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkLocalStorage) name:kReLoadLocalComponentData object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadContents) name:kLoadComponentsData object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadCurrentObject) name:kLoadCurrentEventData object:nil];
     
@@ -306,7 +307,7 @@
     NSIndexPath *indexPath = [tblForDetailList indexPathForRowAtPoint:bottomPosition];
     
     [tblForDetailList reloadData];
-
+    
     [tblForDetailList scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:TRUE];
     
     [GlobalVar getInstance].isPosting = NO;
@@ -340,7 +341,7 @@
     [UIView animateWithDuration:0.2f animations:^{
         
         [customPickerView setFrame:CGRectMake(customPickerView.frame.origin.x, [UIScreen mainScreen].bounds.size.height - customPickerView.frame.size.height, customPickerView.frame.size.width, customPickerView.frame.size.height)];
-      
+        
     } completion:^(BOOL finished) {
         
     }];
@@ -353,7 +354,7 @@
         [self loadContents];
         
     } completion:^(BOOL finished) {
-
+        
     }];
 }
 
@@ -367,7 +368,7 @@
 - (void)initializeNavBar
 {
     //Junaid: The text needs to be expanded for the title and the description.
-//    self.title = currentObject[@"eventname"];
+    //    self.title = currentObject[@"eventname"];
     UILabel *lblTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
     lblTitle.text = currentObject[@"eventname"];
     lblTitle.backgroundColor = [UIColor clearColor];
@@ -387,7 +388,7 @@
     negativeSpacer1.width = -6;// it was -6 in iOS 6
     
     
-    self.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:negativeSpacer1, backBarButton, nil];   
+    self.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:negativeSpacer1, backBarButton, nil];
     UIButton *customButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
     
     [customButton addTarget:self action:@selector(tagPeople) forControlEvents:UIControlEventTouchUpInside];
@@ -402,7 +403,7 @@
     
     BBBadgeBarButtonItem *btnForInvite = [[BBBadgeBarButtonItem alloc] initWithCustomUIButton:inviteButton];
     self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:negativeSpacer1, btnForInvite, negativeSpacer1, barButton,nil];
-
+    
 }
 
 - (void)reloadCurrentObject
@@ -413,7 +414,7 @@
 }
 
 - (void)loadContents {
-   
+    
     if(currentObject == nil) return;
     
     Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
@@ -426,7 +427,7 @@
     
     [GlobalVar getInstance].isPosting = YES;
     [tblForDetailList setContentOffset:CGPointZero animated:NO];
-
+    
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     [GlobalVar getInstance].isPostLoading = YES;
@@ -438,7 +439,7 @@
         || [is_type isEqualToString:@"audio"]
         || [is_type isEqualToString:@"photo"])
     {
-            [mainQuery whereKey:@"postType" equalTo:is_type];
+        [mainQuery whereKey:@"postType" equalTo:is_type];
     }
     
     [mainQuery includeKey:@"user"];
@@ -454,7 +455,7 @@
                 [self populateFeedWith:objects];
             }
             else{
-                [self checkLocalageStorage];
+                [self checkLocalStorage];
             }
         }
         
@@ -463,7 +464,7 @@
     }];
 }
 
-- (void) checkLocalageStorage
+- (void) checkLocalStorage
 {
     NSMutableArray *tempArray = [[NSMutableArray alloc] init];
     [self loadContentsFromLocalStorage: tempArray];
@@ -569,7 +570,7 @@
                     [self populateFeedWith:objects];
                 }
                 else{
-                    [self checkLocalageStorage];
+                    [self checkLocalStorage];
                 }
             }
             [GlobalVar getInstance].isPosting = NO;
@@ -616,7 +617,7 @@
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 // Update the UI
-                
+        
                 [arrForDetail removeAllObjects];
                 [arrForDetail addObjectsFromArray:tempArray];
                 
@@ -914,7 +915,7 @@
     
     OMAppDelegate* appDel = (OMAppDelegate* )[UIApplication sharedApplication].delegate;
     
-     NSDate* lastUpdatedate = [NSDate date];
+    NSDate* lastUpdatedate = [NSDate date];
     [[NSUserDefaults standardUserDefaults] setObject:lastUpdatedate forKey:@"lastUpdateLocalDatastore"];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
@@ -964,6 +965,7 @@
     [tblForDetailList reloadData];
 }
 
+
 - (NSInteger)firstSectionCount:(PFObject *)_obj
 {
     NSInteger rows = 0;
@@ -975,9 +977,9 @@
     //Comments
     //rows += [_obj[@"commenters"] count] > 3 ? 3:[_obj[@"commenters"] count];
     if(_obj[@"commenters"] != nil && [_obj[@"commenters"] count] > 0)
-       if(_obj[@"commentsArray"] !=nil && [_obj[@"commentsArray"] count] > 0)
-           //if(rows + [_obj[@"commenters"] count] <= [_obj[@"commentsArray"] count])
-               rows += [_obj[@"commenters"] count];
+        if(_obj[@"commentsArray"] !=nil && [_obj[@"commentsArray"] count] > 0)
+            //if(rows + [_obj[@"commenters"] count] <= [_obj[@"commentsArray"] count])
+            rows += [_obj[@"commenters"] count];
     
     return rows;
 }
@@ -1008,27 +1010,40 @@
 
 - (void)tagPeople {
     
-    NSMutableArray *arrForTaggedFriend = [NSMutableArray array];
+    NSArray *arrForTaggedFriend = [NSArray array];
+    NSArray *arrTagFriendAuthorities = [NSArray array];
+    
     if (currentObject[@"TagFriends"]) {
         arrForTaggedFriend = currentObject[@"TagFriends"];
     }
     
+    if (currentObject[@"TagFriendAuthorities"]) {
+        arrTagFriendAuthorities = currentObject[@"TagFriendAuthorities"];
+    }
+    
     PFUser *postUser = currentObject[@"user"];
     
-    //if ([arrForTaggedFriend containsObject:USER.objectId] || [postUser.objectId isEqualToString:USER.objectId])
-    if ([postUser.objectId isEqualToString:USER.objectId])
+    if ([arrForTaggedFriend containsObject:USER.objectId]) {
+        NSInteger index = [arrForTaggedFriend indexOfObject:USER.objectId];
+        NSString *strAuthLevel = [arrTagFriendAuthorities objectAtIndex:index];
+        if ([strAuthLevel isEqualToString:@"Full"]) {
+            OMAdditionalTagViewController *tagListVC = [self.storyboard instantiateViewControllerWithIdentifier:@"AdditionalTagVC"];
+            tagListVC.delegate = self;
+            [tagListVC setCurrentObject:currentObject];
+            UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:tagListVC];
+            [TABController presentViewController:nav animated:YES completion:nil];
+        }
+    }
+    else if ([postUser.objectId isEqualToString:USER.objectId])
     {
-        
         OMAdditionalTagViewController *tagListVC = [self.storyboard instantiateViewControllerWithIdentifier:@"AdditionalTagVC"];
         tagListVC.delegate = self;
         [tagListVC setCurrentObject:currentObject];
         UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:tagListVC];
         [TABController presentViewController:nav animated:YES completion:nil];
-        
     } else {
         [OMGlobal showAlertTips:@"Oh, You were not tagged by Post owner." title:@"Oops!"];
     }
-    
 }
 
 #pragma mark - UIActionSheet Delegate
@@ -1058,7 +1073,7 @@
     postImgView = [[UIImageView alloc] init];
     PFFile *file = (PFFile *)currentObject[@"thumbImage"];
     [postImgView setImageWithURL:[NSURL URLWithString:file.url]];
-
+    
     if ([MFMailComposeViewController canSendMail])
     {
         MFMailComposeViewController *mailView = [[MFMailComposeViewController alloc] init];
@@ -1137,20 +1152,35 @@
 - (void)selectedCells:(OMAdditionalTagViewController *)tagVC didFinished:(NSMutableArray *)_dict
 {
     [tagVC.navigationController dismissViewControllerAnimated:YES completion:^{
+        NSMutableArray *tagFriends = [NSMutableArray array];
+        NSMutableArray *authorities = [NSMutableArray array];
         
-        [self addTagFriends:_dict];
+        for (int i=0; i<3; i++) {
+            NSArray *list = _dict[i];
+            if (list.count > 0) {
+                for (PFUser *user in list) {
+                    [tagFriends addObject:user.objectId];
+                    if (i==0) {
+                        [authorities addObject:@"Full"];
+                    } else if (i==1) {
+                        [authorities addObject:@"View Only"];
+                    } else if (i==2) {
+                        [authorities addObject:@"Comment Only"];
+                    }
+                }
+            }
+        }
+        
+        NSMutableArray *data = [NSMutableArray array];
+        [data addObject:tagFriends];
+        [data addObject:authorities];
+        [self addTagFriends:data];
     }];
 }
 
 // In case to change the Tag for Friends.
 - (void)addTagFriends:(NSMutableArray *)_dict {
-    
-    NSMutableArray *temp_array = [NSMutableArray array];
-    temp_array = [_dict copy];
-    
-    NSMutableArray *arrChangedTagFriends = [NSMutableArray array];
-    arrChangedTagFriends = [[temp_array objectAtIndex:0] mutableCopy];
-    
+    NSMutableArray *arrChangedTagFriends = [_dict objectAtIndex:0];
     NSMutableArray *arrAdds = [NSMutableArray array];
     NSMutableArray *arrDels = [NSMutableArray array];
     
@@ -1159,7 +1189,6 @@
     {
         // If exist the new friends?
         for (NSString *addId in arrChangedTagFriends) {
-            
             if(![arrPrevTagFriends containsObject:addId]) {
                 [arrAdds addObject:addId];
             }
@@ -1176,10 +1205,8 @@
         [arrAdds addObjectsFromArray:arrChangedTagFriends];
     }
     
-    
-    currentObject[@"TagFriends"] = [temp_array objectAtIndex:0];
-    currentObject[@"TagFriendAuthorities"] = [temp_array objectAtIndex:1];
-    
+    currentObject[@"TagFriends"] = [_dict objectAtIndex:0];
+    currentObject[@"TagFriendAuthorities"] = [_dict objectAtIndex:1];
     
     // Event Badge Processing...for badge
     if([currentObject[@"eventBadgeFlag"] count] > 0)
@@ -1200,48 +1227,19 @@
     {
         [currentObject addObjectsFromArray:arrAdds forKey:@"eventBadgeFlag"];
     }
+    
     NSLog(@"Newly added friends: %@", arrAdds);
     NSLog(@"Deleted friends: %@", arrDels);
+    
     [GlobalVar getInstance].isPosting = YES;
     [currentObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        
         [GlobalVar getInstance].isPosting = NO;
         if(error) NSLog(@"Event updated for tag: %@", error.description);
         if(error == nil) NSLog(@"DetailEventVC:Badge Processing - Updated an eventBadgeFlage of Event Fields");
-        
-        //[OMPushServiceManager sharedInstance] sendGroupInviteNotification:(NSString *) groupId:(NSString *) userList:(NSMutableArray *)
-        
-        // Post Badge Processing...//for badge
-        /*
-        for (PFObject *postObj in currentObject[@"postedObjects"]) {
-            if(![postObj isEqual:[NSNull null]] && postObj != nil)
-            {
-                for (NSString *temp in arrDels) {
-                    if ([postObj[@"usersBadgeFlag"] containsObject:temp]) {
-                        [postObj removeObject:temp forKey:@"@usersBadgeFlag"];
-                    }
-                }
-                for (NSString *temp in arrAdds) {
-                    if (![postObj[@"usersBadgeFlag"] containsObject:temp]) {
-                        [postObj addObject:temp forKey:@"@usersBadgeFlag"];
-                    }
-                }
-            }
-            [postObj saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-                if(error == nil) NSLog(@"DetailEventVC:Badge Processing - Updated an usersBadgeFlag of Posts");
-            }];
-        }
-         */
-
-        
-        
     }];
-    
 }
 
-
 #pragma mark - MPMediaPickerController Delegate
-
 - (void)mediaPicker:(MPMediaPickerController *)_mediaPicker didPickMediaItems:(MPMediaItemCollection *)mediaItemCollection
 {
     NSMutableData *songData;
@@ -1307,17 +1305,17 @@
     
     m_audioData = [NSData dataWithData:songData];
     
-//    if(url != NULL)
-//    {
-//        m_isAudio = YES;
-//        m_AudioURL = url;
-//        [_btn_play setHidden:NO];
-//        
-//        m_AVAudioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:m_AudioURL error:nil];
-//        [m_AVAudioPlayer prepareToPlay];
-//        m_AVAudioPlayer.delegate = self;
-//        [_btn_play setImage:[UIImage imageNamed:@"btn_play.png"] forState:UIControlStateNormal];
-//    }
+    //    if(url != NULL)
+    //    {
+    //        m_isAudio = YES;
+    //        m_AudioURL = url;
+    //        [_btn_play setHidden:NO];
+    //
+    //        m_AVAudioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:m_AudioURL error:nil];
+    //        [m_AVAudioPlayer prepareToPlay];
+    //        m_AVAudioPlayer.delegate = self;
+    //        [_btn_play setImage:[UIImage imageNamed:@"btn_play.png"] forState:UIControlStateNormal];
+    //    }
     [_mediaPicker dismissViewControllerAnimated:YES completion:^{
         
         if (m_audioData) {
@@ -1326,6 +1324,7 @@
                            mediaKind:kTypeCaptureAudio
                        currentObject:currentObject
                            audioData:m_audioData postOrder:selectedPostOrder];
+            
         }
         else
             [OMGlobal showAlertTips:@"Can't attached audio file." title:@"Oops!"];
@@ -1358,7 +1357,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-
+    
     if(indexPath.section == 0) // Even Header Content
     {
         if (indexPath.row == 0) {
@@ -1390,9 +1389,9 @@
             }
             
             
-            NSDictionary *temp = [currentObject[@"commenters"] objectAtIndex:indexPath.row - 2];
+            PFObject *temp = [currentObject[@"commenters"] objectAtIndex:indexPath.row - 2];
             
-            NSString *objectId = [temp objectForKey:@"objectId"];
+            NSString *objectId = temp.objectId;
             if (objectId == nil){
                 objectId = [[currentObject[@"commenters"] objectAtIndex:indexPath.row - 2] objectId];
             }
@@ -1402,7 +1401,7 @@
             
             return cell;
         }
-    
+        
     }
     else // Event Detail Content with Post detail contents
     {
@@ -1417,7 +1416,6 @@
             if ([tempObj[@"postType"] isEqualToString:@"text"])
             {
                 if (indexPath.row == 0) {
-                    
                     OMTextCell *cell = [tableView dequeueReusableCellWithIdentifier:kTextCell];
                     
                     if (cell == nil) {
@@ -1482,7 +1480,7 @@
                     [cell setCurPostIndex:indexPath.section - 1];
                     [cell setCheckMode:modeForExport];
                     [cell setCurrentObj:tempObj];
-
+                    //cell.currentObj = tempObj;
                     
                     [cell setNeedsLayout];
                     [cell layoutIfNeeded];
@@ -1510,12 +1508,12 @@
                     return cell;
                 }
             }
-
+            
         }
         
     }
-  
-   return nil;
+    
+    return nil;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -1584,7 +1582,7 @@
 {
     
     if (indexPath.section == 0) {
-       
+        
         if (indexPath.row == 0) {
             return tableView.frame.size.width;
         }
@@ -1667,13 +1665,10 @@
 - (void)shareEvent:(PFObject *)_obj
 {
     selectedPostOrder = -1;
-
+    
     UIActionSheet *shareAction1 = nil;
-    
     NSString *status = @"Close";
-    
     if (postImgView) {
-        
         postImgView = nil;
     }
     postImgView = [[UIImageView alloc] init];
@@ -1681,7 +1676,6 @@
     [postImgView setImageWithURL:[NSURL URLWithString:file.url]];
     currentObject = _obj;
     NSLog(@"%@",_obj[@"openStatus"]);
-    
     
     if ([_obj[@"openStatus"] intValue] == 1) {
         status = @"Close";
@@ -1692,25 +1686,51 @@
     }
     
     PFUser *user = (PFUser *)_obj[@"user"];
+    NSArray *arrForTaggedFriend = [NSArray array];
+    NSArray *arrTagFriendAuthorities = [NSArray array];
     
-    if ([user.objectId isEqualToString:USER.objectId]) {
-        shareAction1 = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Share via Email" otherButtonTitles:@"Facebook", @"Twitter", @"Instagram",
+    if (currentObject[@"TagFriends"]) {
+        arrForTaggedFriend = currentObject[@"TagFriends"];
+    }
+    
+    NSString *strAuthLevel = @"";
+    
+    if ([arrForTaggedFriend containsObject:USER.objectId]) {
+        
+        if (currentObject[@"TagFriendAuthorities"]) {
+            arrTagFriendAuthorities = currentObject[@"TagFriendAuthorities"];
+        }
+        
+        NSInteger index = [arrForTaggedFriend indexOfObject:USER.objectId];
+        strAuthLevel = [arrTagFriendAuthorities objectAtIndex:index];
+    }
+    
+    NSInteger index = [arrForTaggedFriend indexOfObject:USER.objectId];
+    strAuthLevel = @"";
+    if (index != NSNotFound) {
+        strAuthLevel = [arrTagFriendAuthorities objectAtIndex:index];
+    }    
+    
+    if ([user.objectId isEqualToString:USER.objectId] || [strAuthLevel isEqualToString:@"Full"]) {
+        shareAction1 = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel"
+                                     destructiveButtonTitle:@"Share via Email"
+                                          otherButtonTitles:@"Facebook", @"Twitter", @"Instagram",
                         @"Add Media After", @"Add to Folder", @"Export to PDF", @"Select Items for New Event",
-                        @"Delete", status, @"Report",  @"Move", nil];
+                        @"Delete", status, @"Report", @"Move",nil];
         
         [shareAction1 showInView:self.view];
         shareAction1.tag = kTag_EventShare;
     }
     else
     {
-        shareAction1 = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Share via Email" otherButtonTitles:@"Facebook", @"Twitter", @"Instagram",
-                        @"Export to PDF", @"Select Items for New Event", @"Report", @"Move",nil];
+        shareAction1 = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel"
+                                     destructiveButtonTitle:@"Share via Email"
+                                          otherButtonTitles:@"Facebook", @"Twitter", @"Instagram", @"Export to PDF",
+                        @"Select Items for New Event", @"Report", @"Move",nil];
         
         [shareAction1 showInView:self.view];
         shareAction1.tag = kTag_EventShareGuest;
     }
-    
-
 }
 
 - (void)sharePost:(UITableViewCell *)_cell {
@@ -1731,7 +1751,7 @@
     postImgView = [[UIImageView alloc] init];
     PFFile *file = (PFFile *)_obj[@"thumbImage"];
     [postImgView setImageWithURL:[NSURL URLWithString:file.url]];
-  
+    
     PFUser *user = (PFUser *)_obj[@"user"];
     
     NSMutableArray *arrForTagFriends = [NSMutableArray array];
@@ -1774,23 +1794,20 @@
             authFlag = YES;
         }
     }
-
+    
     
     if ([user.objectId isEqualToString:USER.objectId] || authFlag) {
-        
         shareAction1 = [[UIActionSheet alloc] initWithTitle:@"More option" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Save to Camera roll" otherButtonTitles:@"Add Media After", @"Use this as thumbnail",
                         @"Delete", @"Report", nil];
         [shareAction1 setTag:kTag_Share];
         [shareAction1 showInView:self.view];
-
-    } else {
         
+    } else {
         shareAction1 = [[UIActionSheet alloc] initWithTitle:@"More option" delegate:self cancelButtonTitle:@"Cancel"
-                                     destructiveButtonTitle:@"Save to Camera roll"
-                                          otherButtonTitles:@"Add Media After", @"Report", nil];
+                                     destructiveButtonTitle:@"Save to Camera roll" otherButtonTitles:@"Add Media After",
+                        @"Report", nil];
         [shareAction1 setTag:kTag_Share1];
         [shareAction1 showInView:self.view];
-
     }
 }
 
@@ -1829,7 +1846,7 @@
             }
         }
         
-        if ([AuthorityValue isEqualToString:@"Full"]){
+        if ([AuthorityValue isEqualToString:@"Full"]) {
             authFlag = YES;
         }
         else
@@ -1844,7 +1861,7 @@
             authFlag = YES;
         }
     }
-
+    
     if ([user.objectId isEqualToString:USER.objectId] || authFlag) {
         
         shareAction1 = [[UIActionSheet alloc] initWithTitle:@"More option" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles: @"Delete", @"Report", nil];
@@ -1902,7 +1919,7 @@
     FTTabBarController *tab = [appDel tabBarController];
     [tab hideTabView:YES];
     OMCommentViewController *commentVC = [self.storyboard instantiateViewControllerWithIdentifier:@"CommentVC"];
-    [commentVC setCurrentObject:_obj];    
+    [commentVC setCurrentObject:_obj];
     [self.navigationController pushViewController:commentVC animated:YES];
 }
 
@@ -1918,7 +1935,7 @@
         myProfileVC.is_type = 0;
         [myProfileVC setTargetUser:USER];
         [myProfileVC setIsPushed:YES];
-        [self.navigationController pushViewController:myProfileVC animated:YES];  
+        [self.navigationController pushViewController:myProfileVC animated:YES];
         
     }
     else
@@ -1927,7 +1944,7 @@
         otherProfileVC.is_type = 0;
         [otherProfileVC setTargetUser:_user];
         [self.navigationController pushViewController:otherProfileVC animated:YES];
-
+        
     }
 }
 
@@ -1959,7 +1976,7 @@
         audioPlayer = [[AVAudioPlayer alloc] initWithData:fetchedData error:nil];
         audioPlayer.delegate = self;
         [audioPlayer play];
-
+        
     }
 }
 
@@ -1995,6 +2012,7 @@
                                    mediaKind:kTypeCaptureAudio
                                currentObject:currentObject
                                    audioData:m_audioData postOrder:selectedPostOrder];
+                    
                 }
                     break;
                 case 1:
@@ -2005,8 +2023,8 @@
                 default:
                     break;
             }
-
-                   }
+            
+        }
             break;
         case kTag_NewVideo:
         {
@@ -2024,7 +2042,7 @@
                 default:
                     break;
             }
-
+            
         }
             break;
         case kTag_EventShare:
@@ -2045,13 +2063,11 @@
                 case 2:
                 {
                     [self shareViaTwitter];
-                    
                 }
                     break;
                 case 3:
                 {
                     [self shareViaInstagram];
-                    
                 }
                     break;
                     
@@ -2104,23 +2120,21 @@
                     }
                     else
                     {
-                        [MBProgressHUD showMessag:@"Progressing..." toView:self.view];
-                        [NSTimer scheduledTimerWithTimeInterval:2.0f target:self selector:@selector(reportEvent) userInfo:nil repeats:NO];
+                        [NSTimer scheduledTimerWithTimeInterval:0.1f target:self selector:@selector(reportEvent)
+                                                       userInfo:nil repeats:NO];
                     }
-                    
                 }
                     break;
                     
                 case 10:
                 {
-                    [MBProgressHUD showMessag:@"Progressing..." toView:self.view];
-                    [NSTimer scheduledTimerWithTimeInterval:2.0f target:self selector:@selector(reportEvent) userInfo:nil repeats:NO];
+                    [NSTimer scheduledTimerWithTimeInterval:0.1f target:self selector:@selector(reportEvent) userInfo:nil repeats:NO];
                 }
                     break;
                 //--------------------------------------------//
                 case 11:
                 {
-                    [tblForDetailList setEditing:!tblForDetailList.editing];
+                    [tblForDetailList setEditing:!tblForDetailList.editing animated:YES];
                     [autoRefreshTimer invalidate];
                     [tblForDetailList reloadData];
                 }
@@ -2129,7 +2143,7 @@
                 default:
                     break;
             }
-
+            
         }
             break;
             
@@ -2139,33 +2153,27 @@
                 case 0:
                 {
                     [self shareViaEmail];
-                    
                 }
                     break;
                 case 1:
                 {
                     [self shareViaFacebook];
-                    
                 }
                     break;
                 case 2:
                 {
                     [self shareViaTwitter];
-                    
                 }
                     break;
                 case 3:
                 {
                     [self shareViaInstagram];
-                    
                 }
                     break;
                     
                 case 4:
                 {
                     [self performSelector:@selector(exportToPDF) withObject:nil afterDelay:0.1f];
-                   //[self exportToPDF];
-                    
                 }
                     break;
                 case 5:
@@ -2175,26 +2183,23 @@
                     break;
                     
                 case 6:{
-                    
-                    [MBProgressHUD showMessag:@"Progressing..." toView:self.view];
-                    
-                    [NSTimer scheduledTimerWithTimeInterval:2.0f target:self selector:@selector(reportEvent) userInfo:nil repeats:NO];
-                    
+                    //Report Event by Guest/Tag user
+                    [NSTimer scheduledTimerWithTimeInterval:0.1f target:self selector:@selector(reportEvent) userInfo:nil repeats:NO];
                 }
                     break;
                 case 7:
-                //--------------------------------------------//
+                    //--------------------------------------------//
                 {
-                    [tblForDetailList setEditing:!tblForDetailList.editing];
+                    [tblForDetailList setEditing:!tblForDetailList.editing animated:YES];
                     [autoRefreshTimer invalidate];
                     [tblForDetailList reloadData];
                 }
                     break;
-                //--------------------------------------------//
+                    //--------------------------------------------//
                 default:
                     break;
             }
-
+            
         }
             break;
         case kTag_Share:
@@ -2219,16 +2224,13 @@
                 case 3:
                 {
                     [self deleteFeed];
-                    
                 }
                     break;
                     
                 case 4:
                 {
-                    [MBProgressHUD showMessag:@"Progressing..." toView:self.view];
-                    
-                    [NSTimer scheduledTimerWithTimeInterval:2.0f target:self selector:@selector(reportEvent) userInfo:nil repeats:NO];
-
+                    //Report Post by Guest/Tag user
+                    [NSTimer scheduledTimerWithTimeInterval:0.1f target:self selector:@selector(reportPost) userInfo:nil repeats:NO];
                 }
                 default:
                     break;
@@ -2251,10 +2253,8 @@
                     break;
                 case 2:
                 {
-                    [MBProgressHUD showMessag:@"Progressing..." toView:self.view];
-                    [NSTimer scheduledTimerWithTimeInterval:2.0f target:self selector:@selector(reportEvent) userInfo:nil repeats:NO];
+                    [NSTimer scheduledTimerWithTimeInterval:0.1f target:self selector:@selector(reportPost) userInfo:nil repeats:NO];
                 }
-                    break;
                 default:
                     break;
             }
@@ -2273,10 +2273,8 @@
                     
                 case 1:
                 {
-                    [MBProgressHUD showMessag:@"Progressing..." toView:self.view];
-                    
-                    [NSTimer scheduledTimerWithTimeInterval:2.0f target:self selector:@selector(reportEvent) userInfo:nil repeats:NO];
-                    
+                    //Report Post
+                    [NSTimer scheduledTimerWithTimeInterval:0.1f target:self selector:@selector(reportPost) userInfo:nil repeats:NO];
                 }
                 default:
                     break;
@@ -2286,19 +2284,16 @@
         case kTag_TextShare1:
         {
             switch (buttonIndex) {
-                
                 case 0:
                 {
-                    [MBProgressHUD showMessag:@"Progressing..." toView:self.view];
-                    
-                    [NSTimer scheduledTimerWithTimeInterval:2.0f target:self selector:@selector(reportEvent) userInfo:nil repeats:NO];
-                    
+                    [NSTimer scheduledTimerWithTimeInterval:2.0f target:self selector:@selector(reportPost) userInfo:nil repeats:NO];
                 }
                 default:
                     break;
             }
         }
             break;
+            
         case kTag_PDF_Select:
         {
             switch (buttonIndex) {
@@ -2318,6 +2313,7 @@
             
         case kTag_PDF_Profile_Mode:
         {
+            
             switch (buttonIndex) {
                 case 0:
                     profileModeInPDF = @"user_profile";
@@ -2395,12 +2391,72 @@
 }
 
 //Report
-
 - (void)reportEvent
 {
-    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-    
-    [OMGlobal showAlertTips:@"Reported successfully. Your report will be reviewed by Administrator." title:nil];
+    [MBProgressHUD showMessag:@"Progressing..." toView:self.view];
+    PFQuery *query = [PFQuery queryWithClassName:@"ReportedContent"];
+    [query whereKey:@"targetEvent" equalTo:currentObject];
+    [query whereKey:@"targetPost" equalTo:[NSNull null]];
+    [query whereKey:@"reportedBy" equalTo:[PFUser currentUser]];
+    [query countObjectsInBackgroundWithBlock:^(int number, NSError * _Nullable error) {
+        if (!error) {
+            if (number == 0) {
+                PFObject *obj = [PFObject objectWithClassName:@"ReportedContent"];
+                obj[@"targetEvent"] = currentObject;
+                obj[@"reportedBy"] = [PFUser currentUser];
+                [obj saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                    [MBProgressHUD hideHUDForView:self.view animated:YES];
+                    if (succeeded) {
+                        [OMGlobal showAlertTips:@"Reported successfully. Your report will be reviewed by Administrator." title:nil];
+                    } else {
+                        [OMGlobal showAlertTips:error.localizedDescription title:@"Error"];
+                    }
+                }];
+            } else {
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+                [OMGlobal showAlertTips:@"You have already reported this event. Your report will be reviewed by Administrator."
+                                  title:nil];
+            }
+        } else {
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            [OMGlobal showAlertTips:error.localizedDescription title:@"Error"];
+        }
+    }];
+}
+
+//Report Event's post
+- (void)reportPost
+{
+    [MBProgressHUD showMessag:@"Progressing..." toView:self.view];
+    PFQuery *query = [PFQuery queryWithClassName:@"ReportedContent"];
+    [query whereKey:@"targetEvent" equalTo:currentObject];
+    [query whereKey:@"targetPost" equalTo:tempObejct];
+    [query whereKey:@"reportedBy" equalTo:[PFUser currentUser]];
+    [query countObjectsInBackgroundWithBlock:^(int number, NSError * _Nullable error) {
+        if (!error) {
+            if (number == 0) {
+                PFObject *obj = [PFObject objectWithClassName:@"ReportedContent"];
+                obj[@"targetEvent"] = currentObject;
+                obj[@"targetPost"] = tempObejct;
+                obj[@"reportedBy"] = [PFUser currentUser];
+                [obj saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                    [MBProgressHUD hideHUDForView:self.view animated:YES];
+                    if (succeeded) {
+                        [OMGlobal showAlertTips:@"Post reported successfully. Your report will be reviewed by Administrator." title:nil];
+                    } else {
+                        [OMGlobal showAlertTips:error.localizedDescription title:@"Error"];
+                    }
+                }];
+            } else {
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+                [OMGlobal showAlertTips:@"You have already reported this post. Your report will be reviewed by Administrator."
+                                  title:nil];
+            }
+        } else {
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            [OMGlobal showAlertTips:error.localizedDescription title:@"Error"];
+        }
+    }];
 }
 
 #pragma mark ActionSheet Actions
@@ -2420,10 +2476,8 @@
     [MBProgressHUD showMessag:@"Changing thumbnail Image..." toView:self.view];
     
     [currentObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
         [tblForDetailList reloadData];
-        
     }];
 }
 
@@ -2481,88 +2535,13 @@
         [arrTargetForGeo removeAllObjects];
         //-----------------------------------------//
         [self getLocationFromObject];
-
+        
     }
     else
     {
         [self onCancelForExport:nil];
     }
-
-}
-
-//for duplication
-- (void) doneToNewEvent
-{
-    if([[GlobalVar getInstance].gArrSelectedList count] > 0)
-    {
-        [GlobalVar getInstance].gThumbImg = nil;
-        for (PFObject *postObj in [GlobalVar getInstance].gArrSelectedList) {
-            if([postObj[@"postType"] isEqualToString:@"photo"])
-            {
-                [GlobalVar getInstance].gThumbImg = (PFFile *)postObj[@"thumbImage"];
-                break;
-            }
-        }
-        
-        [GlobalVar getInstance].gEventObj = currentObject;
-        
-        [doneView setHidden:YES];
-        modeForExport = NO;
-        [tblForDetailList reloadData];
-        
-        [self.navigationController popViewControllerAnimated:YES];
-        [[NSNotificationCenter defaultCenter] postNotificationName:kOpenPostEvent object:nil];
-        
-
-    }
-    else
-    {
-        [self onCancelForExport:nil];
-    }
-}
-
-
-- (void) profileModeForPDF {
-    UIActionSheet* shareAction = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Display User Profile", @"Display Name + Company", nil];
-    [shareAction showInView:self.view];
-    shareAction.tag = kTag_PDF_Profile_Mode;
-}
-
-- (void) exportToPDF {
-    UIActionSheet* shareAction = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Select All" otherButtonTitles:@"Select Items", nil];
-    [shareAction showInView:self.view];
-    shareAction.tag = kTag_PDF_Select;
-}
-
-- (void) exportToPDFWithSelect
-{
-    if(!modeForExport)
-    {
-        [doneView setHidden:NO];
-        [btnDoneForExport setTag:kTag_PDF];
-        modeForExport = YES;
-        [GlobalVar getInstance].isPosting = YES;
-        [GlobalVar getInstance].gArrPostList = [arrForDetail mutableCopy];
-        
-        [tblForDetailList reloadData];
-    }
-    else
-    {
-        [self onCancelForExport:nil];
-    }
-
-}
-
-- (void) exportToPDFAll
-{
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
-    //-----------------------------------------//
-    arrTemp = [arrForDetail mutableCopy];
-    [arrTargetForGeo removeAllObjects];
-    //-----------------------------------------//
-    [self getLocationFromObject];
-
 }
 
 - (void)printPDF
@@ -2598,7 +2577,7 @@
     } else {
         previewController.modalPresentationStyle = UIModalPresentationFormSheet;
     }
-
+    
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self presentViewController:previewController animated:YES completion:^{
             [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -2665,7 +2644,7 @@
                         [arrTemp removeObject:tempObj];
                         NSLog(@"passed ----- ");
                         [self getLocationFromObject];
-                    }
+                   }
                     else
                     {
                         tempObj[@"countryLatLong"] = @"Unknown";
@@ -2675,7 +2654,7 @@
                         
                     }
                 }];
-                
+
             }
             else{
                 
@@ -2689,11 +2668,86 @@
             
             
         }
+  
+    }
+
+}
+
+//for duplication
+- (void) doneToNewEvent
+{
+    if([[GlobalVar getInstance].gArrSelectedList count] > 0)
+    {
+        [GlobalVar getInstance].gThumbImg = nil;
+        for (PFObject *postObj in [GlobalVar getInstance].gArrSelectedList) {
+            if([postObj[@"postType"] isEqualToString:@"photo"])
+            {
+                [GlobalVar getInstance].gThumbImg = (PFFile *)postObj[@"thumbImage"];
+                break;
+            }
+        }
         
+        [GlobalVar getInstance].gEventObj = currentObject;
+        
+        [doneView setHidden:YES];
+        modeForExport = NO;
+        [tblForDetailList reloadData];
+        
+        [self.navigationController popViewControllerAnimated:YES];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kOpenPostEvent object:nil];
+        
+        
+    }
+    else
+    {
+        [self onCancelForExport:nil];
+    }
+}
+
+- (void) profileModeForPDF {
+    UIActionSheet* shareAction = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Display User Profile", @"Display Name + Company", nil];
+    
+    [shareAction showInView:self.view];
+    shareAction.tag = kTag_PDF_Profile_Mode;
+}
+
+- (void) exportToPDF {
+    UIActionSheet* shareAction = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Select All" otherButtonTitles:@"Select Items", nil];
+    
+    [shareAction showInView:self.view];
+    shareAction.tag = kTag_PDF_Select;
+}
+
+- (void) exportToPDFWithSelect
+{
+    if(!modeForExport)
+    {
+        [doneView setHidden:NO];
+        [btnDoneForExport setTag:kTag_PDF];
+        modeForExport = YES;
+        [GlobalVar getInstance].isPosting = YES;
+        [GlobalVar getInstance].gArrPostList = [arrForDetail mutableCopy];
+        
+        [tblForDetailList reloadData];
+    }
+    else
+    {
+        [self onCancelForExport:nil];
     }
     
 }
 
+- (void) exportToPDFAll
+{
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    //-----------------------------------------//
+    arrTemp = [arrForDetail mutableCopy];
+    [arrTargetForGeo removeAllObjects];
+    //-----------------------------------------//
+    [self getLocationFromObject];
+    
+}
 
 //for duplication
 - (void) duplicateToNewEvent
@@ -2718,7 +2772,7 @@
     {
         [self onCancelForExport:nil];
     }
-
+    
 }
 
 -(NSString*)getPDFFilePath
@@ -2736,7 +2790,7 @@
     return pdfFilePath;
 }
 
-- (NSUInteger) DeviceSystemMajorVersion {
+-(NSUInteger) DeviceSystemMajorVersion {
     
     static NSUInteger _deviceSystemMajorVersion = -1;
     
@@ -2871,7 +2925,6 @@
 - (void)shareViaInstagram
 {
     UIImage * screenshot = postImgView.image;//[[CCDirector sharedDirector] screenshotUIImage];
-    
     // UIImage *screenshot = [UIImage imageNamed:@"splash@2x.png"];
     NSString *savePath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Screenshot.igo"];
     
@@ -2888,13 +2941,13 @@
         
         dic.annotation = [NSDictionary dictionaryWithObject:@"Uploaded using #INTELLISPEX App" forKey:@"InstagramCaption"];
         //[dic presentOpenInMenuFromRect:CGRectZero inView:self.view animated:YES];
+        
         if (IS_IPAD) {
             [self performSelector:@selector(openDicOniPad:) withObject:nil afterDelay:0.5];
         }
         else{
             [dic presentOpenInMenuFromRect:CGRectZero inView:self.view animated:YES];
         }
-        
     }
     else
     {
@@ -2905,10 +2958,11 @@
 -(void)openDicOniPad:(id)sender{
     [dic presentOpenInMenuFromRect:self.view.bounds inView:self.view animated:YES];
 }
+
 //Add Media After
 - (void)showAddMediaAfter {
-    UIActionSheet* shareAction = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Text", @"Image", @"Audio", @"Video", nil];
-    
+    UIActionSheet* shareAction = nil;
+    shareAction = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Text", @"Image", @"Audio", @"Video", nil];
     [shareAction showInView:self.view];
     shareAction.tag = kTag_AddMediaAfter;
 }
@@ -2919,7 +2973,7 @@
     tagListVC.delegate = self;
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:tagListVC];
     [TABController presentViewController:nav animated:YES completion:nil];
-
+    
 }
 
 
@@ -2934,7 +2988,7 @@
             {
                 
                 [MBProgressHUD showMessag:@"Deleting..." toView:self.view];
-                OMAppDelegate * appDel = [UIApplication sharedApplication].delegate;
+                OMAppDelegate * appDel = (OMAppDelegate*)[UIApplication sharedApplication].delegate;
                 
                 // In Case Online Mode
                 if(appDel.network_state)
@@ -2949,7 +3003,7 @@
                             PFUser *eventUser = currentObject[@"user"];
                             if([eventUser.objectId isEqualToString: USER.objectId] && appDel.network_state)
                             {
-                               
+                                
                             }
                             else
                             {
@@ -2972,11 +3026,11 @@
                     NSInteger index = -1;
                     
                     if([appDel.m_offlinePosts count]!= 0 && currentCellOfflineUrl != nil)
-                     {
-                         index = [appDel.m_offlinePosts indexOfObject:tempObejct];
+                    {
+                        index = [appDel.m_offlinePosts indexOfObject:tempObejct];
                         [appDel.m_offlinePosts removeObject:tempObejct];
-                         
-                         if ([tempObejct[@"postType"] isEqualToString:@"video"]) {
+                        
+                        if ([tempObejct[@"postType"] isEqualToString:@"video"]) {
                             
                             if(index != -1)
                                 [appDel.m_offlinePostURLs removeObjectAtIndex:index];
@@ -3012,7 +3066,7 @@
             default:
                 break;
         }
-
+        
     }
     //deleteevent
     else if (alertView.tag == kTag_EventShare)
@@ -3027,10 +3081,11 @@
                 [hud show:YES];
                 
                 [GlobalVar getInstance].isPosting = YES;
+                
                 NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
                 [dateFormatter setDateFormat:@"yyyy-MM-dd"];
                 [currentObject setObject:[dateFormatter stringFromDate:[NSDate date]] forKey:@"deletedAt"];
-                [currentObject deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                [currentObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
                     [hud hide:YES];
                     [GlobalVar getInstance].isPosting = NO;
                     if (succeeded) {
@@ -3041,11 +3096,11 @@
                 }];
             }
                 break;
-
+                
             default:
                 break;
         }
-
+        
     }
 }
 
@@ -3068,7 +3123,7 @@
 {
     NSString * folderNames;
     folderNames = @"";
-
+    
     for (PFObject* folder in _dict)
     {
         NSMutableArray *Eventarr = nil;
@@ -3077,14 +3132,14 @@
             Eventarr = [[NSMutableArray alloc] init];
         else
             Eventarr = folder[@"Events"];
-            
+        
         if(![Eventarr containsObject:currentObject.objectId])
         {
             [Eventarr addObject:currentObject.objectId];
             folder[@"Events"] = Eventarr;
             
             [folder saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-
+                
                 if (succeeded) {
                     [[NSNotificationCenter defaultCenter] postNotificationName:kLoadFolderData object:nil];
                 }
@@ -3092,7 +3147,7 @@
                 {
                     [OMGlobal showAlertTips:@"Uploading Failed." title:nil];
                 }
-
+                
             }];
         }
         else
@@ -3106,7 +3161,7 @@
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Alert" message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
         [alert show];
     }
-   
+    
 }
 
 #pragma mark - UIViewControllerTransitioningDelegate methods
@@ -3260,14 +3315,21 @@
         if (networkStatus != NotReachable) //Check both Reachability & Network Status
         {
             if(goOnlineMessagePresentedOnce == false) {
-                [self resumeOfflineContentSync];
+                
+                if (appDelegate.m_offlinePosts.count == 0) {
+                    [self reloadContents];
+                }
+                else{
+                
+                    [self resumeOfflineContentSync];
+                }
             }
             else{
                 [self reloadContents];
             }
         }
         else{
-            [self checkLocalageStorage];
+            [self checkLocalStorage];
         }
     }
     else
@@ -3458,40 +3520,40 @@
 }
 
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
-    if (destinationIndexPath.section == 0) {
-        NSLog(@"Exception : Event Section");
-        [tblForDetailList reloadData];
-    }else {
-        [arrForDetail exchangeObjectAtIndex:sourceIndexPath.section-1 withObjectAtIndex:destinationIndexPath.section-1];
-        
-        
-        
-        PFObject *t1 = [arrForDetail objectAtIndex:(sourceIndexPath.section-1)];
-        PFObject *t2 = [arrForDetail objectAtIndex:(destinationIndexPath.section-1)];
-        
-        NSNumber *temp = t1[@"postOrder"];
-        t1[@"postOrder"] = t2[@"postOrder"];
-        t2[@"postOrder"] = temp;
-        
-        [t1 save];
-        [t2 save];
-        
-        // Current Test feature. lets check these again.
-        PFUser *eventUser = currentObject[@"user"];
-        OMAppDelegate* appDel = (OMAppDelegate *)[UIApplication sharedApplication].delegate;
-        if([eventUser.objectId isEqualToString: USER.objectId] && appDel.network_state)
-        {
-            currentObject[@"postedObjects"] = arrForDetail;
-            [currentObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-                if(error == nil) NSLog(@"DetailEventVC: added Post objs on postedObjects on Event");
-            }];
+        if (destinationIndexPath.section == 0) {
+                NSLog(@"Exception : Event Section");
+            [tblForDetailList reloadData];
+        }else {
+            [arrForDetail exchangeObjectAtIndex:sourceIndexPath.section-1 withObjectAtIndex:destinationIndexPath.section-1];
+            
+            
+            
+            PFObject *t1 = [arrForDetail objectAtIndex:(sourceIndexPath.section-1)];
+            PFObject *t2 = [arrForDetail objectAtIndex:(destinationIndexPath.section-1)];
+            
+            NSNumber *temp = t1[@"postOrder"];
+            t1[@"postOrder"] = t2[@"postOrder"];
+            t2[@"postOrder"] = temp;
+            
+            [t1 save];
+            [t2 save];
+            
+            // Current Test feature. lets check these again.
+            PFUser *eventUser = currentObject[@"user"];
+            OMAppDelegate* appDel = (OMAppDelegate *)[UIApplication sharedApplication].delegate;
+            if([eventUser.objectId isEqualToString: USER.objectId] && appDel.network_state)
+            {
+                currentObject[@"postedObjects"] = arrForDetail;
+                [currentObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                    if(error == nil) NSLog(@"DetailEventVC: added Post objs on postedObjects on Event");
+                }];
+            }
+            
+            [tblForDetailList setEditing:!tblForDetailList.editing animated:YES];
+            autoRefreshTimer = [NSTimer scheduledTimerWithTimeInterval: 10.0 target: self selector: @selector(callAfterSixtySecond:) userInfo: nil repeats: YES];
+            [tblForDetailList reloadData];
+            NSLog(@"prev === %ld, to === %ld", (long)sourceIndexPath.row, (long)destinationIndexPath.row);
         }
-        
-        [tblForDetailList setEditing:!tblForDetailList.editing];
-        autoRefreshTimer = [NSTimer scheduledTimerWithTimeInterval: 10.0 target: self selector: @selector(callAfterSixtySecond:) userInfo: nil repeats: YES];
-        [tblForDetailList reloadData];
-        NSLog(@"prev === %ld, to === %ld", (long)sourceIndexPath.row, (long)destinationIndexPath.row);
-    }
     
 }
 
@@ -3502,6 +3564,7 @@
 - (BOOL)tableView:(UITableView*)tableView shouldIndentWhileEditingRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
     return NO;
 }
+
 //----------------------------------------------------------------//
 -(void)initializeBadges{
     [lbl_card_count removeFromSuperview];
@@ -3547,7 +3610,7 @@
     [self.navigationController pushViewController:notiVC animated:YES];
 }
 
--(void)processBadges:(NSNotification*)not{
+-(void)processBadges:(NSNotification*)not{    
     OMSocialEvent *temp = (OMSocialEvent*)[[GlobalVar getInstance].gArrEventList objectAtIndex:curEventIndex];
     
     if (temp.badgeCount == 0) {

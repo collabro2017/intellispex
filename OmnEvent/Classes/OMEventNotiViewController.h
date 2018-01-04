@@ -10,7 +10,9 @@
 #import "OMSocialEvent.h"
 
 @protocol OMEventNotiViewControllerDelegate <NSObject>
+
 - (void)notificationSelected:(PFObject *)post;
+
 @end
 
 @interface OMEventNotiViewController : UIViewController<UITableViewDelegate, UITableViewDataSource>

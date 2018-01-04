@@ -31,6 +31,11 @@
 //#define CLIENT_KEY   @"oFHtcrLhbqXt3Ge9ylT3KjJmYwo3vE63ImIWEZDW"
 
 //////   Real
+
+// Old Parse App Info
+//#define PARSE_APP_ID      @"fXthztgrwB3gdmQ5TNGL4DVNRzaZJWgoeIBH6lVD"
+//#define CLIENT_KEY        @"CCSj4mz2TxK2lVJxARaFPaKSj8btTG3loZhtg9II"
+
 #define PARSE_APP_ID      @"VcmsRhwkQzMBHEORbnlAvvMQHzzuZmJViay5l7t4"
 #define CLIENT_KEY        @"rFTa7CeXZ4QBuer937yBiBiuyhJSLaKFXMC1n8mB"
 
@@ -40,7 +45,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    //Install Crashlytics
+    //Install Fabric
     [Fabric with:@[[Crashlytics class]]];
     
     self.logOut = NO;
@@ -65,9 +70,11 @@
     [Parse initializeWithConfiguration:[ParseClientConfiguration configurationWithBlock:^(id<ParseMutableClientConfiguration> configuration) {
         configuration.applicationId = PARSE_APP_ID;
         configuration.clientKey = CLIENT_KEY;
-        configuration.server = @"http://intellispex-env.us-east-1.elasticbeanstalk.com//parse";
+//        configuration.server = @"http://eb-icymyi-parse-server.jegr4ium5p.us-east-1.elasticbeanstalk.com/parse"; // For ICYMI
+        configuration.server = @"http://intellispex-env.us-east-1.elasticbeanstalk.com//parse"; // For Intellispex
         [configuration setLocalDatastoreEnabled:YES ];
     }]];
+    
     if (IS_UPLOADING)
         [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
@@ -93,6 +100,7 @@
     //[GIDSignIn sharedInstance].delegate = self;
     
     //Enable public read access by default, with any newly created PFObjects belonging to the current user
+    
     PFACL *defaultACL = [PFACL ACL];
     
     [defaultACL setPublicReadAccess:YES];
@@ -143,6 +151,15 @@
     
     [GlobalVar getInstance].gArrEventList = [[NSMutableArray alloc] init];
     
+    //Check for app version
+    NSString *saveAppVersion = [[NSUserDefaults standardUserDefaults] stringForKey:@"APP_VERSION"];
+    NSString *currentAppVersion = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleShortVersionString"];
+    if (![currentAppVersion isEqualToString:saveAppVersion]) {
+        [[NSUserDefaults standardUserDefaults] setObject:currentAppVersion forKey:@"APP_VERSION"];
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:AGREEMENT_AGREED];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    
     return YES;
 }
 
@@ -176,7 +193,7 @@
     }
     
     PFUser *currentUser = [PFUser currentUser];
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:LOG_IN] && currentUser ) {
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:LOG_IN] && currentUser) {
         
         if (![[NSUserDefaults standardUserDefaults] boolForKey:AGREEMENT_AGREED]) {
             [self showAgreementVC];
@@ -338,7 +355,6 @@
     //    }
 }
 
-
 #pragma mark - ()
 
 - (void)subscribeFinished:(NSNumber *)result error:(NSError *)error{
@@ -355,7 +371,6 @@
 - (FTTabBarController *)tabBarController
 {
     return (FTTabBarController *) self.window.rootViewController;
-    
 }
 
 - (void)showWelcomeVC {

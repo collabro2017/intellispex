@@ -83,7 +83,6 @@
 
 - (void)newPostAction:(int)_uploadOption mediaKind:(int)_captureOption currentObject:(PFObject *)_curObj postOrder:(int)_postOrder
 {
-    
     if ((kTypeCapture)_captureOption == kTypeCaptureText) {
         
         OMPostEventViewController *postEventVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PostEventVC"];
@@ -163,7 +162,8 @@
 
 - (void)postAudio:(int)_uploadOption mediaKind:(int)_captureOption currentObject:(PFObject *)_curObj
         audioData:(NSData *)_audioData postOrder:(int)_postOrder
-{    
+{
+        
     OMRecordAudioViewController *recordAudioVC = [self.storyboard instantiateViewControllerWithIdentifier:@"RecordAudioVC"];
     [recordAudioVC setUploadOption:_uploadOption];
     [recordAudioVC setCaptureOption:_captureOption];
@@ -172,13 +172,8 @@
     [recordAudioVC setPostOrder:_postOrder];
     
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:recordAudioVC];
-    
     [nav setNavigationBarHidden:NO animated:YES];
-    
     [self presentViewController:nav animated:YES completion:nil];
-
-    
-    
     
     /////
 
@@ -215,6 +210,7 @@
 }
 
 - (IBAction)showPopupAction:(id)sender {
+    
 }
 
 - (void)showNotification:(NSNotification *)_notification
@@ -232,14 +228,17 @@
     self.contraintWidthTabbar.constant = IS_IPAD? 414 : SCREEN_WIDTH_ROTATED;
     
     urlForVideo = [[NSBundle mainBundle] pathForResource:@"tutorial" ofType:@"mp4"];
-
+    
+    //////
     _viewControllersByIdentifier = [NSMutableDictionary dictionary];
     
+
+    [OMGlobal setCircleView:imageViewForAvatar borderColor:[UIColor whiteColor]];
+
     availableIdentifiers = @[@"kIdentifierHome",
                              @"kIdentifierSearch",
                              @"kIdentifierFriend",
                              @"kIdentifierProfile"];
-    
     
     if([tabBarButtons count]) {
         
@@ -257,10 +256,6 @@
     ////////
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showNotification:) name:kLoadEventData object:nil];
-    
-    
-    
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -316,7 +311,6 @@
             
             
             PFFile *avatarFile = (PFFile *)USER[@"ProfileImage"];
-            
             if (avatarFile) {
                 
                 [imageViewForAvatar setImageWithURL:[NSURL URLWithString:avatarFile.url]];
@@ -324,7 +318,9 @@
         }
         else if ([USER[@"loginType"] isEqualToString:@"facebook"])
         {
+            
             [imageViewForAvatar setImageWithURL:[NSURL URLWithString:USER[@"profileURL"]]];
+
         }
         
         if (![[NSUserDefaults standardUserDefaults] boolForKey:AGREEMENT_AGREED]) {
@@ -560,4 +556,5 @@
     
     [self presentViewController:nav animated:YES completion:nil];
 }
+
 @end

@@ -164,10 +164,6 @@
     self.title = @"Edit Profile";
 
 }
-- (void)backAction
-{
-    [self.navigationController popViewControllerAnimated:YES];
-}
 
 - (void)displayUserInfo
 {
@@ -699,7 +695,7 @@
 {
     UIImage *image = [info objectForKey:UIImagePickerControllerEditedImage];
     
-//    image = [image resizedImageToSize:CGSizeMake(AVATAR_SIZE, AVATAR_SIZE)];
+    image = [image resizedImageToSize:CGSizeMake(AVATAR_SIZE, AVATAR_SIZE)];
     
     avatarChanged = YES;
     

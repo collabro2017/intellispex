@@ -2,10 +2,10 @@
 # platform :ios, '9.0'
 
 target ‘Intellispex' do
-  # Uncomment this line if you're using Swift or would like to use dynamic frameworks
-  # use_frameworks!
+# Uncomment this line if you're using Swift or would like to use dynamic frameworks
+# use_frameworks!
 
-  # Pods for Intellispex
+# Pods for Intellispex
 
 pod 'AFNetworking', '~> 3.1'
 pod 'MBProgressHUD', '~> 1.0'

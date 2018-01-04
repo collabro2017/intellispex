@@ -33,7 +33,7 @@
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];
-
+    
     // Configure the view for the selected state
 }
 
@@ -44,19 +44,18 @@
     object = _object;
     user = (PFUser *)_object;
     [lblForUsername setText:user.username];
-    
+
     imageViewForAvatar.image = [UIImage imageNamed:@""];
     if ([user[@"loginType"] isEqualToString:@"email"] || [user[@"loginType"] isEqualToString:@"gmail"]) {
         PFFile *avatarFile = (PFFile *)user[@"ProfileImage"];
         if (avatarFile) {
             [OMGlobal setImageURLWithAsync:avatarFile.url positionView:self displayImgView:imageViewForAvatar];
         }
-        
     }
     else if ([user[@"loginType"] isEqualToString:@"facebook"])
     {
         [OMGlobal setImageURLWithAsync:user[@"profileURL"] positionView:self displayImgView:imageViewForAvatar];
-    }
+    }    
 }
 
 - (IBAction)showProfileAction:(id)sender {
@@ -64,6 +63,6 @@
     if ([self.delegate respondsToSelector:@selector(showProfile:)]) {
         [self.delegate performSelector:@selector(showProfile:) withObject:object];
     }
-
+    
 }
 @end

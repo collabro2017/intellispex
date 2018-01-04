@@ -1,6 +1,6 @@
 //
 //  OMSocialEvent.h
-//  INTELLISPEX
+//  ICYMI
 //
 //  Created by Ellisa on 7/19/15.
 //  Copyright (c) 2015 ellisa. All rights reserved.

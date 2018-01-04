@@ -201,7 +201,6 @@
             return;
         }
         if (!objects || [objects count] == 0) {
-            
             [MBProgressHUD hideHUDForView:self.view animated:YES];
             [[[UIAlertView alloc] initWithTitle:@"Oops!" message:@"Wrong email. Please try again." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil]show];
             return;
@@ -219,6 +218,7 @@
                 return;
             }
         }
+        
         [PFUser logInWithUsernameInBackground:[userObj valueForKey:@"username"] password:txtForPassword.text block:^(PFUser *user, NSError *error) {
             [MBProgressHUD hideHUDForView:self.view animated:YES];
             if (!error) {
@@ -264,8 +264,6 @@
             }
         }];
     }];
-
-    
 }
 
 - (BOOL)validateTextFiels

@@ -48,22 +48,13 @@
         }] ;
         
     }
-    else{
-        PFFile *logo = (PFFile *)_currentObj[@"thumbImage"];
-        
-        if (logo) {
-            
-            [imageViewForBG setImageWithURL:[NSURL URLWithString:logo.url]];
-            
-        }
-    }
     
     if ([_currentObj[@"postType"] isEqualToString:@"video"]) {
         //[btnForVideo setHidden:NO];
     } else {
         [btnForVideo setHidden:YES];
     }
-    
+        
     if (_currentObj.badgeCount == 0) {
         
         [lblForBadge setHidden:YES];

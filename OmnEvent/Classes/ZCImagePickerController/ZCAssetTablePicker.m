@@ -139,6 +139,7 @@ static const CGFloat kFooterHeight = 60.0;
         [self.selectedAssets addObject:asset];
         
         NSURL *assetURL = [[asset.asset defaultRepresentation] url];
+        
         if(assetURL != nil) {
             [self.selectedAssetsURLs addObject:assetURL];
         }
