@@ -66,8 +66,8 @@
     [mainQuery orderByDescending:@"createdAt"];
     [mainQuery includeKey:@"user"];
     [mainQuery includeKey:@"postedObjects"];
-//    [mainQuery setLimit:1000];
-    [mainQuery setLimit:20];
+    [mainQuery setLimit:1000];
+//    [mainQuery setLimit:20];
     
     [mainQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [(UIRefreshControl*)sender endRefreshing];
@@ -170,8 +170,8 @@
     [mainQuery orderByDescending:@"createdAt"];
     [mainQuery includeKey:@"user"];
     [mainQuery includeKey:@"postedObjects"];
-//    [mainQuery setLimit:1000];
-    [mainQuery setLimit:20];
+    [mainQuery setLimit:1000];
+//    [mainQuery setLimit:20];
     
     if(standUser != nil){
         [mainQuery whereKey:@"user" equalTo:standUser];
@@ -305,8 +305,8 @@
     [mainQuery orderByDescending:@"createdAt"];
     [mainQuery includeKey:@"user"];
     [mainQuery includeKey:@"postedObjects"];
-//    [mainQuery setLimit:1000];
-    [mainQuery setLimit:20];
+    [mainQuery setLimit:1000];
+//    [mainQuery setLimit:20];
     
     [mainQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         
