@@ -146,7 +146,7 @@
     UIBarButtonItem *backBarButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"btn_back_profile"]
                                                                       style:UIBarButtonItemStylePlain
                                                                      target:self
-                                                                     action:@selector(backAction)];
+                                                                     action:@selector(backAction:)];
     UIBarButtonItem *uploadBarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave
                                                                                      target:self
                                                                                      action:@selector(saveProfileInfo)];
@@ -264,6 +264,11 @@
     
         txtForAnswer.text = [USER objectForKey:@"Answer"];
     }
+}
+
+- (void) backAction:(id) sender
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)saveProfileInfo
