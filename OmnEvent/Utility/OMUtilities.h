@@ -13,5 +13,6 @@
 +(NSString *) getOfflinePostDataDirPath;
 +(BOOL) isEventCreatedFromWebConsole:(NSString *) type;
 +(NSString *) dateToString:(NSDate *) date format:(NSString *) strFormat;
++(NSString *) removeWhiteSpacesFromString:(NSString *) string;
 
 @end

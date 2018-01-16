@@ -7,6 +7,7 @@
 //
 
 #import "OMFeedCommentCell.h"
+#import "OMUtilities.h"
 
 @implementation OMFeedCommentCell {
     NSUInteger comment_number;
@@ -243,9 +244,11 @@
                                     [OMGlobal setImageURLWithAsync:currentUser[@"profileURL"] positionView:self displayImgView:imageViewForProfile];
                                 }
                                 
-                                constraintForCommentHeight.constant = [OMGlobal heightForCellWithPost:_comment];
+                                NSString *strComment = [OMUtilities removeWhiteSpacesFromString:_comment];
                                 
-                                [commentTextView setText:_comment];
+                                constraintForCommentHeight.constant = [OMGlobal heightForCellWithPost:strComment];
+                                
+                                [commentTextView setText:strComment];
                                 [lblForUsername setText:currentUser.username];
 
                                 NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
@@ -289,9 +292,11 @@
                                 [OMGlobal setImageURLWithAsync:currentUser[@"profileURL"] positionView:self displayImgView:imageViewForProfile];
                             }
                             
-                            CGFloat height = [OMGlobal heightForCellWithPost:_comment];
+                            NSString *strComment = [OMUtilities removeWhiteSpacesFromString:_comment];
+                            
+                            CGFloat height = [OMGlobal heightForCellWithPost:strComment];
                             constraintForCommentHeight.constant = height;
-                            [commentTextView setText:_comment];
+                            [commentTextView setText:strComment];
                             [lblForUsername setText:currentUser.username];
                             
                             NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];

@@ -129,9 +129,9 @@
     }
     
     
-    if (_currentObj[@"commenters"]) {
+    if (_currentObj[@"commentsArray"]) {
         
-        [btnForCommentCount setTitle:[NSString stringWithFormat:@"%lu",(unsigned long) [_currentObj[@"commenters"] count]] forState:UIControlStateNormal];
+        [btnForCommentCount setTitle:[NSString stringWithFormat:@"%lu",(unsigned long) [_currentObj[@"commentsArray"] count]] forState:UIControlStateNormal];
         
     }
     else

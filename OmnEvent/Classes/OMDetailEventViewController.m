@@ -88,6 +88,7 @@
     // temp array for geolocation editing
     NSMutableArray *arrTemp;
     NSMutableArray *arrTargetForGeo;
+    NSMutableArray *eventComments;
     
     BOOL modeForExport;
     int selectedPostOrder;
@@ -100,6 +101,8 @@
     BOOL goOnlineMessagePresentedOnce;
     
     OMAppDelegate* appDelegate;
+    
+    
 }
 
 @property (weak, nonatomic) IBOutlet UITableView *tblForDetailList;
@@ -583,6 +586,7 @@
 
 - (void) populateFeedWith:(NSArray *) objects{
 
+    [self loadMissingEventComments];
     if(objects != nil && objects.count > 0) {
         __block NSMutableArray *tempArray = [[NSMutableArray alloc] initWithArray:objects];
         
@@ -620,6 +624,12 @@
         
                 [arrForDetail removeAllObjects];
                 [arrForDetail addObjectsFromArray:tempArray];
+                
+                NSArray *commentsArray = currentObject[@"commentsArray"];
+                
+                if(eventComments != nil && eventComments.count > 0) {
+                    currentObject[@"commentsArray"] = eventComments;
+                }
                 
                 currentObject[@"postedObjects"] = arrForDetail;
                 
@@ -682,6 +692,30 @@
     
 }
 
+- (void) loadMissingEventComments
+{
+    //dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        PFQuery *query = [PFQuery queryWithClassName:@"EventComment"];
+        [query whereKey:@"targetEvent" equalTo:currentObject];
+        [query includeKey:@"Commenter"];
+        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+             if ([objects count] == 0 || !objects) {
+                return;
+            }
+            
+            if(eventComments == nil) {
+                eventComments = [[NSMutableArray alloc] init];
+                [eventComments addObjectsFromArray:objects];
+            }
+            else{
+                if(objects.count > eventComments.count) {
+                    [eventComments removeAllObjects];
+                    [eventComments addObjectsFromArray:objects];
+                }
+            }
+        }];
+    //});
+}
 
 - (void) registerForNetworkNotifications
 {
@@ -979,7 +1013,7 @@
     if(_obj[@"commenters"] != nil && [_obj[@"commenters"] count] > 0)
         if(_obj[@"commentsArray"] !=nil && [_obj[@"commentsArray"] count] > 0)
             //if(rows + [_obj[@"commenters"] count] <= [_obj[@"commentsArray"] count])
-            rows += [_obj[@"commenters"] count];
+            rows += [_obj[@"commentsArray"] count];
     
     return rows;
 }
@@ -1388,18 +1422,40 @@
                 cell = [[OMFeedCommentCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kFeedCommentCell];
             }
             
+            NSArray *commenters = currentObject[@"commenters"];
             
-            PFObject *temp = [currentObject[@"commenters"] objectAtIndex:indexPath.row - 2];
+            NSInteger index = indexPath.row - 2;
             
-            NSString *objectId = temp.objectId;
-            if (objectId == nil){
-                objectId = [[currentObject[@"commenters"] objectAtIndex:indexPath.row - 2] objectId];
+            NSString *objectId;
+            
+            if(index < commenters.count) {
+                PFObject *temp = [currentObject[@"commenters"] objectAtIndex:index];
+                
+                objectId = temp.objectId;
+                if (objectId == nil){
+                    objectId = [[currentObject[@"commenters"] objectAtIndex:index] objectId];
+                }
             }
             
             [cell setDelegate:self];
-            [cell newsetUser:objectId comment:[currentObject[@"commentsArray"] objectAtIndex:indexPath.row - 2] curObj:currentObject commentType:kTypeEventComment number:indexPath.row - 2];
+            
+            NSString *str = [[currentObject objectForKey:@"commentsArray"] objectAtIndex:index];
+            
+            if([str isKindOfClass:[PFObject class]]){
+                PFObject *pfo= (PFObject *)str;
+                str = pfo[@"Comments"];
+                
+                if(objectId == nil) {
+                    objectId = [pfo[@"Commenter"] objectId];
+                }
+            }
+            
+            [cell newsetUser:objectId comment:str curObj:currentObject commentType:kTypeEventComment number:index];
             
             return cell;
+        }
+        else{
+            NSLog(@"NO CELL RETURNED !!!!");
         }
         
     }
@@ -1595,8 +1651,18 @@
         }
         else
         {
-            if (indexPath.row > 1)
-                return [OMGlobal heightForCellWithPost:[[currentObject objectForKey:@"commentsArray"] objectAtIndex:(indexPath.row - 2)]] + 30;
+            if (indexPath.row > 1){
+                NSString *str = [[currentObject objectForKey:@"commentsArray"] objectAtIndex:(indexPath.row - 2)];
+                
+                if([str isKindOfClass:[PFObject class]]){
+                    PFObject *pfo= (PFObject *)str;
+                    str = pfo[@"Comments"];
+                }
+                
+                str = [OMUtilities removeWhiteSpacesFromString:str];
+                
+                return [OMGlobal heightForCellWithPost:str] + 30;
+            }
             else
                 return 70;
         }

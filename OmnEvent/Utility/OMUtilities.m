@@ -54,4 +54,10 @@
     return str_date;
 }
 
++ (NSString *) removeWhiteSpacesFromString:(NSString *)string
+{
+    NSString *str = [string stringByReplacingOccurrencesOfString:@"  " withString:@""];
+    return [str stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+}
+
 @end
