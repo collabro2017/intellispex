@@ -169,7 +169,7 @@
                 currentUser[@"loginType"] = @"facebook";
                 
                 PFQuery *query = [PFQuery queryWithClassName:@"_Role"];
-                [query getObjectInBackgroundWithId:@"XVr1sAmAQl" block:^(PFObject * _Nullable object, NSError * _Nullable error) {
+                [query getObjectInBackgroundWithId:@"Di56R0ITXB" block:^(PFObject * _Nullable object, NSError * _Nullable error) {
                     if (isNewUser) {
                         currentUser[@"user_type"] = object;
                     }
@@ -266,7 +266,7 @@
                 
                 // SignUp with gmail information on Parse
                 PFQuery *query = [PFQuery queryWithClassName:@"_Role"];
-                [query getObjectInBackgroundWithId:@"XVr1sAmAQl" block:^(PFObject * _Nullable object, NSError * _Nullable error) {
+                [query getObjectInBackgroundWithId:@"Di56R0ITXB" block:^(PFObject * _Nullable object, NSError * _Nullable error) {
                     newUser[@"user_type"] = object;
                     [newUser signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                         [MBProgressHUD hideHUDForView:self.view animated:YES];
