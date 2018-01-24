@@ -1441,8 +1441,13 @@
             
             if([str isKindOfClass:[PFObject class]]){
                 PFObject *pfo= (PFObject *)str;
-                str = pfo[@"Comments"];
-                objectId = [pfo[@"Commenter"] objectId];
+                if([pfo isDataAvailable]){
+                    str = pfo[@"Comments"];
+                    objectId = [pfo[@"Commenter"] objectId];
+                }
+                else{
+                    str = @"";
+                }
             }
             
             [cell newsetUser:objectId comment:str curObj:currentObject commentType:kTypeEventComment number:index];
