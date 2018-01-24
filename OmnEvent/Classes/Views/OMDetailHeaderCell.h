@@ -54,6 +54,7 @@
 @property (strong, nonatomic) id delegate;
 @property (strong, nonatomic) PFObject *currentObj;
 @property (strong, nonatomic) PFUser   *user;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *lblAddressHeightConstraint;
 
 - (IBAction)likeAction:(id)sender;
 

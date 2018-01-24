@@ -541,21 +541,19 @@
     PFUser* user = currentObject[@"user"];
     PFFile *postImgFile = (PFFile *)currentObject[@"thumbImage"];
     
-    if (postImgFile) {
+    NSString *eventType = currentObject[@"event_type"];
     
+    if([OMUtilities isEventCreatedFromWebConsole:eventType]) {
         
-        NSString *eventType = currentObject[@"event_type"];
+        UIImage* postImage = [contentDic objectForKey:@"headerSnapshot"];
         
-        if([OMUtilities isEventCreatedFromWebConsole:eventType]) {
-            
-            UIImage* postImage = [contentDic objectForKey:@"headerSnapshot"];
-            
-            CGRect frame = CGRectMake(0, 0, PDF_PAGE_WIDTH, PDF_PAGE_WIDTH);
-            
-            [PDFRenderer drawImage:postImage inRect:frame];
-        }
-        else{
-            
+        CGRect frame = CGRectMake(0, 0, PDF_PAGE_WIDTH, PDF_PAGE_WIDTH);
+        
+        [PDFRenderer drawImage:postImage inRect:frame];
+    }
+    else{
+        
+        if (postImgFile) {
             UIImage* postImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:postImgFile.url]]];
             
             CGRect frame = CGRectMake(0, 0, PDF_PAGE_WIDTH, PDF_PAGE_WIDTH);
@@ -563,7 +561,6 @@
             [PDFRenderer drawImage:postImage inRect:frame];
         }
     }
-    //
     
     NSString *profileMode = contentDic[@"profileMode"];
     if (![profileMode isEqualToString:@"company_profile"]) {

@@ -58,6 +58,15 @@
         lblTime.text = [NSString stringWithFormat:@"Start Time : %@", _currentObj[@"startTime"]];
         lblAddress.text = _currentObj[@"country"];
         
+        CGSize size = [OMGlobal getBoundingOfString:lblAddress.text width:CGRectGetWidth(lblAddress.frame) font: lblAddress.font];
+        
+        if(size.height > 21) {
+            self.lblAddressHeightConstraint.constant = 42;
+        }
+        else{
+            self.lblAddressHeightConstraint.constant = 21;
+        }
+        
         PFFile *logo = (PFFile *)_currentObj[@"thumbImage"];
         
         if (logo) {

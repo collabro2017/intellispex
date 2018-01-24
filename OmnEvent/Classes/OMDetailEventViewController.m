@@ -1013,8 +1013,6 @@
             //if(rows + [_obj[@"commenters"] count] <= [_obj[@"commentsArray"] count])
             rows += [_obj[@"commentsArray"] count];
     
-    
-    NSLog(@"Rows : %lu", rows);
     return rows;
 }
 

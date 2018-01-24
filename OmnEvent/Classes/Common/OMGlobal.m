@@ -286,5 +286,27 @@ static GlobalVar *_instance = nil;
 #endif
     return sizeToFit;
 }
-                 
+
++ (CGSize)getBoundingOfString:(NSString *)text width:(float)_width font:(UIFont *) _font
+{
+        
+        text = [text stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+        CGSize sizeToFit;
+        CGFloat messageMaxWidth = _width;
+        UIFont *font = _font;
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= 70000
+        sizeToFit = [text boundingRectWithSize: CGSizeMake(messageMaxWidth, CGFLOAT_MAX)
+                                       options: NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading
+                                    attributes: @{ NSFontAttributeName : font }
+                                       context: nil].size;
+#else
+        sizeToFit = [text sizeWithFont:[[UIFont systemFontOfSize:14.0f]
+                                        constrainedToSize:CGSizeMake(messageMaxWidth, CGFLOAT_MAX)
+                                        lineBreakMode:NSLineBreakByWordWrapping];
+#endif
+
+   return sizeToFit;
+                    
+}
+
 @end

@@ -81,6 +81,7 @@ typedef enum {
 + (NSArray *)showDetailTime:(NSDate *)_date;
 
 + (CGSize)getBoundingOfString:(NSString *)text width:(float)_width;
++ (CGSize)getBoundingOfString:(NSString *)text width:(float)_width font:(UIFont *) _font;
 
 + (CGFloat)heightForCellWithPost:(NSString *)str;
 
