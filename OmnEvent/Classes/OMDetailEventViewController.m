@@ -625,8 +625,6 @@
                 [arrForDetail removeAllObjects];
                 [arrForDetail addObjectsFromArray:tempArray];
                 
-                NSArray *commentsArray = currentObject[@"commentsArray"];
-                
                 if(eventComments != nil && eventComments.count > 0) {
                     currentObject[@"commentsArray"] = eventComments;
                 }
@@ -1015,6 +1013,8 @@
             //if(rows + [_obj[@"commenters"] count] <= [_obj[@"commentsArray"] count])
             rows += [_obj[@"commentsArray"] count];
     
+    
+    NSLog(@"Rows : %lu", rows);
     return rows;
 }
 
@@ -1444,10 +1444,7 @@
             if([str isKindOfClass:[PFObject class]]){
                 PFObject *pfo= (PFObject *)str;
                 str = pfo[@"Comments"];
-                
-                if(objectId == nil) {
-                    objectId = [pfo[@"Commenter"] objectId];
-                }
+                objectId = [pfo[@"Commenter"] objectId];
             }
             
             [cell newsetUser:objectId comment:str curObj:currentObject commentType:kTypeEventComment number:index];
@@ -1656,7 +1653,13 @@
                 
                 if([str isKindOfClass:[PFObject class]]){
                     PFObject *pfo= (PFObject *)str;
-                    str = pfo[@"Comments"];
+                    
+                    if([pfo isDataAvailable]) {
+                        str = pfo[@"Comments"];
+                    }
+                    else{
+                        str = @"";
+                    }
                 }
                 
                 str = [OMUtilities removeWhiteSpacesFromString:str];

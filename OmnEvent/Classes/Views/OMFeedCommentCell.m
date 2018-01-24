@@ -155,7 +155,7 @@
     currentType = kTypeEventComment;
     comment_number = _number;
     event_flag = YES;
-    imageViewForProfile.image = nil;
+    //imageViewForProfile.image = nil;
     
     PFQuery *query = [PFUser query];
     [query whereKey:@"objectId" equalTo:user];
@@ -237,11 +237,17 @@
                                     if (avatarFile) {
                                         [OMGlobal setImageURLWithAsync:avatarFile.url positionView:self displayImgView:imageViewForProfile];
                                     }
+                                    else{
+                                        imageViewForProfile.image = nil;
+                                    }
                                     
                                 }
                                 else if ([currentUser[@"loginType"] isEqualToString:@"facebook"])
                                 {
                                     [OMGlobal setImageURLWithAsync:currentUser[@"profileURL"] positionView:self displayImgView:imageViewForProfile];
+                                }
+                                else{
+                                    imageViewForProfile.image = nil;
                                 }
                                 
                                 NSString *strComment = [OMUtilities removeWhiteSpacesFromString:_comment];
@@ -285,11 +291,17 @@
                                 if (avatarFile) {
                                     [OMGlobal setImageURLWithAsync:avatarFile.url positionView:self displayImgView:imageViewForProfile];
                                 }
+                                else{
+                                    imageViewForProfile.image = nil;
+                                }
                                 
                             }
                             else if ([currentUser[@"loginType"] isEqualToString:@"facebook"])
                             {
                                 [OMGlobal setImageURLWithAsync:currentUser[@"profileURL"] positionView:self displayImgView:imageViewForProfile];
+                            }
+                            else{
+                                imageViewForProfile.image = nil;
                             }
                             
                             NSString *strComment = [OMUtilities removeWhiteSpacesFromString:_comment];
