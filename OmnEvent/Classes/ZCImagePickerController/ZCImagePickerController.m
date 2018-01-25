@@ -98,11 +98,16 @@
 	for (ALAsset *asset in assets) {
         
 		NSMutableDictionary *workingDictionary = [[NSMutableDictionary alloc] init];
-		[workingDictionary setObject:[asset valueForProperty:ALAssetPropertyType] forKey:@"UIImagePickerControllerMediaType"];
-        [workingDictionary setObject:[UIImage imageWithCGImage:[[asset defaultRepresentation] fullScreenImage]] forKey:@"UIImagePickerControllerOriginalImage"];
-		[workingDictionary setObject:[[asset valueForProperty:ALAssetPropertyURLs] valueForKey:[[[asset valueForProperty:ALAssetPropertyURLs] allKeys] objectAtIndex:0]] forKey:@"UIImagePickerControllerReferenceURL"];
-		
-		[returnArray addObject:workingDictionary];
+        id mediaType = [asset valueForProperty:ALAssetPropertyType];
+        id orgImage = [UIImage imageWithCGImage:[[asset defaultRepresentation] fullScreenImage]];
+        id refURL = [[asset valueForProperty:ALAssetPropertyURLs] valueForKey:[[[asset valueForProperty:ALAssetPropertyURLs] allKeys] objectAtIndex:0]];
+        
+        if(mediaType != nil && orgImage != nil && refURL != nil) {
+            [workingDictionary setObject:mediaType forKey:@"UIImagePickerControllerMediaType"];
+            [workingDictionary setObject:orgImage forKey:@"UIImagePickerControllerOriginalImage"];
+            [workingDictionary setObject:refURL forKey:@"UIImagePickerControllerReferenceURL"];
+            [returnArray addObject:workingDictionary];
+        }
 	}
     
 	if ([self.imagePickerDelegate respondsToSelector:@selector(zcImagePickerController:didFinishPickingMediaWithInfo:)]) {

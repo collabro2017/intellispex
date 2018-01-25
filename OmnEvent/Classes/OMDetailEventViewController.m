@@ -2622,7 +2622,15 @@
     
     [contentPDF setObject:currentObject forKey:@"currentObject"];
     [contentPDF setObject:arrTargetForGeo forKey:@"arrDetail"];
-    [contentPDF setObject:PFUser.currentUser[@"company"] forKey:@"companyName"];
+    
+    NSString *companyName = PFUser.currentUser[@"company"];
+    if(companyName != nil && ![companyName isKindOfClass:[NSNull class]]) {
+        [contentPDF setObject:PFUser.currentUser[@"company"] forKey:@"companyName"];
+    }
+    else{
+        [contentPDF setObject:@"" forKey:@"companyName"];
+    }
+    
     [contentPDF setObject:profileModeInPDF forKey:@"profileMode"];
     
     NSString *eventType = currentObject[@"event_type"];
