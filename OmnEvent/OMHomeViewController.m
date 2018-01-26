@@ -43,6 +43,13 @@
     NSMutableArray *arrForFirstArray;
     NSUInteger process_number;
     BOOL  progressAVDisplayed;
+    
+    int recordCount;
+    int pageCount;
+    int recordsPerPage;
+    int limit;
+    int currentPageIndex;
+    int dataFetchForPage;
 }
 
 @property (readwrite, nonatomic, strong) UIRefreshControl *refreshControl1;
@@ -57,17 +64,8 @@
 - (void)reload:(__unused id)sender {
     [(UIRefreshControl*)sender beginRefreshing];
     
-    PFQuery *subQuery1 = [PFQuery queryWithClassName:@"Event"];
-    [subQuery1 whereKeyDoesNotExist:@"deletedAt"];
-    PFQuery *subQuery2 = [PFQuery queryWithClassName:@"Event"];
-    [subQuery2 whereKey:@"deletedAt" equalTo:@""];
-    
-    PFQuery *mainQuery = [PFQuery orQueryWithSubqueries:@[subQuery1, subQuery2]];
-    [mainQuery orderByDescending:@"createdAt"];
-    [mainQuery includeKey:@"user"];
-    [mainQuery includeKey:@"postedObjects"];
-    [mainQuery setLimit:1000];
-//    [mainQuery setLimit:20];
+    PFQuery *mainQuery = [self loadFeedDataQuery];
+    currentPageIndex = 0;
     
     [mainQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [(UIRefreshControl*)sender endRefreshing];
@@ -98,7 +96,8 @@
     
     [super viewDidLoad];
     
-  
+    recordsPerPage = 100;
+    
     currentUser = [PFUser currentUser];
     NSLog(@"current user object id = %@", currentUser.objectId);
     is_grid = YES;
@@ -276,7 +275,46 @@
     else [tableViewForFeeds reloadData];
 }
 
-- (void)loadFeedData {
+- (PFQuery *) loadFeedDataQuery
+{
+    PFQuery *subQuery1 = [PFQuery queryWithClassName:@"Event"];
+    [subQuery1 whereKeyDoesNotExist:@"deletedAt"];
+    PFQuery *subQuery2 = [PFQuery queryWithClassName:@"Event"];
+    [subQuery2 whereKey:@"deletedAt" equalTo:@""];
+    
+    PFQuery *mainQuery = [PFQuery orQueryWithSubqueries:@[subQuery1, subQuery2]];
+    [mainQuery orderByDescending:@"createdAt"];
+    [mainQuery includeKey:@"user"];
+    [mainQuery includeKey:@"postedObjects"];
+    
+    return mainQuery;
+}
+
+- (void) fetchObjectsCountForPagination
+{
+    
+    PFQuery *mainQuery = [self loadFeedDataQuery];
+    
+    // Other query parameters assigned here...
+    [mainQuery countObjectsInBackgroundWithBlock:^(int count, NSError *error) {
+        // Do better error handling in your app...
+        NSLog(@"Object Counts : %d ", count);
+        recordCount = count;
+        pageCount   = count / recordsPerPage + 1;
+        
+        currentPageIndex = 0;
+        
+        [self loadFeedDataForPageIndex:currentPageIndex countPerPage:recordsPerPage];
+        
+    }];
+}
+
+- (void) loadFeedData
+{
+    [self fetchObjectsCountForPagination];
+}
+
+- (void)loadFeedDataForPageIndex:(NSInteger)pageIndex countPerPage:(NSInteger)count  {
     
     [GlobalVar getInstance].isEventLoading = YES;
     
@@ -296,20 +334,92 @@
         [MBProgressHUD showMessag:@"Loading..." toView:self.view];
     }
     
-    PFQuery *subQuery1 = [PFQuery queryWithClassName:@"Event"];
-    [subQuery1 whereKeyDoesNotExist:@"deletedAt"];
-    PFQuery *subQuery2 = [PFQuery queryWithClassName:@"Event"];
-    [subQuery2 whereKey:@"deletedAt" equalTo:@""];
+    PFQuery *mainQuery = [self loadFeedDataQuery];
+    [mainQuery setLimit:count];
+    [mainQuery setSkip:pageIndex * count];
     
-    PFQuery *mainQuery = [PFQuery orQueryWithSubqueries:@[subQuery1, subQuery2]];
-    [mainQuery orderByDescending:@"createdAt"];
-    [mainQuery includeKey:@"user"];
-    [mainQuery includeKey:@"postedObjects"];
-    [mainQuery setLimit:1000];
-//    [mainQuery setLimit:20];
+    NSLog(@"Timestamp Before Sending Request on server : %@ ", [NSDate date]);
+    [mainQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
     
+        NSLog(@"Timestamp After getting response from server : %@ ", [NSDate date]);
+        if(progressAVDisplayed == true) {
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        }
+        [GlobalVar getInstance].isEventLoading = NO;
+        
+        if (error == nil)
+        {
+            if ([objects count] == 0) {
+                NSLog(@"No Data: %@", [mainQuery parseClassName]);
+                return;
+            }
+            
+            //if([arrForFeed count] != 0) [arrForFeed removeAllObjects];
+            for (PFObject *obj in objects) {
+                
+                if((NSNull*)obj == [NSNull null]) NSLog(@"-- have one null obj --");
+                OMSocialEvent * socialtempObj = (OMSocialEvent*) obj;
+                PFUser *user = socialtempObj[@"user"];
+                
+                // Filtering Event: Own Events or User's Events including me in TagFriends
+                if([user.objectId isEqualToString:USER.objectId] )
+                {
+                    [arrForFeed addObject:socialtempObj];
+                }
+                else if ([socialtempObj[@"TagFriends"] containsObject:USER.objectId])
+                {
+                    if (user != nil && user.username != nil) {
+                        [arrForFeed addObject:socialtempObj];
+                    }
+                    else
+                    {
+                        NSLog(@"error user obj = %@", socialtempObj);
+                    }
+                }
+                
+            }
+            
+            arrForFirstArray = [arrForFeed copy];
+            [arrForFeed removeAllObjects];
+            [self estimateBadgeCount1];
+        }
+    }];
+}
+
+- (void)loadOldFeedData {
+    
+    
+    NSInteger pageIndex = self.arrForFeed.count / 100;
+    
+    pageIndex = pageIndex + 1;
+    if (dataFetchForPage == pageIndex ) {
+        NSLog(@"Data for page : %lu already fetched", pageIndex);
+        return;
+    }
+    
+    [GlobalVar getInstance].isEventLoading = YES;
+    
+    arrForFirstArray = [NSMutableArray array];
+    
+    if(arrForFeed != nil && arrForFeed.count > 0) {
+        progressAVDisplayed = false;
+    }
+    else{
+        
+        progressAVDisplayed = true;
+        [MBProgressHUD showMessag:@"Loading..." toView:self.view];
+    }
+    
+    PFQuery *mainQuery = [self loadFeedDataQuery];
+    
+    dataFetchForPage = pageIndex;
+    
+    [mainQuery setSkip:pageIndex];
+    
+    NSLog(@"Timestamp Before Sending Request on server : %@ ", [NSDate date]);
     [mainQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         
+        NSLog(@"Timestamp After getting response from server : %@ ", [NSDate date]);
         if(progressAVDisplayed == true) {
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         }
@@ -353,6 +463,8 @@
         }
     }];
 }
+
+
 
 // For pre processing for Badge Count
 // For this features, it was added some columns on Event, Post class.
@@ -614,6 +726,7 @@
     OMSearchCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kSearchCell forIndexPath:indexPath];
     [cell setDelegate:self];
     [cell setCurrentObj:obj];
+    
     return cell;
 }
 
@@ -673,6 +786,18 @@
     }else{
         return UIEdgeInsetsMake(1, 0, 0, 0);
     }
+}
+
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSInteger row = indexPath.row;
+    
+    if (row + 1 == arrForFeed.count) {
+        
+        currentPageIndex = currentPageIndex + 1;
+        [self loadFeedDataForPageIndex:currentPageIndex countPerPage:recordsPerPage];
+    }
+    
 }
 
 
