@@ -169,8 +169,7 @@
     [mainQuery orderByDescending:@"createdAt"];
     [mainQuery includeKey:@"user"];
     [mainQuery includeKey:@"postedObjects"];
-    [mainQuery setLimit:1000];
-//    [mainQuery setLimit:20];
+    [mainQuery setLimit:100];
     
     if(standUser != nil){
         [mainQuery whereKey:@"user" equalTo:standUser];
@@ -794,8 +793,10 @@
     
     if (row + 1 == arrForFeed.count) {
         
-        currentPageIndex = currentPageIndex + 1;
-        [self loadFeedDataForPageIndex:currentPageIndex countPerPage:recordsPerPage];
+        if(currentPageIndex + 1 < pageCount) {
+            currentPageIndex = currentPageIndex + 1;
+            [self loadFeedDataForPageIndex:currentPageIndex countPerPage:recordsPerPage];
+        }
     }
     
 }
@@ -889,6 +890,19 @@
         
         [detailEventVC setCurrentObject:event];
         [self.navigationController pushViewController:detailEventVC animated:YES];
+    }
+}
+
+- (void) tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSInteger row = indexPath.row;
+    
+    if (row + 1 == arrForFeed.count) {
+        
+        if(currentPageIndex + 1 < pageCount) {
+            currentPageIndex = currentPageIndex + 1;
+            [self loadFeedDataForPageIndex:currentPageIndex countPerPage:recordsPerPage];
+        }
     }
 }
 
