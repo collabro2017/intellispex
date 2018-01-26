@@ -1449,6 +1449,13 @@
                     str = @"";
                 }
             }
+            else{
+                if(objectId == nil){
+                    objectId = [[PFUser currentUser] objectId];
+                }
+            }
+            
+            
             
             [cell newsetUser:objectId comment:str curObj:currentObject commentType:kTypeEventComment number:index];
             
