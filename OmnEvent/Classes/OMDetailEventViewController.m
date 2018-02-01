@@ -99,9 +99,9 @@
     UIView *offlineView;
     Reachability *internetReachability;
     BOOL goOnlineMessagePresentedOnce;
+    BOOL addMediaAfterHTN;
     
     OMAppDelegate* appDelegate;
-    
     
 }
 
@@ -619,6 +619,9 @@
                 tempArray = [[[tempArray reverseObjectEnumerator] allObjects] mutableCopy];
             }
             
+            
+            [self rearrangeForThumbnailPosts:tempArray];
+            
             dispatch_async(dispatch_get_main_queue(), ^{
                 // Update the UI
         
@@ -635,6 +638,96 @@
             });
         });
     }
+}
+
+- (BOOL) isThumbnailPost:(PFObject *) object
+{
+    BOOL blnResult = FALSE;
+    
+    if (object[@"thumbnailPost"]) {
+        
+        NSNumber *thumbnailPost = object[@"thumbnailPost"];
+        if (thumbnailPost.integerValue > 0) {
+            blnResult = TRUE;
+        }
+    }
+    
+    return blnResult;
+}
+
+- (NSMutableArray *) getThumbnailPosts:(NSArray *) objects
+{
+    NSMutableArray *thumbnailObjects = [[NSMutableArray alloc] init];
+    for(int i = 0; i < objects.count; ++i) {
+        
+        PFObject *tempObj = [objects objectAtIndex:i];
+        if ([self isThumbnailPost:tempObj]) {
+            [thumbnailObjects addObject:tempObj];
+        }
+    }
+    
+    return thumbnailObjects;
+}
+
+- (void) rearrangeForThumbnailPosts:(NSMutableArray *) objects
+{
+    NSMutableArray *thumbnailObjects = [self getThumbnailPosts:objects];
+    
+    if (thumbnailObjects != nil && thumbnailObjects.count > 1) {
+     
+        [thumbnailObjects sortUsingComparator:^NSComparisonResult(PFObject *obj1, PFObject *obj2) {
+            NSNumber *postOrder1 = obj1[@"thumbnailPostOrder"];
+            NSNumber *postOrder2 = obj2[@"thumbnailPostOrder"];
+            if (postOrder1.intValue > postOrder2.intValue) {
+                return NSOrderedAscending;
+            } else if (postOrder1.intValue < postOrder2.intValue) {
+                return NSOrderedDescending;
+            }
+            return NSOrderedSame;
+        }];
+    }
+    
+    for (int j = 0; j < thumbnailObjects.count; ++j) {
+        PFObject *obj = [thumbnailObjects objectAtIndex:j];
+        [objects removeObject:obj];
+        [objects insertObject:obj atIndex:0];
+    }
+}
+
+- (int) getAddMediaAfterThumbnailPostOrder
+{
+ 
+    int thumbnailPostOrder = -1;
+    
+    if (addMediaAfterHTN == TRUE) {
+
+        thumbnailPostOrder = 0;
+        NSArray *thumbnailObjects = [self getThumbnailPosts:arrForDetail];
+        
+        for (int i = 0; i < thumbnailObjects.count; ++i) {
+            PFObject *obj = [thumbnailObjects objectAtIndex:i];
+            int tempPostOrder = [obj[@"thumbnailPostOrder"] intValue];
+            
+            if(tempPostOrder > thumbnailPostOrder) {
+                thumbnailPostOrder = tempPostOrder;
+            }
+        }
+        
+        thumbnailPostOrder = thumbnailPostOrder + 1;
+    }
+    else{
+        
+        if(selectedPostOrder >= 0 && selectedPostOrder < arrForDetail.count) {
+            PFObject *obj = arrForDetail[selectedPostOrder];
+            
+            if([self isThumbnailPost:obj]) {
+                NSNumber *tempPostOrder = obj[@"thumbnailPostOrder"];
+                thumbnailPostOrder = tempPostOrder.intValue;
+            }
+        }
+    }
+    
+    return thumbnailPostOrder;
 }
 
 - (void)loadAnyMissingComments:(NSMutableArray *) objects
@@ -897,7 +990,7 @@
             case 10:
             {
                 [TABController newPostAction:kTypeUploadPost mediaKind:kTypeCapturePhoto currentObject:currentObject
-                                   postOrder:selectedPostOrder];
+                                       postOrder:selectedPostOrder thumbnailPostOrder:-1];
             }
                 break;
             case 11:
@@ -917,13 +1010,13 @@
             case 12:
             {
                 [TABController newPostAction:kTypeUploadPost mediaKind:kTypeCaptureVideo currentObject:currentObject
-                                   postOrder:selectedPostOrder];
+                                   postOrder:selectedPostOrder thumbnailPostOrder:-1];
             }
                 break;
             case 13:
             {
                 [TABController newPostAction:kTypeUploadPost mediaKind:kTypeCaptureText currentObject:currentObject
-                                   postOrder:selectedPostOrder];
+                                   postOrder:selectedPostOrder thumbnailPostOrder:-1];
             }
                 break;
             default:
@@ -992,6 +1085,8 @@
     
     if (arrForDetail.count > 0) {
         arrForDetail = [[[arrForDetail reverseObjectEnumerator] allObjects] mutableCopy];
+        
+        [self rearrangeForThumbnailPosts:arrForDetail];
     }
     
     [tblForDetailList reloadData];
@@ -2152,6 +2247,7 @@
                     
                 case 4:
                 {
+                    addMediaAfterHTN = TRUE;
                     [self performSelector:@selector(showAddMediaAfter) withObject:nil afterDelay:0.1f];
                 }
                     break;
@@ -2292,6 +2388,7 @@
                     break;
                 case 1:
                 {
+                    addMediaAfterHTN = FALSE;
                     [self performSelector:@selector(showAddMediaAfter) withObject:nil afterDelay:0.1f];
                 }
                     break;
@@ -2327,6 +2424,7 @@
                     break;
                 case 1:
                 {
+                    addMediaAfterHTN = FALSE;
                     [self performSelector:@selector(showAddMediaAfter) withObject:nil afterDelay:0.1f];
                 }
                     break;
@@ -2422,7 +2520,7 @@
                 {
                     if ([currentObject[@"openStatus"] intValue]) {
                         [TABController newPostAction:kTypeUploadPost mediaKind:kTypeCaptureText currentObject:currentObject
-                                           postOrder:selectedPostOrder];
+                                           postOrder:selectedPostOrder thumbnailPostOrder: [self getAddMediaAfterThumbnailPostOrder]];
                     } else {
                         [OMGlobal showAlertTips:@"Oops!" title:@"This event was closed."];
                     }
@@ -2430,9 +2528,10 @@
                     break;
                 case 1: //Image
                 {
+                    
                     if ([currentObject[@"openStatus"] intValue]) {
                         [TABController newPostAction:kTypeUploadPost mediaKind:kTypeCapturePhoto currentObject:currentObject
-                                           postOrder:selectedPostOrder];
+                                           postOrder:selectedPostOrder thumbnailPostOrder: [self getAddMediaAfterThumbnailPostOrder]];
                     } else {
                         [OMGlobal showAlertTips:@"Oops!" title:@"This event was closed."];
                     }
@@ -2452,7 +2551,7 @@
                 {
                     if ([currentObject[@"openStatus"] intValue]) {
                         [TABController newPostAction:kTypeUploadPost mediaKind:kTypeCaptureVideo currentObject:currentObject
-                                           postOrder:selectedPostOrder];
+                                           postOrder:selectedPostOrder thumbnailPostOrder: [self getAddMediaAfterThumbnailPostOrder]];
                     } else {
                         [OMGlobal showAlertTips:@"Oops!" title:@"This event was closed."];
                     }

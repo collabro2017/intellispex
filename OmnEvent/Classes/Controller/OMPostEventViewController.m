@@ -697,6 +697,9 @@
             }
                       
             NSNumber *postOrder = [NSNumber numberWithInt:1];
+            NSNumber *tnPostOrder = [NSNumber numberWithInt:1];
+            BOOL shouldIncrementTNPO = FALSE;
+            
             if (self.postOrder == -1) {
                 PFObject *item = allPosts.firstObject; //First Element will contain the object with highest postOrder
                 if (item != nil || ![item isEqual:[NSNull null]]) {
@@ -709,6 +712,46 @@
                 postOrder = item[@"postOrder"];
             }
             post[@"postOrder"] = postOrder;
+            
+            if (self.thumbnailPostOrder > 0) {
+                post[@"thumbnailPost"] = [NSNumber numberWithInt:1];
+                
+                if(allPosts.count > 0) {
+                    NSMutableArray *tnps = [self getThumbnailPosts:allPosts];
+                    
+                    if(tnps != nil && tnps.count > 0 ) {
+                        
+                        if (self.thumbnailPostOrder < tnps.count) {
+                            
+                            [tnps sortUsingComparator:^NSComparisonResult(PFObject *obj1, PFObject *obj2) {
+                                NSNumber *postOrder1 = obj1[@"thumbnailPostOrder"];
+                                NSNumber *postOrder2 = obj2[@"thumbnailPostOrder"];
+                                if (postOrder1.intValue > postOrder2.intValue) {
+                                    return NSOrderedAscending;
+                                }
+                                
+                                return NSOrderedSame;
+                            }];
+                            
+                            PFObject *item = tnps[self.thumbnailPostOrder];
+                            tnPostOrder = item[@"thumbnailPostOrder"];
+                            post[@"thumbnailPostOrder"] = [NSNumber numberWithInt:tnPostOrder.intValue];
+                            shouldIncrementTNPO = TRUE;
+                        }
+                        else{
+                            post[@"thumbnailPostOrder"] = [NSNumber numberWithInt:self.thumbnailPostOrder + 1];
+                        }
+                    }
+                    else{
+                        post[@"thumbnailPostOrder"] = [NSNumber numberWithInt:self.thumbnailPostOrder];
+                    }
+                }
+                else{
+                    post[@"thumbnailPostOrder"] = [NSNumber numberWithInt:self.thumbnailPostOrder];
+                }
+                
+            }
+            
             
             //for badge
             arrPostLookedFlags = [arrCurTaggedFriends mutableCopy];
@@ -913,6 +956,23 @@
                                 [item save];
                             }
                             
+                            if (shouldIncrementTNPO == TRUE) {
+                                //[self inrementThumbnailPostsOrders:allPosts fromIndex:self.thumbnailPostOrder];
+                                
+                                NSMutableArray *thumbnailObjects = [self getThumbnailPosts:allPosts];
+                                
+                                int startIndex = self.thumbnailPostOrder;
+                                
+                                //Increment the postOrder for other posts
+                                for (int i = startIndex; i < thumbnailObjects.count; i++) {
+                                    PFObject *item = thumbnailObjects[i];
+                                    if ([item isEqual:[NSNull null]] || item == nil) continue;
+                                    [item incrementKey:@"thumbnailPostOrder"];
+                                    [item save];
+                                }
+                                
+                            }
+                            
                             // add one Post on Event postedObject field: for badge
                             if(![curObj[@"postedObjects"] containsObject:post])
                             {
@@ -956,6 +1016,49 @@
     }
 }
 
+
+- (BOOL) isThumbnailPost:(PFObject *) object
+{
+    BOOL blnResult = FALSE;
+    
+    if (object[@"thumbnailPost"]) {
+        
+        NSNumber *thumbnailPost = object[@"thumbnailPost"];
+        if (thumbnailPost.integerValue > 0) {
+            blnResult = TRUE;
+        }
+    }
+    
+    return blnResult;
+}
+
+- (NSMutableArray *) getThumbnailPosts:(NSArray *) objects
+{
+    NSMutableArray *thumbnailObjects = [[NSMutableArray alloc] init];
+    for(int i = 0; i < objects.count; ++i) {
+        
+        PFObject *tempObj = [objects objectAtIndex:i];
+        if ([self isThumbnailPost:tempObj]) {
+            [thumbnailObjects addObject:tempObj];
+        }
+    }
+    
+    return thumbnailObjects;
+}
+
+- (void) inrementThumbnailPostsOrders:(NSArray *) objects fromIndex:(int) index
+{
+    NSMutableArray *thumbnailObjects = [self getThumbnailPosts:objects];
+    
+    //Increment the postOrder for other posts
+    for (int i=0; i<=index && i < thumbnailObjects.count; i++) {
+        PFObject *item = thumbnailObjects[i];
+        if ([item isEqual:[NSNull null]] || item == nil) continue;
+        [item incrementKey:@"thumbnailPostOrder"];
+        [item save];
+    }
+}
+
 //------------------------------------------------------------------------------------------------------//
 -(void)uploadBulkImages{
     
@@ -987,6 +1090,8 @@
         }
         
         NSNumber *postOrder = [NSNumber numberWithInt:1];
+        NSNumber *tnPostOrder = [NSNumber numberWithInt:1];
+        BOOL shouldIncrementTNPO = FALSE;
         if (self.postOrder == -1) {
             PFObject *item = allPosts.firstObject; //First Element will contain the object with highest postOrder
             if (item != nil || ![item isEqual:[NSNull null]]) {
@@ -999,6 +1104,46 @@
             postOrder = item[@"postOrder"];
         }
         post[@"postOrder"] = postOrder;
+        
+        
+        if (self.thumbnailPostOrder > 0) {
+            post[@"thumbnailPost"] = [NSNumber numberWithInt:1];
+            
+            if(allPosts.count > 0) {
+                NSMutableArray *tnps = [self getThumbnailPosts:allPosts];
+                
+                if(tnps != nil && tnps.count > 0 ) {
+                    
+                    if (self.thumbnailPostOrder < tnps.count) {
+
+                        [tnps sortUsingComparator:^NSComparisonResult(PFObject *obj1, PFObject *obj2) {
+                            NSNumber *postOrder1 = obj1[@"thumbnailPostOrder"];
+                            NSNumber *postOrder2 = obj2[@"thumbnailPostOrder"];
+                            if (postOrder1.intValue > postOrder2.intValue) {
+                                return NSOrderedAscending;
+                            }
+                            
+                            return NSOrderedSame;
+                        }];
+                        
+                        PFObject *item = tnps[self.thumbnailPostOrder];
+                        tnPostOrder = item[@"thumbnailPostOrder"];
+                        post[@"thumbnailPostOrder"] = [NSNumber numberWithInt:tnPostOrder.intValue];
+                        shouldIncrementTNPO = TRUE;
+                    }
+                    else{
+                        post[@"thumbnailPostOrder"] = [NSNumber numberWithInt:self.thumbnailPostOrder + 1];
+                    }
+                }
+                else{
+                    post[@"thumbnailPostOrder"] = [NSNumber numberWithInt:self.thumbnailPostOrder];
+                }
+            }
+            else{
+                post[@"thumbnailPostOrder"] = [NSNumber numberWithInt:self.thumbnailPostOrder];
+            }
+
+        }
         
         //for badge
         arrPostLookedFlags = [arrCurTaggedFriends mutableCopy];
@@ -1112,6 +1257,25 @@
                     [item incrementKey:@"postOrder"];
                 }
                 
+                if (shouldIncrementTNPO == TRUE) {
+                    
+                    if (shouldIncrementTNPO == TRUE) {
+                        //[self inrementThumbnailPostsOrders:allPosts fromIndex:self.thumbnailPostOrder];
+                        
+                        NSMutableArray *thumbnailObjects = [self getThumbnailPosts:allPosts];
+                        
+                        int startIndex = self.thumbnailPostOrder;
+                        
+                        //Increment the postOrder for other posts
+                        for (int i = startIndex; i < thumbnailObjects.count; i++) {
+                            PFObject *item = thumbnailObjects[i];
+                            if ([item isEqual:[NSNull null]] || item == nil) continue;
+                            [item incrementKey:@"thumbnailPostOrder"];
+                        }
+                        
+                    }
+                }
+                
                 // add one Post on Event postedObject field: for badge
                 if(![curObj[@"postedObjects"] containsObject:post]) {
                     [allPosts insertObject:post atIndex:self.postOrder+1];
@@ -1147,6 +1311,23 @@
                             
                             [item incrementKey:@"postOrder"];
                             [item save];
+                        }
+                        
+                        if (shouldIncrementTNPO == TRUE) {
+                            //[self inrementThumbnailPostsOrders:allPosts fromIndex:self.thumbnailPostOrder];
+                            
+                            NSMutableArray *thumbnailObjects = [self getThumbnailPosts:allPosts];
+                            
+                            int startIndex = self.thumbnailPostOrder;
+                            
+                            //Increment the postOrder for other posts
+                            for (int i = startIndex; i < thumbnailObjects.count; i++) {
+                                PFObject *item = thumbnailObjects[i];
+                                if ([item isEqual:[NSNull null]] || item == nil) continue;
+                                [item incrementKey:@"thumbnailPostOrder"];
+                                [item save];
+                            }
+                            
                         }
                         
                         // add one Post on Event postedObject field: for badge

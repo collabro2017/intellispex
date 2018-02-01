@@ -71,6 +71,7 @@
 @property (nonatomic) kTypeCapture      captureOption;
 @property (nonatomic) PFObject          *curObj;
 @property (nonatomic, assign) int       postOrder;
+@property (nonatomic, assign) int       thumbnailPostOrder;
 
 - (IBAction)topButtonsAction:(id)sender;
 - (IBAction)bottomButtonsAction:(id)sender;

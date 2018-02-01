@@ -706,6 +706,7 @@
             [postEventVC setCaptureOption:captureOption];
             [postEventVC setCurObj:curObj];
             [postEventVC setPostOrder:_postOrder];
+            [postEventVC setThumbnailPostOrder:_thumbnailPostOrder];
             if (self.panoFlag == YES) {
                 [postEventVC setPanoFlag:YES];
                 self.panoFlag = NO;
@@ -730,6 +731,7 @@
     [postEventVC setCaptureOption:captureOption];
     [postEventVC setCurObj:curObj];
     [postEventVC setPostOrder:_postOrder];
+    [postEventVC setThumbnailPostOrder:_thumbnailPostOrder];
     
     [self.navigationController pushViewController:postEventVC animated:YES];
 }

@@ -81,7 +81,7 @@
 - (IBAction)showMessageAction:(id)sender {
 }
 
-- (void)newPostAction:(int)_uploadOption mediaKind:(int)_captureOption currentObject:(PFObject *)_curObj postOrder:(int)_postOrder
+- (void)newPostAction:(int)_uploadOption mediaKind:(int)_captureOption currentObject:(PFObject *)_curObj postOrder:(int)_postOrder thumbnailPostOrder:(int)_thumbnailPostOrder
 {
     if ((kTypeCapture)_captureOption == kTypeCaptureText) {
         
@@ -91,6 +91,7 @@
         [postEventVC setCaptureOption:_captureOption];
         [postEventVC setCurObj:_curObj];
         [postEventVC setPostOrder:_postOrder];
+        [postEventVC setThumbnailPostOrder:_thumbnailPostOrder];
         UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:postEventVC];
         
         [nav setNavigationBarHidden:NO animated:YES];
@@ -112,6 +113,7 @@
                 
                 _tempCurObj = _curObj;
                 _tempPostOrder = _postOrder;
+                _tempThumbnailPostOrder = _thumbnailPostOrder;
                 _tempCaptureOption = _captureOption;
                 _tempUploadOption = _uploadOption;
                 
@@ -450,6 +452,7 @@
             [cameraVC setCaptureOption:(kTypeCapture)_tempCaptureOption];
             [cameraVC setCurObj:_tempCurObj];
             [cameraVC setPostOrder:_tempPostOrder];
+            [cameraVC setThumbnailPostOrder:_tempThumbnailPostOrder];
             
             UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:cameraVC];
             
@@ -548,6 +551,7 @@
     [postEventVC setCaptureOption:_tempCaptureOption];
     [postEventVC setCurObj:_tempCurObj];
     [postEventVC setPostOrder:_tempPostOrder];
+    [postEventVC setThumbnailPostOrder:_tempThumbnailPostOrder];
     [postEventVC setImageArray:_imageArray];
     
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:postEventVC];

@@ -154,7 +154,7 @@
 
 - (void)newEventPostAction
 {
-    [TABController newPostAction:kTypeUploadEvent mediaKind:kTypeCaptureAll currentObject:nil postOrder:-1];
+    [TABController newPostAction:kTypeUploadEvent mediaKind:kTypeCaptureAll currentObject:nil postOrder:-1 thumbnailPostOrder:-1];
 }
 
 - (void)animatePopupView
