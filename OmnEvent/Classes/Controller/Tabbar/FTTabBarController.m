@@ -163,7 +163,7 @@
 }
 
 - (void)postAudio:(int)_uploadOption mediaKind:(int)_captureOption currentObject:(PFObject *)_curObj
-        audioData:(NSData *)_audioData postOrder:(int)_postOrder
+        audioData:(NSData *)_audioData postOrder:(int)_postOrder thumbnailPostOrder:(int)_thumbnailPostOrder
 {
         
     OMRecordAudioViewController *recordAudioVC = [self.storyboard instantiateViewControllerWithIdentifier:@"RecordAudioVC"];
@@ -172,6 +172,7 @@
     [recordAudioVC setCurObj:_curObj];
     [recordAudioVC setAudioData:_audioData];
     [recordAudioVC setPostOrder:_postOrder];
+    [recordAudioVC setThumbnailPostOrder:_thumbnailPostOrder];
     
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:recordAudioVC];
     [nav setNavigationBarHidden:NO animated:YES];

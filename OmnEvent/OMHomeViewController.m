@@ -130,6 +130,8 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadFeedData) name:kLoadFeedData object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadFeedData) name:kLoadComponentsData object:nil];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedPush:) name:kReceivedNotification object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(firstViewLoad) name:kNotificationFirstViewLoad object:nil];

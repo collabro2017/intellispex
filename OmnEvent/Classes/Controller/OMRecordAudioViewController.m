@@ -55,6 +55,7 @@
         [postEventVC setCurObj:_curObj];
         [postEventVC setAudioData:recordedData];
         [postEventVC setPostOrder:_postOrder];
+        [postEventVC setThumbnailPostOrder:_thumbnailPostOrder];
         
         [self.navigationController pushViewController:postEventVC animated:YES];
     }

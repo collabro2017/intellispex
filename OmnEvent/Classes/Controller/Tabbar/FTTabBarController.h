@@ -69,7 +69,7 @@
 - (void)newPostAction:(int)_uploadOption mediaKind:(int)_captureOption currentObject:(PFObject *)_curObj postOrder:(int)_postOrder thumbnailPostOrder:(int)_thumbnailPostOrder;
 
 - (void)postAudio:(int)_uploadOption mediaKind:(int)_captureOption currentObject:(PFObject *)_curObj
-        audioData:(NSData *)_audioData postOrder:(int)_postOrder;
+        audioData:(NSData *)_audioData postOrder:(int)_postOrder thumbnailPostOrder:(int)_thumbnailPostOrder;
 
 - (void) setSelectedIndex:(int)index;
 

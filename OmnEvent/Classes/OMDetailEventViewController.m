@@ -1450,7 +1450,7 @@
             [TABController postAudio:kTypeUploadPost
                            mediaKind:kTypeCaptureAudio
                        currentObject:currentObject
-                           audioData:m_audioData postOrder:selectedPostOrder];
+                           audioData:m_audioData postOrder:selectedPostOrder  thumbnailPostOrder: [self getAddMediaAfterThumbnailPostOrder]];
             
         }
         else
@@ -2185,7 +2185,7 @@
                     [TABController postAudio:kTypeUploadPost
                                    mediaKind:kTypeCaptureAudio
                                currentObject:currentObject
-                                   audioData:m_audioData postOrder:selectedPostOrder];
+                                   audioData:m_audioData postOrder:selectedPostOrder thumbnailPostOrder: [self getAddMediaAfterThumbnailPostOrder]];
                     
                 }
                     break;
@@ -2541,7 +2541,7 @@
                 {
                     if ([currentObject[@"openStatus"] intValue]) {
                         [TABController postAudio:kTypeUploadPost mediaKind:kTypeCaptureAudio
-                                   currentObject:currentObject audioData:m_audioData postOrder:selectedPostOrder];
+                                   currentObject:currentObject audioData:m_audioData postOrder:selectedPostOrder  thumbnailPostOrder: [self getAddMediaAfterThumbnailPostOrder]];
                     } else {
                         [OMGlobal showAlertTips:@"Oops!" title:@"This event was closed."];
                     }
