@@ -261,7 +261,15 @@ static const CGFloat kFooterHeight = 60.0;
         [selectedAssetsArray addObject:asset.asset];
     }
     
-    [(ZCImagePickerController *)self.navigationController selectedAssets:selectedAssetsArray];
+    if (selectedAssetsArray != nil && selectedAssetsArray.count > 0) {
+    
+        [(ZCImagePickerController *)self.navigationController selectedAssets:selectedAssetsArray];
+    }
+    else{
+        UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:@"Image Not Selected!" message:@"You have not selected any image, please select image." delegate:nil cancelButtonTitle:NSLocalizedStringFromTable(@"OK", LOCALIZED_STRING_TABLE, nil) otherButtonTitles:nil];
+        [errorView show];
+    }
+    
 }
 
 - (void)updateNavigationBarStatus {
