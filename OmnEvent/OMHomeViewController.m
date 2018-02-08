@@ -41,6 +41,8 @@
     NSMutableArray *arrForComments;
     NSMutableArray *arrForPosts;
     NSMutableArray *arrForFirstArray;
+    NSMutableArray *notificationsEvents;
+    
     NSUInteger process_number;
     BOOL  progressAVDisplayed;
     
@@ -137,6 +139,7 @@
     arrForComments = [NSMutableArray array];
     arrCurrentTagedFriends = [NSMutableArray array];
     arrForPosts = [NSMutableArray array];
+    notificationsEvents = [NSMutableArray array];
     
     UIBarButtonItem *switchIcon = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"btn-list"] style:UIBarButtonItemStylePlain target:self action:@selector(changeMode:)];
     self.navigationItem.leftBarButtonItem = switchIcon;
@@ -453,6 +456,7 @@
         return;
     }
     
+    [notificationsEvents removeAllObjects];
     int notificationCount = 0;
     for( OMSocialEvent *eventObj in arrForFirstArray)
     {
@@ -472,6 +476,11 @@
                                 if ([user isEqualToString:currentUser.objectId]) {
                                     postBadgeCount++;
                                     NSLog(@"---found badge count----%i",(int) postBadgeCount);
+                                    
+                                    if (![notificationsEvents containsObject:eventObj]) {
+                                        [notificationsEvents addObject:eventObj];
+                                    }
+                                    
                                 }
                             }
                         }
@@ -500,6 +509,8 @@
         }
     }
     [self setBadgeCounter:notificationCount];
+    [self setAllEventsNotificationsDatasource:notificationsEvents];
+    
     [[GlobalVar getInstance].gArrEventList removeAllObjects];
     [GlobalVar getInstance].gArrEventList = [arrForFeed mutableCopy];
     

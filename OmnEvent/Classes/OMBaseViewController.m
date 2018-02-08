@@ -8,6 +8,7 @@
 
 #import "OMBaseViewController.h"
 #import "BBBadgeBarButtonItem.h"
+#import "OMAllEventsNotificationsViewController.h"
 
 
 #define kNavBarAttributes [NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorWithRed:255./255.0 green:255./255.0 blue:255./255.0 alpha:1.0], NSForegroundColorAttributeName,[UIFont fontWithName:@"Gibson" size:15], NSFontAttributeName, [NSNumber numberWithFloat:2.0],NSKernAttributeName,nil]
@@ -18,6 +19,7 @@
     
     BBBadgeBarButtonItem *btnForInvite;
     BBBadgeBarButtonItem *barButton;
+    NSMutableArray *allEventsNotificationsDatasource;
 }
 
 @end
@@ -145,11 +147,17 @@
 
 - (void)showMessageView
 {
-    PFInstallation *currentIns = [PFInstallation currentInstallation];
+    /*PFInstallation *currentIns = [PFInstallation currentInstallation];
     
     [currentIns setBadge:0];
     
     [currentIns saveInBackground];
+     */
+    
+    
+    OMAllEventsNotificationsViewController *allEventsNVC = [self.storyboard instantiateViewControllerWithIdentifier:@"OMAllEventsNotificationsViewController"];
+    allEventsNVC.allEventsNotificationsDatasource = [[NSMutableArray alloc] initWithArray:allEventsNotificationsDatasource];
+    [self.navigationController pushViewController:allEventsNVC animated:YES];
 }
 
 - (void)newEventPostAction
@@ -256,6 +264,11 @@
 
 - (void)setBadgeCounter:(int)count {
     barButton.badgeValue = [NSString stringWithFormat:@"%i", count];
+}
+
+- (void)setAllEventsNotificationsDatasource:(NSArray *) aenDatasource
+{
+    allEventsNotificationsDatasource = [[NSMutableArray alloc] initWithArray:aenDatasource];
 }
 
 #pragma mark

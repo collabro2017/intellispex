@@ -24,4 +24,6 @@
 
 - (void)setBadgeCounter:(int)count;
 
+- (void)setAllEventsNotificationsDatasource:(NSArray *) datasource;
+
 @end

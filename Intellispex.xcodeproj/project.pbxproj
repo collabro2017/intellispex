@@ -13,6 +13,8 @@
 		0AB04E901B81613100A308ED /* OMFolderListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB04E8F1B81613100A308ED /* OMFolderListCell.m */; };
 		1F39C80C1B3A898000FA9FCE /* ParseFacebookUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F39C80B1B3A898000FA9FCE /* ParseFacebookUtils.framework */; };
 		1F39C80E1B3ADA8B00FA9FCE /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F39C80D1B3ADA8B00FA9FCE /* FacebookSDK.framework */; };
+		3103DCFF202C686F0076E4CB /* OMAllEventsNotificationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3103DCFE202C686F0076E4CB /* OMAllEventsNotificationsViewController.m */; };
+		3103DD02202C69B50076E4CB /* OMAllEventsNotificationsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3103DD01202C69B50076E4CB /* OMAllEventsNotificationsTableViewCell.m */; };
 		317C302A1FD0019600D9FA36 /* OMUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 317C30291FD0019600D9FA36 /* OMUtilities.m */; };
 		3C0283AD198929EC00EA3864 /* OMEventCells.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C0283AC198929EC00EA3864 /* OMEventCells.xib */; };
 		3C0283BA198960D800EA3864 /* OMEventCells.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C0283B9198960D800EA3864 /* OMEventCells.m */; };
@@ -638,6 +640,10 @@
 		0AB04E8F1B81613100A308ED /* OMFolderListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMFolderListCell.m; sourceTree = "<group>"; };
 		1F39C80B1B3A898000FA9FCE /* ParseFacebookUtils.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseFacebookUtils.framework; sourceTree = "<group>"; };
 		1F39C80D1B3ADA8B00FA9FCE /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
+		3103DCFD202C686F0076E4CB /* OMAllEventsNotificationsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OMAllEventsNotificationsViewController.h; sourceTree = "<group>"; };
+		3103DCFE202C686F0076E4CB /* OMAllEventsNotificationsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OMAllEventsNotificationsViewController.m; sourceTree = "<group>"; };
+		3103DD00202C69B50076E4CB /* OMAllEventsNotificationsTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OMAllEventsNotificationsTableViewCell.h; sourceTree = "<group>"; };
+		3103DD01202C69B50076E4CB /* OMAllEventsNotificationsTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OMAllEventsNotificationsTableViewCell.m; sourceTree = "<group>"; };
 		317C30281FD0019600D9FA36 /* OMUtilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OMUtilities.h; sourceTree = "<group>"; };
 		317C30291FD0019600D9FA36 /* OMUtilities.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OMUtilities.m; sourceTree = "<group>"; };
 		3C0283AC198929EC00EA3864 /* OMEventCells.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OMEventCells.xib; sourceTree = "<group>"; };
@@ -1674,6 +1680,8 @@
 				0A22E8B81B834D8A00DD6638 /* OMTagFolderViewController.m */,
 				B484A91A1DEC611500C14D35 /* OMEventNotiViewController.h */,
 				B484A91B1DEC611500C14D35 /* OMEventNotiViewController.m */,
+				3103DCFD202C686F0076E4CB /* OMAllEventsNotificationsViewController.h */,
+				3103DCFE202C686F0076E4CB /* OMAllEventsNotificationsViewController.m */,
 			);
 			name = HomeGroup;
 			sourceTree = "<group>";
@@ -2384,6 +2392,8 @@
 				3E6F5CFF1ACA9393002ABFED /* OMEditPasswordCell.m */,
 				3E6F5D011ACA93A9002ABFED /* OMEditLocationCell.h */,
 				3E6F5D021ACA93A9002ABFED /* OMEditLocationCell.m */,
+				3103DD00202C69B50076E4CB /* OMAllEventsNotificationsTableViewCell.h */,
+				3103DD01202C69B50076E4CB /* OMAllEventsNotificationsTableViewCell.m */,
 			);
 			name = Cell;
 			sourceTree = "<group>";
@@ -3034,7 +3044,7 @@
 				TargetAttributes = {
 					3C5E7E7E197628DF000550F6 = {
 						DevelopmentTeam = 6M75VL4633;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.Push = {
 								enabled = 1;
@@ -3558,6 +3568,7 @@
 				3E5611CB1AC49EAE00505444 /* OMProfileBioCell.m in Sources */,
 				3EB298AB1ACDD83400528552 /* OMMediaCell.m in Sources */,
 				B40B56971DE6EB570016E121 /* CLImageToolInfo.m in Sources */,
+				3103DD02202C69B50076E4CB /* OMAllEventsNotificationsTableViewCell.m in Sources */,
 				B45ED2391DD4458000664B78 /* UIColor+Tweak.m in Sources */,
 				B40B56BE1DE6EB570016E121 /* UIImage+Utility.m in Sources */,
 				3C4D1F3A1987A298001622B7 /* SlideNavigationContorllerAnimatorFade.m in Sources */,
@@ -3699,6 +3710,7 @@
 				3C1284471978C90500EB7744 /* OMEventCell.m in Sources */,
 				3EB718DA1ABF4FF70050E2D2 /* OMFeedControlCell.m in Sources */,
 				3C0A5C461978FB5B009AEC85 /* OMSocialUser.m in Sources */,
+				3103DCFF202C686F0076E4CB /* OMAllEventsNotificationsViewController.m in Sources */,
 				B40B569B1DE6EB570016E121 /* CLDrawTool.m in Sources */,
 				B4FBBA271CCE723200BFDAD8 /* OMFeedOtherCommentCell.m in Sources */,
 				3C1284511978D82B00EB7744 /* MHTextField.m in Sources */,
@@ -3893,8 +3905,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.collabro.intellispex;
 				PRODUCT_NAME = Intellispex;
-				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE = "67c46fac-7bdc-4ad4-922d-b34681642482";
+				PROVISIONING_PROFILE_SPECIFIER = "Intellispex development";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3910,7 +3922,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				COMPRESS_PNG_FILES = YES;
-				DEVELOPMENT_TEAM = 6M75VL4633;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
