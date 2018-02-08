@@ -85,6 +85,7 @@
 #define  kLoadEventData         @"loadEventData"
 #define  kLoadCurrentEventData  @"loadCurrentEventData"
 #define  kLoadCurrentPhotoData  @"loadCurrentPhotoData"
+#define  kLoadFeedDataAfterLogin @"loadFeedDataAfterLogin"
 
 #define  kExportCancel          @"exportCancel"
 

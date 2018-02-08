@@ -235,7 +235,7 @@
 
                         [OMGlobal setLogInUserDefault];
                         
-                        [[NSNotificationCenter defaultCenter] postNotificationName:kLoadFeedData object:nil];
+                        [[NSNotificationCenter defaultCenter] postNotificationName:kLoadFeedDataAfterLogin object:nil];
                         
                         if ([APP_DELEGATE logOut]) {
                             

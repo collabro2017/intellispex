@@ -62,34 +62,58 @@
 @synthesize arrForFeed,dic;
 
 - (void)reload:(__unused id)sender {
-    [(UIRefreshControl*)sender beginRefreshing];
-    
-    PFQuery *mainQuery = [self loadFeedDataQuery];
-    currentPageIndex = 0;
-    
-    [mainQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        [(UIRefreshControl*)sender endRefreshing];
-        if (error == nil)
-        {
-            if([arrForFeed count] != 0) [arrForFeed removeAllObjects];
-            for (PFObject *obj in objects) {
-                OMSocialEvent * socialtempObj = (OMSocialEvent*) obj;
-                PFUser *user = socialtempObj[@"user"];
-                
-                // Filtering Event: Own Events or User's Events including me in TagFriends
-                if ([socialtempObj[@"TagFriends"] containsObject:USER.objectId] || [user.objectId isEqualToString:USER.objectId])
-                {
-                    if (user != nil && user.username != nil) {
-                        [arrForFeed addObject:socialtempObj];
-                    }
-                }
+    [self fetchFreshData:sender];
+}
+
+- (void)fetchFreshData:(id) sender
+{
+    if ([GlobalVar getInstance].isEventLoading == NO) {
+        
+        [GlobalVar getInstance].isEventLoading = YES;
+        
+        if (sender != nil && [sender isKindOfClass:[UIRefreshControl class]]) {
+            [(UIRefreshControl*)sender beginRefreshing];
+        }
+        
+        PFQuery *mainQuery = [self loadFeedDataQuery];
+        currentPageIndex = 0;
+        
+        [mainQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            
+            if (sender != nil && [sender isKindOfClass:[UIRefreshControl class]]) {
+                [(UIRefreshControl*)sender endRefreshing];
             }
             
-            arrForFirstArray = [arrForFeed copy];
-            [arrForFeed removeAllObjects];
-            [self estimateBadgeCount1];
+            
+            if (error == nil)
+            {
+                if([arrForFeed count] != 0) [arrForFeed removeAllObjects];
+                for (PFObject *obj in objects) {
+                    OMSocialEvent * socialtempObj = (OMSocialEvent*) obj;
+                    PFUser *user = socialtempObj[@"user"];
+                    
+                    // Filtering Event: Own Events or User's Events including me in TagFriends
+                    if ([socialtempObj[@"TagFriends"] containsObject:USER.objectId] || [user.objectId isEqualToString:USER.objectId])
+                    {
+                        if (user != nil && user.username != nil) {
+                            [arrForFeed addObject:socialtempObj];
+                        }
+                    }
+                }
+                
+                arrForFirstArray = [arrForFeed copy];
+                [arrForFeed removeAllObjects];
+                [self estimateBadgeCount1];
+            }
+            
+            [GlobalVar getInstance].isEventLoading = NO;
+        }];
+    }
+    else{
+        if (sender != nil && [sender isKindOfClass:[UIRefreshControl class]]) {
+            [(UIRefreshControl*)sender endRefreshing];
         }
-    }];
+    }
 }
 
 - (void)viewDidLoad {
@@ -129,6 +153,8 @@
     [tableViewForFeeds addSubview:self.refreshControl2];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadFeedData) name:kLoadFeedData object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadFeedDataAfterLogin) name:kLoadFeedDataAfterLogin object:nil];
+    
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadFeedData) name:kLoadComponentsData object:nil];
     
@@ -178,8 +204,7 @@
     }
     else
     {
-        if (is_grid) [collectionViewForFeed reloadData];
-        else [tableViewForFeeds reloadData];
+        [self refreshView];
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         return;
     }
@@ -200,8 +225,8 @@
                 OMSocialEvent * socialtempObj = (OMSocialEvent*) obj;
                 [arrForFeed addObject:socialtempObj];
             }
-            if (is_grid) [collectionViewForFeed reloadData];
-            else [tableViewForFeeds reloadData];
+            
+            [self refreshView];
         }
     }];
 }
@@ -272,8 +297,7 @@
     [arrForFeed removeAllObjects];
     arrForFeed = [[GlobalVar getInstance].gArrEventList mutableCopy];
     
-    if (is_grid) [collectionViewForFeed reloadData];
-    else [tableViewForFeeds reloadData];
+    [self refreshView];
 }
 
 - (PFQuery *) loadFeedDataQuery
@@ -293,21 +317,38 @@
 
 - (void) fetchObjectsCountForPagination
 {
-    
-    PFQuery *mainQuery = [self loadFeedDataQuery];
-    
-    // Other query parameters assigned here...
-    [mainQuery countObjectsInBackgroundWithBlock:^(int count, NSError *error) {
-        // Do better error handling in your app...
-        NSLog(@"Object Counts : %d ", count);
-        recordCount = count;
-        pageCount   = count / recordsPerPage + 1;
+
+    if ([GlobalVar getInstance].isEventLoading == NO) {
+        PFQuery *mainQuery = [self loadFeedDataQuery];
         
-        currentPageIndex = 0;
-        
-        [self loadFeedDataForPageIndex:currentPageIndex countPerPage:recordsPerPage];
-        
-    }];
+        // Other query parameters assigned here...
+        [mainQuery countObjectsInBackgroundWithBlock:^(int count, NSError *error) {
+            // Do better error handling in your app...
+            NSLog(@"Object Counts : %d ", count);
+            recordCount = count;
+            pageCount   = count / recordsPerPage + 1;
+            
+            currentPageIndex = 0;
+            
+            [self loadFeedDataForPageIndex:currentPageIndex countPerPage:recordsPerPage];
+            
+        }];
+    }
+}
+
+- (void) refreshView
+{
+    if (is_grid){
+        [collectionViewForFeed reloadData];
+    }
+    else{
+        [tableViewForFeeds reloadData];
+    }
+}
+
+- (void) loadFeedDataAfterLogin
+{
+    [self fetchFreshData:nil];
 }
 
 - (void) loadFeedData
@@ -339,14 +380,12 @@
     [mainQuery setLimit:count];
     [mainQuery setSkip:pageIndex * count];
     
-    NSLog(@"Timestamp Before Sending Request on server : %@ ", [NSDate date]);
+    
     [mainQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
     
-        NSLog(@"Timestamp After getting response from server : %@ ", [NSDate date]);
         if(progressAVDisplayed == true) {
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         }
-        [GlobalVar getInstance].isEventLoading = NO;
         
         if (error == nil)
         {
@@ -354,6 +393,8 @@
                 NSLog(@"No Data: %@", [mainQuery parseClassName]);
                 return;
             }
+            
+            NSLog(@"Object Count: %ld", objects.count);
             
             //if([arrForFeed count] != 0) [arrForFeed removeAllObjects];
             for (PFObject *obj in objects) {
@@ -365,12 +406,18 @@
                 // Filtering Event: Own Events or User's Events including me in TagFriends
                 if([user.objectId isEqualToString:USER.objectId] )
                 {
-                    [arrForFeed addObject:socialtempObj];
+                    if (![arrForFeed containsObject:socialtempObj]) {
+                        [arrForFeed addObject:socialtempObj];
+                    }
+                    
                 }
                 else if ([socialtempObj[@"TagFriends"] containsObject:USER.objectId])
                 {
                     if (user != nil && user.username != nil) {
-                        [arrForFeed addObject:socialtempObj];
+                        
+                        if (![arrForFeed containsObject:socialtempObj]) {
+                            [arrForFeed addObject:socialtempObj];
+                        }
                     }
                     else
                     {
@@ -384,6 +431,8 @@
             [arrForFeed removeAllObjects];
             [self estimateBadgeCount1];
         }
+        
+        [GlobalVar getInstance].isEventLoading = NO;
     }];
 }
 
@@ -399,8 +448,7 @@
 {
     if ([arrForFirstArray count] == 0 || arrForFirstArray == nil)
     {
-        if (is_grid) [collectionViewForFeed reloadData];
-        else [tableViewForFeeds reloadData];
+        [self refreshView];
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         return;
     }
@@ -409,7 +457,7 @@
     for( OMSocialEvent *eventObj in arrForFirstArray)
     {
         NSInteger postBadgeCount = 0;
-       
+        
         if(eventObj[@"postedObjects"] != nil && [eventObj[@"postedObjects"] count] > 0)
         {
                 for (PFObject *postObj in eventObj[@"postedObjects"])
@@ -439,7 +487,7 @@
         eventObj.badgeCount = postBadgeCount;
         if(eventObj[@"eventBadgeFlag"] != nil && [eventObj[@"eventBadgeFlag"] count] > 0)
         {
-            if ([eventObj[@"eventBadgeFlag"] containsObject:currentUser])
+            if ([eventObj[@"eventBadgeFlag"] containsObject:currentUser.objectId])
             {
                      eventObj.badgeNewEvent = 1;
             }
@@ -455,12 +503,10 @@
     [[GlobalVar getInstance].gArrEventList removeAllObjects];
     [GlobalVar getInstance].gArrEventList = [arrForFeed mutableCopy];
     
-    if (is_grid) [collectionViewForFeed reloadData];
-    else [tableViewForFeeds reloadData];
+    [self refreshView];
    
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        if (is_grid) [collectionViewForFeed reloadData];
-        else [tableViewForFeeds reloadData];
+        [self refreshView];
     });
 }
 
@@ -469,8 +515,7 @@
 {
     if ([arrForFirstArray count] == 0 || [arrForFirstArray firstObject] == nil)
     {
-        if (is_grid) [collectionViewForFeed reloadData];
-        else [tableViewForFeeds reloadData];
+        [self refreshView];
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         return;
     }
@@ -537,8 +582,7 @@
             
         if([arrForFeed count] % 6 == 0)
         {
-            if (is_grid) [collectionViewForFeed reloadData];
-            else [tableViewForFeeds reloadData];
+            [self refreshView];
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         }
             
@@ -553,8 +597,7 @@
             [[NSUserDefaults standardUserDefaults] setObject:lastUpdatedate forKey:@"lastUpdateLocalDatastore"];
             [[NSUserDefaults standardUserDefaults] synchronize];
                 
-            if (is_grid) [collectionViewForFeed reloadData];
-            else [tableViewForFeeds reloadData];
+            [self refreshView];
         }
     }];
     
@@ -716,8 +759,11 @@
     if (row + 1 == arrForFeed.count) {
         
         if(currentPageIndex + 1 < pageCount) {
-            currentPageIndex = currentPageIndex + 1;
-            [self loadFeedDataForPageIndex:currentPageIndex countPerPage:recordsPerPage];
+            
+            if ([GlobalVar getInstance].isEventLoading == NO) {
+                currentPageIndex = currentPageIndex + 1;
+                [self loadFeedDataForPageIndex:currentPageIndex countPerPage:recordsPerPage];
+            }
         }
     }
     
@@ -822,8 +868,11 @@
     if (row + 1 == arrForFeed.count) {
         
         if(currentPageIndex + 1 < pageCount) {
-            currentPageIndex = currentPageIndex + 1;
-            [self loadFeedDataForPageIndex:currentPageIndex countPerPage:recordsPerPage];
+            
+            if ([GlobalVar getInstance].isEventLoading == NO) {
+                currentPageIndex = currentPageIndex + 1;
+                [self loadFeedDataForPageIndex:currentPageIndex countPerPage:recordsPerPage];
+            }
         }
     }
 }
