@@ -640,10 +640,12 @@
     
     [PDFRenderer drawText:[NSString stringWithFormat:@"%d",likeCount] inFrame:CGRectMake(57 * rScale, 317 * rScale, 46 * rScale, 30 * rScale) fontName:@"Roboto-Medium" fontSize:15 * rScale fontColor:[UIColor whiteColor]];
     
-    if (currentObject[@"commenters"])
-    [PDFRenderer drawText:[NSString stringWithFormat:@"%lu",(unsigned long) [currentObject[@"commenters"] count]] inFrame:CGRectMake(149 * rScale, 317 * rScale, 46 * rScale, 30 * rScale) fontName:@"Roboto-Medium" fontSize:15 * rScale  fontColor:[UIColor whiteColor]];
-    else
-    [PDFRenderer drawText:[NSString stringWithFormat:@"0"] inFrame:CGRectMake(144 * rScale, 317 * rScale, 46 * rScale, 30 * rScale) fontName:@"Roboto-Medium" fontSize:15 * rScale fontColor:[UIColor whiteColor]];
+    if (currentObject[@"commentsArray"]){
+        [PDFRenderer drawText:[NSString stringWithFormat:@"%lu",(unsigned long) [currentObject[@"commentsArray"] count]] inFrame:CGRectMake(149 * rScale, 317 * rScale, 46 * rScale, 30 * rScale) fontName:@"Roboto-Medium" fontSize:15 * rScale  fontColor:[UIColor whiteColor]];
+    }
+    else{
+        [PDFRenderer drawText:[NSString stringWithFormat:@"0"] inFrame:CGRectMake(144 * rScale, 317 * rScale, 46 * rScale, 30 * rScale) fontName:@"Roboto-Medium" fontSize:15 * rScale fontColor:[UIColor whiteColor]];
+    }
     
     int nLblDescW = 250;
     int nLblDescH = [OMGlobal getBoundingOfString:currentObject[@"description"] width:nLblDescW].height;

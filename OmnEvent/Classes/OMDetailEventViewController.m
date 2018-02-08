@@ -475,6 +475,9 @@
     if(tempArray.count > 0) {
         [self populateFeedWith:tempArray];
     }
+    else{
+        [self loadMissingEventComments];
+    }
 }
 
 - (void)loadContentsFromLocalStorage:(NSMutableArray *) arrayOfObjects {
@@ -628,9 +631,9 @@
                 [arrForDetail removeAllObjects];
                 [arrForDetail addObjectsFromArray:tempArray];
                 
-                if(eventComments != nil && eventComments.count > 0) {
+                /*if(eventComments != nil && eventComments.count > 0) {
                     currentObject[@"commentsArray"] = eventComments;
-                }
+                }*/
                 
                 currentObject[@"postedObjects"] = arrForDetail;
                 
@@ -785,27 +788,31 @@
 
 - (void) loadMissingEventComments
 {
-    //dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        PFQuery *query = [PFQuery queryWithClassName:@"EventComment"];
-        [query whereKey:@"targetEvent" equalTo:currentObject];
-        [query includeKey:@"Commenter"];
-        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-             if ([objects count] == 0 || !objects) {
-                return;
-            }
-            
-            if(eventComments == nil) {
-                eventComments = [[NSMutableArray alloc] init];
+    PFQuery *query = [PFQuery queryWithClassName:@"EventComment"];
+    [query whereKey:@"targetEvent" equalTo:currentObject];
+    [query includeKey:@"Commenter"];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if ([objects count] == 0 || !objects) {
+            return;
+        }
+        
+        if(eventComments == nil) {
+            eventComments = [[NSMutableArray alloc] init];
+            [eventComments addObjectsFromArray:objects];
+        }
+        else{
+            if(objects.count > eventComments.count) {
+                [eventComments removeAllObjects];
                 [eventComments addObjectsFromArray:objects];
             }
-            else{
-                if(objects.count > eventComments.count) {
-                    [eventComments removeAllObjects];
-                    [eventComments addObjectsFromArray:objects];
-                }
-            }
-        }];
-    //});
+        }
+        
+        if(eventComments != nil && eventComments.count > 0) {
+            currentObject[@"commentsArray"] = eventComments;
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+            [tblForDetailList reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        }
+    }];
 }
 
 - (void) registerForNetworkNotifications

@@ -215,7 +215,7 @@
                     }
                 }
                 
-                if (commentTextView.editable) {
+                //if (commentTextView.editable) {
                     
                     PFQuery *query = [PFQuery queryWithClassName:@"EventComment"];
                     [query whereKey:@"targetEvent" equalTo:currentObj];
@@ -264,7 +264,7 @@
                             }
                         }];
                     }];
-                }
+                //}
                 
             } else {
                 commentTextView.editable = YES;
@@ -612,7 +612,6 @@
         
     }];
 }
-
 
 - (void)textViewDidBeginEditing:(UITextView *)textView {
     if (textView == commentTextView)
