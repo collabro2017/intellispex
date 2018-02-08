@@ -156,7 +156,8 @@
     PFQuery *subQuery2 = [PFQuery queryWithClassName:kClassEvent];
     [subQuery2 whereKey:@"deletedAt" equalTo:@""];
     
-    PFQuery *query = [PFQuery orQueryWithSubqueries:@[eventQuery, eventQueryCapitalized, eventQueryLowerCase, descriptionQuery, descriptionQueryCapitalized, descriptionQueryLowerCase, subQuery1, subQuery2]];
+    PFQuery *query = [PFQuery orQueryWithSubqueries:@[eventQuery, eventQueryCapitalized, eventQueryLowerCase, descriptionQuery, descriptionQueryCapitalized, descriptionQueryLowerCase]];
+    
     [query orderByDescending:@"createdAt"];
     [query includeKey:@"user"];
 
