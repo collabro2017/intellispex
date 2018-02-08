@@ -265,6 +265,7 @@
     (int)[arrForFeed count],(int)[[GlobalVar getInstance].gArrEventList count]);
     
     if (arrForFeed.count > 0) {
+        [notificationsEvents removeAllObjects];
         int notificationsCount = 0;
         for (OMSocialEvent *event in arrForFeed) {
             if (event.badgeCount > 0) {
@@ -272,6 +273,7 @@
             }
         }
         [self setBadgeCounter:notificationsCount];
+        [self setAllEventsNotificationsDatasource:notificationsEvents];
     }
 }
 

@@ -8,6 +8,7 @@
 
 #import "OMAllEventsNotificationsViewController.h"
 #import "OMAllEventsNotificationsTableViewCell.h"
+#import "OMDetailEventViewController.h"
 
 @interface OMAllEventsNotificationsViewController ()
 
@@ -30,6 +31,8 @@
     [super viewWillAppear:animated];
     
     self.title = @"All Events Notifications";
+    
+    [self.allEventsNotificationsTableView reloadData];
 }
 
 #pragma mark  UITableViewDataSource
@@ -54,6 +57,41 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    OMDetailEventViewController *detailEventVC = [self.storyboard instantiateViewControllerWithIdentifier:@"DetailEventVC"];
+    OMSocialEvent *event = [self.allEventsNotificationsDatasource objectAtIndex:indexPath.item];
+    
+    if (event != nil) {
+        
+        NSString *lastLoadTime_Key = [NSString stringWithFormat:@"%@-lastLoadTime", event.objectId];
+        NSDate* lastLoadTime = [NSDate date];
+        
+        [[NSUserDefaults standardUserDefaults] setObject:lastLoadTime forKey:lastLoadTime_Key];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        
+        event.loadTimeAt = lastLoadTime;
+        if(event.badgeNewEvent >= 1) event.badgeNewEvent = 0;
+        if(event.badgeNotifier >= 1) event.badgeNotifier = 0;
+        
+        PFUser *currentUser = [PFUser currentUser];
+        
+        // Event Badge processing...
+        if([event[@"eventBadgeFlag"] containsObject:currentUser.objectId])
+        {
+            [event removeObject:currentUser.objectId forKey:@"eventBadgeFlag"];
+            [event saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                if(error == nil) NSLog(@"DetailEventVC: Event Badge remove when open Detail view...");
+            }];
+        }
+        
+        [self.allEventsNotificationsDatasource replaceObjectAtIndex:indexPath.item withObject:event];
+        [self.allEventsNotificationsTableView reloadData];
+        
+        
+        [detailEventVC setCurrentObject:event];
+        [self.navigationController pushViewController:detailEventVC animated:YES];
+        
+    }
     
 }
 
