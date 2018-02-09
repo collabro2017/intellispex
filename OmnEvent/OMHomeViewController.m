@@ -270,6 +270,9 @@
         for (OMSocialEvent *event in arrForFeed) {
             if (event.badgeCount > 0) {
                 notificationsCount++;
+                if (![notificationsEvents containsObject:event]) {
+                    [notificationsEvents addObject:event];
+                }
             }
         }
         [self setBadgeCounter:notificationsCount];
