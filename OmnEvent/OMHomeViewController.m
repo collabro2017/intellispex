@@ -673,6 +673,17 @@
     [tableViewForFeeds reloadData];
 }
 
+- (BOOL) hasDataFor:(NSIndexPath *) indexPath
+{
+    BOOL blnResult = FALSE;
+    
+    if (indexPath.row < [arrForFeed count]) {
+        blnResult = TRUE;
+    }
+    
+    return blnResult;
+}
+
 #pragma mark - Tag List
 - (void)selectedCells:(OMTagListViewController *)tagVC didFinished:(NSMutableArray *)_dict {
     [tagVC.navigationController dismissViewControllerAnimated:YES completion:^{
@@ -701,11 +712,15 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    OMSocialEvent *obj = (OMSocialEvent *)[arrForFeed objectAtIndex:indexPath.row];
+    
     
     OMSearchCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kSearchCell forIndexPath:indexPath];
     [cell setDelegate:self];
-    [cell setCurrentObj:obj];
+    
+    if ([self hasDataFor:indexPath]) {
+        OMSocialEvent *obj = (OMSocialEvent *)[arrForFeed objectAtIndex:indexPath.row];
+        [cell setCurrentObj:obj];
+    }
     
     return cell;
 }
@@ -717,43 +732,45 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    OMDetailEventViewController *detailEventVC = [self.storyboard instantiateViewControllerWithIdentifier:@"DetailEventVC"];
-    OMSocialEvent *event = [arrForFeed objectAtIndex:indexPath.item];
-    
-    if (event != nil) {
+    if ([self hasDataFor:indexPath]) {
+        OMDetailEventViewController *detailEventVC = [self.storyboard instantiateViewControllerWithIdentifier:@"DetailEventVC"];
+        OMSocialEvent *event = [arrForFeed objectAtIndex:indexPath.item];
         
-        NSString *lastLoadTime_Key = [NSString stringWithFormat:@"%@-lastLoadTime", event.objectId];
-        NSDate* lastLoadTime = [NSDate date];
-        
-        [[NSUserDefaults standardUserDefaults] setObject:lastLoadTime forKey:lastLoadTime_Key];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        
-        
-        event.loadTimeAt = lastLoadTime;
-        if(event.badgeNewEvent >= 1) event.badgeNewEvent = 0;
-        if(event.badgeNotifier >= 1) event.badgeNotifier = 0;
-        
-        // Event Badge processing...
-        if([event[@"eventBadgeFlag"] containsObject:currentUser.objectId])
-        {
-            [event removeObject:currentUser.objectId forKey:@"eventBadgeFlag"];
-            [event saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-                if(error == nil) NSLog(@"DetailEventVC: Event Badge remove when open Detail view...");
-            }];
+        if (event != nil) {
+            
+            NSString *lastLoadTime_Key = [NSString stringWithFormat:@"%@-lastLoadTime", event.objectId];
+            NSDate* lastLoadTime = [NSDate date];
+            
+            [[NSUserDefaults standardUserDefaults] setObject:lastLoadTime forKey:lastLoadTime_Key];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            
+            
+            event.loadTimeAt = lastLoadTime;
+            if(event.badgeNewEvent >= 1) event.badgeNewEvent = 0;
+            if(event.badgeNotifier >= 1) event.badgeNotifier = 0;
+            
+            // Event Badge processing...
+            if([event[@"eventBadgeFlag"] containsObject:currentUser.objectId])
+            {
+                [event removeObject:currentUser.objectId forKey:@"eventBadgeFlag"];
+                [event saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                    if(error == nil) NSLog(@"DetailEventVC: Event Badge remove when open Detail view...");
+                }];
+            }
+            
+            [arrForFeed replaceObjectAtIndex:indexPath.item withObject:event];
+            [collectionViewForFeed reloadData];
+            
+            [[GlobalVar getInstance].gArrEventList removeAllObjects];
+            [GlobalVar getInstance].gArrEventList = [arrForFeed mutableCopy];
+            
+            [GlobalVar getInstance].gEventIndex = indexPath.item;
+            
+            
+            [detailEventVC setCurrentObject:event];
+            [self.navigationController pushViewController:detailEventVC animated:YES];
+            
         }
-        
-        [arrForFeed replaceObjectAtIndex:indexPath.item withObject:event];
-        [collectionViewForFeed reloadData];
-        
-        [[GlobalVar getInstance].gArrEventList removeAllObjects];
-        [GlobalVar getInstance].gArrEventList = [arrForFeed mutableCopy];
-        
-        [GlobalVar getInstance].gEventIndex = indexPath.item;
-        
-                
-        [detailEventVC setCurrentObject:event];
-        [self.navigationController pushViewController:detailEventVC animated:YES];
-        
     }
 }
 
@@ -827,53 +844,67 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     OMEventFeedCell *cell = [tableView dequeueReusableCellWithIdentifier:@"HomeCell"];
-    PFObject *obj = [arrForFeed objectAtIndex:indexPath.row];
-    cell.currentObj = obj;
+    
+    if ([self hasDataFor:indexPath]) {
+    
+        PFObject *obj = [arrForFeed objectAtIndex:indexPath.row];
+        cell.currentObj = obj;
+    }
+    
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    PFObject *obj = [arrForFeed objectAtIndex:indexPath.row];
-    return [OMGlobal heightForCellWithPost:obj[@"eventname"]] + 66.0f;
+    
+    CGFloat rowHeight = 66.0f;
+    
+    if ([self hasDataFor:indexPath]) {
+        PFObject *obj = [arrForFeed objectAtIndex:indexPath.row];
+        rowHeight = [OMGlobal heightForCellWithPost:obj[@"eventname"]] + 66.0f;
+    }
+
+    return rowHeight;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    OMDetailEventViewController *detailEventVC = [self.storyboard instantiateViewControllerWithIdentifier:@"DetailEventVC"];
-    OMSocialEvent *event = [arrForFeed objectAtIndex:indexPath.item];
-    
-    if (event != nil) {
+    if ([self hasDataFor:indexPath]) {
+        OMDetailEventViewController *detailEventVC = [self.storyboard instantiateViewControllerWithIdentifier:@"DetailEventVC"];
+        OMSocialEvent *event = [arrForFeed objectAtIndex:indexPath.item];
         
-        NSString *lastLoadTime_Key = [NSString stringWithFormat:@"%@-lastLoadTime", event.objectId];
-        NSDate* lastLoadTime = [NSDate date];
-        
-        [[NSUserDefaults standardUserDefaults] setObject:lastLoadTime forKey:lastLoadTime_Key];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        
-        
-        event.loadTimeAt = lastLoadTime;
-        if(event.badgeNewEvent >= 1) event.badgeNewEvent = 0;
-        if(event.badgeNotifier >= 1) event.badgeNotifier = 0;
-        
-        // Event Badge processing...
-        if([event[@"eventBadgeFlag"] containsObject:currentUser.objectId])
-        {
-            [event removeObject:currentUser.objectId forKey:@"eventBadgeFlag"];
-            [event saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-                if(error == nil) NSLog(@"DetailEventVC: Event Badge remove when open Detail view...");
-            }];
+        if (event != nil) {
+            
+            NSString *lastLoadTime_Key = [NSString stringWithFormat:@"%@-lastLoadTime", event.objectId];
+            NSDate* lastLoadTime = [NSDate date];
+            
+            [[NSUserDefaults standardUserDefaults] setObject:lastLoadTime forKey:lastLoadTime_Key];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            
+            
+            event.loadTimeAt = lastLoadTime;
+            if(event.badgeNewEvent >= 1) event.badgeNewEvent = 0;
+            if(event.badgeNotifier >= 1) event.badgeNotifier = 0;
+            
+            // Event Badge processing...
+            if([event[@"eventBadgeFlag"] containsObject:currentUser.objectId])
+            {
+                [event removeObject:currentUser.objectId forKey:@"eventBadgeFlag"];
+                [event saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                    if(error == nil) NSLog(@"DetailEventVC: Event Badge remove when open Detail view...");
+                }];
+            }
+            
+            [arrForFeed replaceObjectAtIndex:indexPath.item withObject:event];
+            [collectionViewForFeed reloadData];
+            
+            [[GlobalVar getInstance].gArrEventList removeAllObjects];
+            [GlobalVar getInstance].gArrEventList = [arrForFeed mutableCopy];
+            
+            [GlobalVar getInstance].gEventIndex = indexPath.item;
+            
+            [detailEventVC setCurrentObject:event];
+            [self.navigationController pushViewController:detailEventVC animated:YES];
         }
-        
-        [arrForFeed replaceObjectAtIndex:indexPath.item withObject:event];
-        [collectionViewForFeed reloadData];
-        
-        [[GlobalVar getInstance].gArrEventList removeAllObjects];
-        [GlobalVar getInstance].gArrEventList = [arrForFeed mutableCopy];
-        
-        [GlobalVar getInstance].gEventIndex = indexPath.item;
-        
-        [detailEventVC setCurrentObject:event];
-        [self.navigationController pushViewController:detailEventVC animated:YES];
     }
 }
 
