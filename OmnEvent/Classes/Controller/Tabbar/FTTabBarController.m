@@ -81,7 +81,7 @@
 - (IBAction)showMessageAction:(id)sender {
 }
 
-- (void)newPostAction:(int)_uploadOption mediaKind:(int)_captureOption currentObject:(PFObject *)_curObj postOrder:(int)_postOrder thumbnailPostOrder:(int)_thumbnailPostOrder
+- (void)newPostAction:(int)_uploadOption mediaKind:(int)_captureOption currentObject:(PFObject *)_curObj postOrder:(int)_postOrder thumbnailPostOrder:(int)_thumbnailPostOrder sortFlag:(BOOL) sortFlag
 {
     if ((kTypeCapture)_captureOption == kTypeCaptureText) {
         
@@ -92,6 +92,7 @@
         [postEventVC setCurObj:_curObj];
         [postEventVC setPostOrder:_postOrder];
         [postEventVC setThumbnailPostOrder:_thumbnailPostOrder];
+        [postEventVC setSortActivitiesFlag:sortFlag];
         UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:postEventVC];
         
         [nav setNavigationBarHidden:NO animated:YES];
@@ -116,7 +117,7 @@
                 _tempThumbnailPostOrder = _thumbnailPostOrder;
                 _tempCaptureOption = _captureOption;
                 _tempUploadOption = _uploadOption;
-                
+                _tempSortActivitiesFlag = sortFlag;
                 
                 // In this case the device is an iPad.&& In this case the device is an iPhone/iPod Touch.
                 [actionSheet showInView:self.view];
@@ -129,6 +130,7 @@
                 [cameraVC setCaptureOption:(kTypeCapture)_captureOption];
                 [cameraVC setCurObj:_curObj];
                 [cameraVC setPostOrder:_postOrder];
+                [cameraVC setSortActivitiesFlag:sortFlag];
                 
                 UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:cameraVC];
                 
@@ -163,7 +165,7 @@
 }
 
 - (void)postAudio:(int)_uploadOption mediaKind:(int)_captureOption currentObject:(PFObject *)_curObj
-        audioData:(NSData *)_audioData postOrder:(int)_postOrder thumbnailPostOrder:(int)_thumbnailPostOrder
+        audioData:(NSData *)_audioData postOrder:(int)_postOrder thumbnailPostOrder:(int)_thumbnailPostOrder sortFlag:(BOOL) sortFlag
 {
         
     OMRecordAudioViewController *recordAudioVC = [self.storyboard instantiateViewControllerWithIdentifier:@"RecordAudioVC"];
@@ -173,6 +175,8 @@
     [recordAudioVC setAudioData:_audioData];
     [recordAudioVC setPostOrder:_postOrder];
     [recordAudioVC setThumbnailPostOrder:_thumbnailPostOrder];
+    [recordAudioVC setSortActivityFlag:sortFlag];
+    
     
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:recordAudioVC];
     [nav setNavigationBarHidden:NO animated:YES];
@@ -454,6 +458,7 @@
             [cameraVC setCurObj:_tempCurObj];
             [cameraVC setPostOrder:_tempPostOrder];
             [cameraVC setThumbnailPostOrder:_tempThumbnailPostOrder];
+            [cameraVC setSortActivitiesFlag:_tempSortActivitiesFlag];
             
             UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:cameraVC];
             
@@ -553,6 +558,7 @@
     [postEventVC setCurObj:_tempCurObj];
     [postEventVC setPostOrder:_tempPostOrder];
     [postEventVC setThumbnailPostOrder:_tempThumbnailPostOrder];
+    [postEventVC setSortActivitiesFlag:_tempSortActivitiesFlag];
     [postEventVC setImageArray:_imageArray];
     
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:postEventVC];

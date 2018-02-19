@@ -991,13 +991,14 @@
 - (IBAction)addContentsAction:(id)sender
 {
     selectedPostOrder = -1;
+    
     UIButton *button = (UIButton *)sender;
     if ([currentObject[@"openStatus"] intValue]) {
         switch (button.tag) {
             case 10:
             {
                 [TABController newPostAction:kTypeUploadPost mediaKind:kTypeCapturePhoto currentObject:currentObject
-                                       postOrder:selectedPostOrder thumbnailPostOrder:-1];
+                                       postOrder:selectedPostOrder thumbnailPostOrder:-1 sortFlag:isActionSheetReverseSelected];
             }
                 break;
             case 11:
@@ -1017,13 +1018,13 @@
             case 12:
             {
                 [TABController newPostAction:kTypeUploadPost mediaKind:kTypeCaptureVideo currentObject:currentObject
-                                   postOrder:selectedPostOrder thumbnailPostOrder:-1];
+                                   postOrder:selectedPostOrder thumbnailPostOrder:-1 sortFlag:isActionSheetReverseSelected];
             }
                 break;
             case 13:
             {
                 [TABController newPostAction:kTypeUploadPost mediaKind:kTypeCaptureText currentObject:currentObject
-                                   postOrder:selectedPostOrder thumbnailPostOrder:-1];
+                                   postOrder:selectedPostOrder thumbnailPostOrder:-1 sortFlag:isActionSheetReverseSelected];
             }
                 break;
             default:
@@ -1457,7 +1458,7 @@
             [TABController postAudio:kTypeUploadPost
                            mediaKind:kTypeCaptureAudio
                        currentObject:currentObject
-                           audioData:m_audioData postOrder:selectedPostOrder  thumbnailPostOrder: [self getAddMediaAfterThumbnailPostOrder]];
+                           audioData:m_audioData postOrder:selectedPostOrder  thumbnailPostOrder: [self getAddMediaAfterThumbnailPostOrder] sortFlag:isActionSheetReverseSelected];
             
         }
         else
@@ -1896,7 +1897,7 @@
         shareAction1 = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel"
                                      destructiveButtonTitle:@"Share via Email"
                                           otherButtonTitles:@"Facebook", @"Twitter", @"Instagram",
-                        @"Add Media After", @"Add to Folder", @"Export to PDF", @"Select Items for New Event",
+                        @"Add to Folder", @"Export to PDF", @"Select Items for New Event",
                         @"Delete", status, @"Report", @"Move",nil];
         
         [shareAction1 showInView:self.view];
@@ -2192,7 +2193,7 @@
                     [TABController postAudio:kTypeUploadPost
                                    mediaKind:kTypeCaptureAudio
                                currentObject:currentObject
-                                   audioData:m_audioData postOrder:selectedPostOrder thumbnailPostOrder: [self getAddMediaAfterThumbnailPostOrder]];
+                                   audioData:m_audioData postOrder:selectedPostOrder thumbnailPostOrder: [self getAddMediaAfterThumbnailPostOrder] sortFlag:isActionSheetReverseSelected];
                     
                 }
                     break;
@@ -2251,39 +2252,32 @@
                     [self shareViaInstagram];
                 }
                     break;
-                    
+    
                 case 4:
-                {
-                    addMediaAfterHTN = TRUE;
-                    [self performSelector:@selector(showAddMediaAfter) withObject:nil afterDelay:0.1f];
-                }
-                    break;
-                    
-                case 5:
                 {
                     [self tagFolders];
                 }
                     break;
                     
-                case 6:
+                case 5:
                 {
                     [self performSelector:@selector(exportToPDF) withObject:nil afterDelay:0.1f];
                 }
                     break;
                     
-                case 7:
+                case 6:
                 {
                     [self duplicateToNewEvent];
                 }
                     break;
                     
-                case 8:
+                case 7:
                 {
                     [self deleteEvent];
                 }
                     break;
                     
-                case 9:
+                case 8:
                 {
                     PFUser *user = (PFUser *)currentObject[@"user"];
                     if ([user.objectId isEqualToString:USER.objectId]) {
@@ -2308,13 +2302,13 @@
                 }
                     break;
                     
-                case 10:
+                case 9:
                 {
                     [NSTimer scheduledTimerWithTimeInterval:0.1f target:self selector:@selector(reportEvent) userInfo:nil repeats:NO];
                 }
                     break;
                 //--------------------------------------------//
-                case 11:
+                case 10:
                 {
                     [tblForDetailList setEditing:!tblForDetailList.editing animated:YES];
                     [autoRefreshTimer invalidate];
@@ -2527,7 +2521,7 @@
                 {
                     if ([currentObject[@"openStatus"] intValue]) {
                         [TABController newPostAction:kTypeUploadPost mediaKind:kTypeCaptureText currentObject:currentObject
-                                           postOrder:selectedPostOrder thumbnailPostOrder: [self getAddMediaAfterThumbnailPostOrder]];
+                                           postOrder:selectedPostOrder thumbnailPostOrder: [self getAddMediaAfterThumbnailPostOrder] sortFlag:isActionSheetReverseSelected];
                     } else {
                         [OMGlobal showAlertTips:@"Oops!" title:@"This event was closed."];
                     }
@@ -2538,7 +2532,7 @@
                     
                     if ([currentObject[@"openStatus"] intValue]) {
                         [TABController newPostAction:kTypeUploadPost mediaKind:kTypeCapturePhoto currentObject:currentObject
-                                           postOrder:selectedPostOrder thumbnailPostOrder: [self getAddMediaAfterThumbnailPostOrder]];
+                                           postOrder:selectedPostOrder thumbnailPostOrder: [self getAddMediaAfterThumbnailPostOrder] sortFlag:isActionSheetReverseSelected];
                     } else {
                         [OMGlobal showAlertTips:@"Oops!" title:@"This event was closed."];
                     }
@@ -2548,7 +2542,7 @@
                 {
                     if ([currentObject[@"openStatus"] intValue]) {
                         [TABController postAudio:kTypeUploadPost mediaKind:kTypeCaptureAudio
-                                   currentObject:currentObject audioData:m_audioData postOrder:selectedPostOrder  thumbnailPostOrder: [self getAddMediaAfterThumbnailPostOrder]];
+                                   currentObject:currentObject audioData:m_audioData postOrder:selectedPostOrder  thumbnailPostOrder: [self getAddMediaAfterThumbnailPostOrder] sortFlag:isActionSheetReverseSelected];
                     } else {
                         [OMGlobal showAlertTips:@"Oops!" title:@"This event was closed."];
                     }
@@ -2558,7 +2552,7 @@
                 {
                     if ([currentObject[@"openStatus"] intValue]) {
                         [TABController newPostAction:kTypeUploadPost mediaKind:kTypeCaptureVideo currentObject:currentObject
-                                           postOrder:selectedPostOrder thumbnailPostOrder: [self getAddMediaAfterThumbnailPostOrder]];
+                                           postOrder:selectedPostOrder thumbnailPostOrder: [self getAddMediaAfterThumbnailPostOrder] sortFlag:isActionSheetReverseSelected];
                     } else {
                         [OMGlobal showAlertTips:@"Oops!" title:@"This event was closed."];
                     }

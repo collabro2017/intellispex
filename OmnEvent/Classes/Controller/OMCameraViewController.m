@@ -707,6 +707,7 @@
             [postEventVC setCurObj:curObj];
             [postEventVC setPostOrder:_postOrder];
             [postEventVC setThumbnailPostOrder:_thumbnailPostOrder];
+            [postEventVC setSortActivitiesFlag:_sortActivitiesFlag];
             if (self.panoFlag == YES) {
                 [postEventVC setPanoFlag:YES];
                 self.panoFlag = NO;
@@ -732,6 +733,7 @@
     [postEventVC setCurObj:curObj];
     [postEventVC setPostOrder:_postOrder];
     [postEventVC setThumbnailPostOrder:_thumbnailPostOrder];
+    [postEventVC setSortActivitiesFlag:_sortActivitiesFlag];
     
     [self.navigationController pushViewController:postEventVC animated:YES];
 }

@@ -701,7 +701,16 @@
             BOOL shouldIncrementTNPO = FALSE;
             
             if (self.postOrder == -1) {
-                PFObject *item = allPosts.firstObject; //First Element will contain the object with highest postOrder
+                
+                
+                PFObject *item;
+                if(self.sortActivitiesFlag == TRUE) {
+                    item = allPosts.lastObject; //Last Element will contain the object with highest postOrder
+                }
+                else{
+                    item = allPosts.firstObject; //First Element will contain the object with highest postOrder
+                }
+                
                 if (item != nil || ![item isEqual:[NSNull null]]) {
                     int newOrder = [item[@"postOrder"] intValue] + 1;
                     postOrder = [NSNumber numberWithInt:newOrder];
@@ -1093,7 +1102,14 @@
         NSNumber *tnPostOrder = [NSNumber numberWithInt:1];
         BOOL shouldIncrementTNPO = FALSE;
         if (self.postOrder == -1) {
-            PFObject *item = allPosts.firstObject; //First Element will contain the object with highest postOrder
+            PFObject *item;
+            if(self.sortActivitiesFlag == TRUE) {
+               item = allPosts.lastObject; //Last Element will contain the object with highest postOrder
+            }
+            else{
+                item = allPosts.firstObject; //First Element will contain the object with highest postOrder
+            }
+            
             if (item != nil || ![item isEqual:[NSNull null]]) {
                 int newOrder = [item[@"postOrder"] intValue] + 1;
                 postOrder = [NSNumber numberWithInt:newOrder];

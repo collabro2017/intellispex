@@ -56,6 +56,7 @@
         [postEventVC setAudioData:recordedData];
         [postEventVC setPostOrder:_postOrder];
         [postEventVC setThumbnailPostOrder:_thumbnailPostOrder];
+        [postEventVC setSortActivitiesFlag:_sortActivityFlag];
         
         [self.navigationController pushViewController:postEventVC animated:YES];
     }

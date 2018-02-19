@@ -29,6 +29,7 @@
 @property (nonatomic, strong) PFObject *curObj;
 @property (nonatomic, assign) int postOrder;
 @property (nonatomic, assign) int thumbnailPostOrder;
+@property (nonatomic, assign) BOOL sortActivityFlag;
 @property (nonatomic) kTypeUpload      uploadOption;
 @property (nonatomic) kTypeCapture      captureOption;
 @property (nonatomic) kTypeRecord       audioOption;

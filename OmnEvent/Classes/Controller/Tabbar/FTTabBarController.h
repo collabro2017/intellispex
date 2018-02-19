@@ -59,6 +59,7 @@
 @property (nonatomic) int tempPostOrder;
 @property (nonatomic) int tempThumbnailPostOrder;
 @property (nonatomic) int tempUploadOption;
+@property (nonatomic) BOOL tempSortActivitiesFlag;
 //----------------------------------------------------//
 
 - (IBAction)tabBarAction:(id)sender;
@@ -66,10 +67,10 @@
 
 - (IBAction)showMessageAction:(id)sender;
 
-- (void)newPostAction:(int)_uploadOption mediaKind:(int)_captureOption currentObject:(PFObject *)_curObj postOrder:(int)_postOrder thumbnailPostOrder:(int)_thumbnailPostOrder;
+- (void)newPostAction:(int)_uploadOption mediaKind:(int)_captureOption currentObject:(PFObject *)_curObj postOrder:(int)_postOrder thumbnailPostOrder:(int)_thumbnailPostOrder sortFlag:(BOOL) sortFlag;
 
 - (void)postAudio:(int)_uploadOption mediaKind:(int)_captureOption currentObject:(PFObject *)_curObj
-        audioData:(NSData *)_audioData postOrder:(int)_postOrder thumbnailPostOrder:(int)_thumbnailPostOrder;
+        audioData:(NSData *)_audioData postOrder:(int)_postOrder thumbnailPostOrder:(int)_thumbnailPostOrder sortFlag:(BOOL) sortFlag;
 
 - (void) setSelectedIndex:(int)index;
 

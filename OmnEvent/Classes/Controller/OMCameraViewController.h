@@ -72,6 +72,7 @@
 @property (nonatomic) PFObject          *curObj;
 @property (nonatomic, assign) int       postOrder;
 @property (nonatomic, assign) int       thumbnailPostOrder;
+@property (nonatomic, assign) BOOL      sortActivitiesFlag;
 
 - (IBAction)topButtonsAction:(id)sender;
 - (IBAction)bottomButtonsAction:(id)sender;
