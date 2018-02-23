@@ -49,6 +49,7 @@ extern BOOL refresh_require;
 - (IBAction)logoutAction:(id)sender;
 
 - (IBAction)profileAction:(id)sender;
+- (IBAction)timestampAction:(id)sender;
 
 - (IBAction)createFolderAction:(id)sender;
 - (IBAction)cancelCreateAction:(id)sender;

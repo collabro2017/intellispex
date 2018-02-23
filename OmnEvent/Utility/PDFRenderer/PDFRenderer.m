@@ -412,6 +412,8 @@
         
         CGRect frame = CGRectMake(50 * rScale, (nCurrOffset + 8) * rScale, nImageWidth * rScale, nImageWidth * rScale);
         
+        mediaImage = [OMUtilities stmapOn:mediaImage withDate:currentObj.createdAt];
+        
         [PDFRenderer drawImage:mediaImage inRect:frame];
         
         nCurrOffset += nImageWidth;

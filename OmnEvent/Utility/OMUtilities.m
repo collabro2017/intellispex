@@ -60,4 +60,45 @@
     return [str stringByReplacingOccurrencesOfString:@"\n" withString:@""];
 }
 
++ (UIImage *) stmapOn:(UIImage *)image withDate:(NSDate *)date
+{
+    UIImage *finalImage = image;
+    BOOL flag = [[NSUserDefaults standardUserDefaults] boolForKey:@"IS_TIMESTAMP_ENABLED"];
+    if (flag == TRUE) {
+        NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+        [dateFormat setDateFormat:@"yyyy/MM/dd hh:mm"];
+        
+        if (date == nil) {
+            date = [NSDate date];
+        }
+        
+        NSString *str_date = [dateFormat stringFromDate:date];
+        finalImage = [OMUtilities drawText:str_date inImage:image];
+    }
+    
+    return finalImage;
+}
+
++(UIImage *) drawText:(NSString*) text inImage:(UIImage*) image
+{
+    CGFloat fontSize = 0.06 * image.size.width;
+    if (fontSize < 15) {
+        fontSize = 15;
+    }
+    
+    CGFloat xPos = image.size.width * 0.05;
+    CGFloat yPos = image.size.height - (image.size.height * 0.125);
+    
+    UIFont *font = [UIFont boldSystemFontOfSize:fontSize];
+    UIGraphicsBeginImageContext(image.size);
+    [image drawInRect:CGRectMake(0,0,image.size.width,image.size.height)];
+    CGRect rect = CGRectMake(xPos, yPos, image.size.width, image.size.height);
+    [[UIColor yellowColor] set];
+    [text drawInRect:CGRectIntegral(rect) withFont:font];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return newImage;
+}
+
 @end

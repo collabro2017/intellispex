@@ -191,7 +191,10 @@ BOOL refresh_require;
         viewForPopup.transform = CGAffineTransformMakeScale(0.0001, 0.0001);
     } completion:^(BOOL finished) {
         
-        if (!_isFolderCreating) [viewForLayer setHidden:YES];
+        if (!_isFolderCreating){
+            [viewForLayer setHidden:YES];
+            isShowSetting = NO;
+        }
    }];
     
 }
@@ -779,6 +782,14 @@ BOOL refresh_require;
 - (IBAction)geocodeAction:(UIButton *)sender {
     BOOL flag = [[NSUserDefaults standardUserDefaults] boolForKey:@"IS_GEOCODE_ENABLED"];
     [[NSUserDefaults standardUserDefaults] setBool:!flag forKey:@"IS_GEOCODE_ENABLED"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    [self hidePopup];
+}
+
+- (IBAction)timestampAction:(id)sender
+{
+    BOOL flag = [[NSUserDefaults standardUserDefaults] boolForKey:@"IS_TIMESTAMP_ENABLED"];
+    [[NSUserDefaults standardUserDefaults] setBool:!flag forKey:@"IS_TIMESTAMP_ENABLED"];
     [[NSUserDefaults standardUserDefaults] synchronize];
     [self hidePopup];
 }

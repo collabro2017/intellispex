@@ -592,7 +592,8 @@
             UIImage *img = [UIImage imageWithData:fileObj.getData];
             
             if(img != nil) {
-            
+                
+                img = [OMUtilities stmapOn:img withDate:currentObj.createdAt];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     // Update the UI
                     [imageLoaderIndicator stopAnimating];
@@ -608,6 +609,7 @@
                     UIImage *img = [UIImage imageWithContentsOfFile:fullPath];
                     
                     if(img != nil) {
+                        img = [OMUtilities stmapOn:img withDate:currentObj.createdAt];
                         dispatch_async(dispatch_get_main_queue(), ^{
                             // Update the UI
                             [imageLoaderIndicator stopAnimating];
@@ -647,6 +649,7 @@
                 UIImage *img = [UIImage imageWithData:fileObj.getData];
                 
                 if(img != nil) {
+                    img = [OMUtilities stmapOn:img withDate:currentObj.createdAt];
                     dispatch_async(dispatch_get_main_queue(), ^{
                         // Update the UI
                         [imageLoaderIndicator stopAnimating];
@@ -663,6 +666,7 @@
                     UIImage *img = [UIImage imageWithContentsOfFile:fullPath];
                     
                     if(img != nil) {
+                        img = [OMUtilities stmapOn:img withDate:currentObj.createdAt];
                         dispatch_async(dispatch_get_main_queue(), ^{
                             // Update the UI
                             [imageLoaderIndicator stopAnimating];
