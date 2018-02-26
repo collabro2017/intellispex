@@ -66,7 +66,7 @@
     BOOL flag = [[NSUserDefaults standardUserDefaults] boolForKey:@"IS_TIMESTAMP_ENABLED"];
     if (flag == TRUE) {
         NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-        [dateFormat setDateFormat:@"yyyy/MM/dd hh:mm"];
+        [dateFormat setDateFormat:@"yyyy/MM/dd HH:mm"];
         
         if (date == nil) {
             date = [NSDate date];

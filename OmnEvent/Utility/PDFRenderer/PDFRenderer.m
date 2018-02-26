@@ -400,9 +400,10 @@
     
     if (postImgFile) {
         
-        int nImageWidth = 200;
+        int nImageWidth = 480;
+        int nImageHeight = 640;
         
-        if (((nCurrOffset + nImageWidth) * rScale) > PDF_CONTENT_HEIGHT)
+        if (((nCurrOffset + nImageHeight) * rScale) > PDF_CONTENT_HEIGHT)
         {
             UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, PDF_PAGE_WIDTH, PDF_PAGE_HEIGHT), nil); // start second page
             nCurrOffset = PDF_START_OffSet;
@@ -410,7 +411,7 @@
         
         UIImage* mediaImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:postImgFile.url]]];
         
-        CGRect frame = CGRectMake(50 * rScale, (nCurrOffset + 8) * rScale, nImageWidth * rScale, nImageWidth * rScale);
+        CGRect frame = CGRectMake(50, (nCurrOffset + 8), nImageWidth, nImageHeight);
         
         mediaImage = [OMUtilities stmapOn:mediaImage withDate:currentObj.createdAt];
         
