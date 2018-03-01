@@ -8,6 +8,7 @@
 
 #import "PDFRenderer.h"
 #import "OMUtilities.h"
+#import <UIImage+ResizeMagick.h>
 
 #define PDF_PAGE_WIDTH 612.0f
 #define PDF_PAGE_HEIGHT 792.0f
@@ -395,8 +396,14 @@
         UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, PDF_PAGE_WIDTH, PDF_PAGE_HEIGHT), nil); // start second page
         nCurrOffset = PDF_START_OffSet;
     }
-    
     PFFile *postImgFile = (PFFile *)currentObj[@"thumbImage"];
+    
+    if ([currentObj[@"postType"] isEqualToString:@"photo"]){
+        PFFile *postImage = (PFFile *)currentObj[@"postFile"];
+        if (postImage != nil) {
+            postImgFile = postImage;
+        }
+    }
     
     if (postImgFile) {
         
@@ -410,11 +417,14 @@
         }
         
         UIImage* mediaImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:postImgFile.url]]];
+       
+        //mediaImage = [mediaImage resizedImageToFitInSize:CGSizeMake(nImageWidth, nImageHeight) scaleIfSmaller:YES];
+        mediaImage = [mediaImage resizedImageByMagick:@"480x640"];
         
-        CGRect frame = CGRectMake(50, (nCurrOffset + 8), nImageWidth, nImageHeight);
-        
-        mediaImage = [OMUtilities stmapOn:mediaImage withDate:currentObj.createdAt];
-        
+        CGRect frame = CGRectMake(66, (nCurrOffset + 8), nImageWidth, nImageHeight);
+       
+        mediaImage = [OMUtilities stampOn:mediaImage withDate:currentObj.createdAt];
+       
         [PDFRenderer drawImage:mediaImage inRect:frame];
         
         nCurrOffset += nImageWidth;

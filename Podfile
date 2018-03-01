@@ -16,5 +16,6 @@ pod 'PBJVideoPlayer'
 pod 'PBJVision'
 pod 'Fabric'
 pod 'Crashlytics'
+pod 'UIImage-ResizeMagick'
 
 end

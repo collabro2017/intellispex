@@ -14,7 +14,7 @@
 +(BOOL) isEventCreatedFromWebConsole:(NSString *) type;
 +(NSString *) dateToString:(NSDate *) date format:(NSString *) strFormat;
 +(NSString *) removeWhiteSpacesFromString:(NSString *) string;
-+(UIImage *) stmapOn:(UIImage *)image withDate:(NSDate *) date;
++(UIImage *) stampOn:(UIImage *)image withDate:(NSDate *) date;
 +(UIImage *) drawText:(NSString*) text inImage:(UIImage*) image;
 
 @end

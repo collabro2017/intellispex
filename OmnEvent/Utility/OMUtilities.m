@@ -60,7 +60,7 @@
     return [str stringByReplacingOccurrencesOfString:@"\n" withString:@""];
 }
 
-+ (UIImage *) stmapOn:(UIImage *)image withDate:(NSDate *)date
++ (UIImage *) stampOn:(UIImage *)image withDate:(NSDate *)date
 {
     UIImage *finalImage = image;
     BOOL flag = [[NSUserDefaults standardUserDefaults] boolForKey:@"IS_TIMESTAMP_ENABLED"];
