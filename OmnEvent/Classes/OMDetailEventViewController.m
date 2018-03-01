@@ -2674,6 +2674,8 @@
             // Update the UI
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             UIImage* postImage = [UIImage imageWithData:imageData];
+            
+            postImage = [OMUtilities stampOn:postImage withDate:tempObejct.createdAt];
             UIImageWriteToSavedPhotosAlbum(postImage, nil, nil, nil);
         });
     });
@@ -3112,6 +3114,8 @@
 - (void)shareViaInstagram
 {
     UIImage * screenshot = postImgView.image;//[[CCDirector sharedDirector] screenshotUIImage];
+    
+    //screenshot = [OMUtilities stampOn:screenshot withDate:tempObejct.createdAt];
     // UIImage *screenshot = [UIImage imageNamed:@"splash@2x.png"];
     NSString *savePath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Screenshot.igo"];
     
