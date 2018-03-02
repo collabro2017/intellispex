@@ -9,6 +9,7 @@
 #import "PDFRenderer.h"
 #import "OMUtilities.h"
 #import <UIImage+ResizeMagick.h>
+#import "UIImage+Resize.h"
 
 #define PDF_PAGE_WIDTH 612.0f
 #define PDF_PAGE_HEIGHT 792.0f
@@ -418,14 +419,18 @@
         
         UIImage* mediaImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:postImgFile.url]]];
        
-        //mediaImage = [mediaImage resizedImageToFitInSize:CGSizeMake(nImageWidth, nImageHeight) scaleIfSmaller:YES];
-        mediaImage = [mediaImage resizedImageByMagick:@"480x640"];
-        
-        CGRect frame = CGRectMake(66, (nCurrOffset + 8), nImageWidth, nImageHeight);
-       
         mediaImage = [OMUtilities stampOn:mediaImage withDate:currentObj.createdAt];
+        mediaImage = [mediaImage resizedImageToSize:CGSizeMake(nImageWidth, nImageHeight)];
+        //mediaImage = [mediaImage resizedImageToFitInSize:CGSizeMake(nImageWidth, nImageHeight) scaleIfSmaller:NO];
+        //mediaImage = [mediaImage resizedImageByMagick:@"480x640"];
+        
+        CGRect borderFrame = CGRectMake(62, (nCurrOffset + 8), nImageWidth + 4, nImageHeight + 4);
+        CGRect frame = CGRectMake(64, (nCurrOffset + 8) + 2, nImageWidth, nImageHeight);
        
+        [PDFRenderer drawRect:borderFrame withBorderColor:[UIColor grayColor]];
         [PDFRenderer drawImage:mediaImage inRect:frame];
+        
+        
         
         nCurrOffset += nImageWidth;
         nCurrOffset += 8;
@@ -512,6 +517,26 @@
     //this should be white color with 0.7 opacity right
     CGContextSetRGBFillColor(context, 0.0, 0.0, 0.0, 0.45);
     CGContextFillRect(context, rect);
+}
+
++(void)drawRect:(CGRect)rect withBorderColor:(UIColor *) borderColor
+{
+    /*CGContextRef context = UIGraphicsGetCurrentContext();
+    //this should be white color with 0.7 opacity right
+    CGContextSetRGBFillColor(context, 0.0, 0.0, 0.0, 0.45);
+    CGContextFillRect(context, rect);
+     */
+    
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetLineWidth(context, 2.0);
+    CGPathRef path = CGPathCreateWithRect(rect, NULL);
+    [[UIColor whiteColor] setFill];
+    [borderColor setStroke];
+    
+    CGContextAddPath(context, path);
+    CGContextDrawPath(context, kCGPathFillStroke);
+    CGPathRelease(path);
+
 }
 
 +(void)drawImage:(UIImage*)image inRect:(CGRect)rect

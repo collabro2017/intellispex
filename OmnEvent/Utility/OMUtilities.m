@@ -81,6 +81,7 @@
 
 +(UIImage *) drawText:(NSString*) text inImage:(UIImage*) image
 {
+    
     CGFloat fontSize = 0.06 * image.size.width;
     if (fontSize < 15) {
         fontSize = 15;
@@ -89,10 +90,15 @@
     CGFloat xPos = image.size.width * 0.05;
     CGFloat yPos = image.size.height - (image.size.height * 0.125);
     
+    if ((image.size.width / image.size.height) > 2.0) {
+        yPos = image.size.height - ((image.size.width / image.size.height) * 90);
+    }
+    
     UIFont *font = [UIFont boldSystemFontOfSize:fontSize];
     UIGraphicsBeginImageContext(image.size);
     [image drawInRect:CGRectMake(0,0,image.size.width,image.size.height)];
     CGRect rect = CGRectMake(xPos, yPos, image.size.width, image.size.height);
+        
     [[UIColor yellowColor] set];
     [text drawInRect:CGRectIntegral(rect) withFont:font];
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
