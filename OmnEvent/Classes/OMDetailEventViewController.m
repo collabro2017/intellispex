@@ -43,6 +43,7 @@
 #import "OMEventNotiViewController.h"
 
 #import "OMUtilities.h"
+#import <UIImage+ResizeMagick.h>
 
 #define kTag_NewPhoto           4000
 #define kTag_NewVideo           5000
@@ -1979,7 +1980,7 @@
     
     
     if ([user.objectId isEqualToString:USER.objectId] || authFlag) {
-        shareAction1 = [[UIActionSheet alloc] initWithTitle:@"More option" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Save to Camera roll" otherButtonTitles:@"Add Media After", @"Use this as thumbnail",
+        shareAction1 = [[UIActionSheet alloc] initWithTitle:@"More option" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Save to Camera roll(480x640)" otherButtonTitles:@"Save to Camera roll", @"Add Media After", @"Use this as thumbnail",
                         @"Delete", @"Report", nil];
         [shareAction1 setTag:kTag_Share];
         [shareAction1 showInView:self.view];
@@ -2384,27 +2385,33 @@
                 case 0:
                 {
                     [MBProgressHUD showMessag:@"Saving Image to Camera Roll..." toView:self.view];
-                    [self saveToCameraRoll];
+                    [self saveToCameraRoll: YES];
                 }
                     break;
                 case 1:
+                {
+                    [MBProgressHUD showMessag:@"Saving Image to Camera Roll..." toView:self.view];
+                    [self saveToCameraRoll: NO];
+                }
+                break;
+                case 2:
                 {
                     addMediaAfterHTN = FALSE;
                     [self performSelector:@selector(showAddMediaAfter) withObject:nil afterDelay:0.1f];
                 }
                     break;
-                case 2:
+                case 3:
                 {
                     [self useThisAsThumbnail];
                 }
                     break;
-                case 3:
+                case 4:
                 {
                     [self deleteFeed];
                 }
                     break;
                     
-                case 4:
+                case 5:
                 {
                     //Report Post by Guest/Tag user
                     [NSTimer scheduledTimerWithTimeInterval:0.1f target:self selector:@selector(reportPost) userInfo:nil repeats:NO];
@@ -2420,7 +2427,7 @@
                 case 0:
                 {
                     [MBProgressHUD showMessag:@"Saving Image to Camera Roll..." toView:self.view];
-                    [self saveToCameraRoll];
+                    [self saveToCameraRoll: NO];
                 }
                     break;
                 case 1:
@@ -2662,9 +2669,17 @@
 
 // Save Image to Camera Roll
 
--(void) saveToCameraRoll
+-(void) saveToCameraRoll:(BOOL) selectedSize
 {
     PFFile *file = (PFFile *)tempObejct[@"thumbImage"];
+    
+    if ([tempObejct[@"postType"] isEqualToString:@"photo"]){
+        PFFile *postImage = (PFFile *)tempObejct[@"postFile"];
+        if (postImage != nil) {
+            file = postImage;
+        }
+    }
+    
     NSURL *imageURL = [NSURL URLWithString:file.url];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
@@ -2676,7 +2691,54 @@
             UIImage* postImage = [UIImage imageWithData:imageData];
             
             postImage = [OMUtilities stampOn:postImage withDate:tempObejct.createdAt];
-            UIImageWriteToSavedPhotosAlbum(postImage, nil, nil, nil);
+            
+            
+            if(selectedSize == YES)
+            {
+                int nImageWidth = 480;
+                int nImageHeight = 640;
+                
+                UIImage* mediaImage = postImage;
+                CGFloat imageWidth = mediaImage.size.width;
+                CGFloat imageHeight = mediaImage.size.height;
+                
+                CGFloat ratio = 0.0;
+                BOOL fillHeight = NO;
+                if (imageHeight > imageWidth){
+                    ratio = imageHeight/imageWidth;
+                    fillHeight = YES;
+                }
+                else{
+                    ratio = imageWidth/imageHeight;
+                    fillHeight = NO;
+                }
+                
+                CGFloat imageNewWidth = 0.0;
+                CGFloat imageNewHeight = 0.0;
+                NSString *strDimentions = @"";
+                if(fillHeight == YES){
+                    imageNewHeight = nImageHeight;
+                    imageNewWidth = nImageHeight/ratio;
+                    strDimentions = [NSString stringWithFormat:@"%.0fx%.0fh", imageNewWidth, imageNewHeight];
+                }
+                else{
+                    imageNewHeight = nImageHeight/ratio;
+                    imageNewWidth = nImageWidth;
+                    strDimentions = [NSString stringWithFormat:@"%.0fx%.0fw", imageNewWidth, imageNewHeight];
+                }
+                
+                //CGRect frame = CGRectMake(0, 0, imageNewWidth, imageNewHeight);
+                
+                //UIImage *newImage = [OMUtilities drawImage:mediaImage inRect:frame];
+                
+                UIImage *newImage = [mediaImage resizedImageByMagick:strDimentions];
+                UIImageWriteToSavedPhotosAlbum(newImage, nil, nil, nil);
+            }
+            else{
+                UIImageWriteToSavedPhotosAlbum(postImage, nil, nil, nil);
+            }
+            
+            
         });
     });
 }

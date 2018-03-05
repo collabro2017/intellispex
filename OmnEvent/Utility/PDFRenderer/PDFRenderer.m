@@ -418,14 +418,39 @@
         }
         
         UIImage* mediaImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:postImgFile.url]]];
-       
         mediaImage = [OMUtilities stampOn:mediaImage withDate:currentObj.createdAt];
-        mediaImage = [mediaImage resizedImageToSize:CGSizeMake(nImageWidth, nImageHeight)];
+        
+        CGFloat imageWidth = mediaImage.size.width;
+        CGFloat imageHeight = mediaImage.size.height;
+        
+        CGFloat ratio = 0.0;
+        BOOL fillHeight = NO;
+        if (imageHeight > imageWidth){
+            ratio = imageHeight/imageWidth;
+            fillHeight = YES;
+        }
+        else{
+            ratio = imageWidth/imageHeight;
+            fillHeight = NO;
+        }
+        
+        CGFloat imageNewWidth = 0.0;
+        CGFloat imageNewHeight = 0.0;
+        if(fillHeight == YES){
+            imageNewHeight = nImageHeight;
+            imageNewWidth = nImageHeight/ratio;
+        }
+        else{
+            imageNewHeight = nImageHeight/ratio;
+            imageNewWidth = nImageWidth;
+        }
+        
+        //mediaImage = [mediaImage resizedImageToSize:CGSizeMake(nImageWidth, nImageHeight)];
         //mediaImage = [mediaImage resizedImageToFitInSize:CGSizeMake(nImageWidth, nImageHeight) scaleIfSmaller:NO];
         //mediaImage = [mediaImage resizedImageByMagick:@"480x640"];
         
         CGRect borderFrame = CGRectMake(62, (nCurrOffset + 8), nImageWidth + 4, nImageHeight + 4);
-        CGRect frame = CGRectMake(64, (nCurrOffset + 8) + 2, nImageWidth, nImageHeight);
+        CGRect frame = CGRectMake(64, (nCurrOffset + 8) + 2, imageNewWidth, imageNewHeight);
        
         [PDFRenderer drawRect:borderFrame withBorderColor:[UIColor grayColor]];
         [PDFRenderer drawImage:mediaImage inRect:frame];
