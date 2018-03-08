@@ -107,4 +107,40 @@
     return newImage;
 }
 
++ (UIImage *)imageFromColor:(UIColor *)color withRect:(CGRect ) rect{
+
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, rect);
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
+
++(UIImage *)mergeImage:(UIImage*)mask overImage:(UIImage*)source inSize:(CGSize)size
+{
+    //Capture image context ref
+    
+    UIImageView *totalimage=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
+    
+    UIImageView *firstImage=[[UIImageView alloc] initWithImage:mask];
+    UIImageView *secondImage=[[UIImageView alloc] initWithImage:source];
+    
+    [totalimage addSubview:firstImage];
+    [totalimage addSubview:secondImage];
+    
+    UIGraphicsBeginImageContext(totalimage.bounds.size);
+    [totalimage.layer renderInContext:UIGraphicsGetCurrentContext()];
+    
+    //Draw images onto the context
+    [source drawInRect:CGRectMake(0, 0, source.size.width, source.size.height)];
+    [mask drawInRect:CGRectMake(0, 0, mask.size.width, mask.size.height)];
+    
+    UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return viewImage;
+}
+
 @end

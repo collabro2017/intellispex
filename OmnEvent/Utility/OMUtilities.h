@@ -16,5 +16,7 @@
 +(NSString *) removeWhiteSpacesFromString:(NSString *) string;
 +(UIImage *) stampOn:(UIImage *)image withDate:(NSDate *) date;
 +(UIImage *) drawText:(NSString*) text inImage:(UIImage*) image;
++ (UIImage *)imageFromColor:(UIColor *)color withRect:(CGRect ) rect;
++(UIImage *)mergeImage:(UIImage*)mask overImage:(UIImage*)source inSize:(CGSize)size;
 
 @end

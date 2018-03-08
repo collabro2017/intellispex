@@ -2727,12 +2727,14 @@
                     strDimentions = [NSString stringWithFormat:@"%.0fx%.0fw", imageNewWidth, imageNewHeight];
                 }
                 
-                //CGRect frame = CGRectMake(0, 0, imageNewWidth, imageNewHeight);
-                
-                //UIImage *newImage = [OMUtilities drawImage:mediaImage inRect:frame];
-                
                 UIImage *newImage = [mediaImage resizedImageByMagick:strDimentions];
-                UIImageWriteToSavedPhotosAlbum(newImage, nil, nil, nil);
+                
+                CGRect frame = CGRectMake(0, 0, nImageWidth, nImageHeight);
+                UIImage *grayBGImage = [OMUtilities imageFromColor:[UIColor grayColor] withRect:frame];
+                
+                UIImage *finalImage = [OMUtilities mergeImage:newImage overImage:grayBGImage inSize:frame.size];
+                
+                UIImageWriteToSavedPhotosAlbum(finalImage, nil, nil, nil);
             }
             else{
                 UIImageWriteToSavedPhotosAlbum(postImage, nil, nil, nil);
